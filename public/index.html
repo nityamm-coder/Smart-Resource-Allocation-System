@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report a Need — Smart Resource Allocation</title>
+  <meta name="description"
+    content="Submit a community need for food, medical aid, or shelter. Our AI will categorise and route your request to the nearest available volunteer." />
+
+  <!-- Bootstrap 5 CSS (CDN) — handles grid, buttons, forms, utilities -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Our custom styles (supplements Bootstrap) -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- ── Navigation Bar ────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-heart-pulse-fill me-2 text-danger"></i>
+        Smart Resource Allocation
+      </a>
+      <div class="ms-auto">
+        <a href="dashboard.html" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-grid-3x3-gap me-1"></i>NGO Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero Section ──────────────────────────────────────── -->
+  <section class="hero-section">
+    <h1>Report a Community Need</h1>
+    <p>
+      Describe what you or someone near you needs. Our AI will analyse your
+      request and connect you to the right help — fast.
+    </p>
+  </section>
+
+  <!-- ── Request Form & Status Column ───────────────────────── -->
+  <main class="container mb-5">
+    <div class="row g-4 justify-content-center">
+      <!-- Left Column: Submit Request Form -->
+      <div class="col-12 col-md-6">
+        <div class="form-card m-0" style="max-width: 100%;">
+          <h2 class="fs-5 fw-700 mb-4">
+            <i class="bi bi-pencil-square me-2 text-primary"></i>
+            Submit a Request
+          </h2>
+
+          <form id="request-form" novalidate>
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description">Describe the need</label>
+              <textarea id="description" name="description" class="form-control" rows="4"
+                placeholder="e.g. An elderly man in our building has run out of insulin and cannot reach a hospital…"
+                required></textarea>
+              <div class="form-text text-muted mt-1">
+                Be as specific as possible — the AI uses this to prioritise your request.
+              </div>
+            </div>
+
+            <!-- Victim Contact Number -->
+            <div class="mb-3">
+              <label for="victim-phone">Your Contact Number</label>
+              <input type="tel" id="victim-phone" name="victimPhone" class="form-control"
+                placeholder="e.g. +91 98765 43210" required />
+              <div class="form-text text-muted mt-1">
+                So volunteers or coordinators can call you directly.
+              </div>
+            </div>
+
+            <!-- Victim Address -->
+            <div class="mb-3">
+              <label for="address">Exact Address / Specific Location</label>
+              <textarea id="address" name="address" class="form-control" rows="2"
+                placeholder="e.g. Flat 202, Building B, Tarmale Nagar, Vasind, Maharashtra" required></textarea>
+              <div class="form-text text-muted mt-1">
+                Include landmarks, building name, flat number, etc.
+              </div>
+            </div>
+
+            <!-- Zone -->
+            <div class="mb-4">
+              <label for="zone">Select Nearest Locality/Hub</label>
+              <select id="zone" name="zone" class="form-select" required>
+                <option value="" disabled selected>Select nearest locality…</option>
+                <option value="Vasind">Vasind</option>
+                <option value="Kalyan">Kalyan</option>
+                <option value="Thane">Thane</option>
+                <option value="Mumbai Central">Mumbai Central</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit-btn" class="btn btn-primary w-100">
+              <span id="btn-text">
+                <i class="bi bi-send-fill me-2"></i>Submit Request
+              </span>
+              <!-- Shown while waiting for API response -->
+              <span id="btn-spinner" class="d-none">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Analysing with AI…
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Results & Live Tracker -->
+      <div class="col-12 col-md-6">
+        <div id="result-container" class="form-card m-0 h-100 d-flex flex-column justify-content-center align-items-center text-center" style="max-width: 100%; min-height: 480px;">
+          <div id="placeholder-content">
+            <i class="bi bi-shield-fill-check text-indigo fs-1 mb-3"></i>
+            <h5>Real-time Tracker</h5>
+            <p class="text-muted mb-0" style="font-size: 0.88rem; max-width: 300px; margin: 0 auto;">
+              Submit a request on the left. Your matched volunteer details and live status progress tracker will display here immediately.
+            </p>
+          </div>
+          
+          <!-- ── Result Banner (hidden until form is submitted) ── -->
+          <div id="result-banner" class="w-100 d-none text-start"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+    <!-- How It Works Section -->
+    <div class="row g-3 mb-5" style="max-width:560px; margin:0 auto;">
+      <div class="col-12">
+        <p class="text-center how-it-works-title fw-600 mb-3"
+          style="font-size:0.88rem; text-transform:uppercase; letter-spacing:0.06em;">
+          How it works
+        </p>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-blue p-3 rounded-3">
+          <i class="bi bi-pencil fs-3 text-indigo"></i>
+          <p class="mt-2 mb-0 font-label">You describe the need</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-green p-3 rounded-3">
+          <i class="bi bi-cpu fs-3 text-emerald"></i>
+          <p class="mt-2 mb-0 font-label">AI classifies & scores urgency</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-yellow p-3 rounded-3">
+          <i class="bi bi-person-check fs-3 text-amber"></i>
+          <p class="mt-2 mb-0 font-label">Volunteer gets matched</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Built with ❤️ for the Hackathon &nbsp;·&nbsp; Smart Resource Allocation MVP
+  </footer>
+
+  <!-- Bootstrap 5 JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Our frontend logic -->
+  <script src="app.js"></script>
+
+
+
+
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDI9OdGV2-tW8L77KzeZmACj_-IvI0UY00",
+      authDomain: "smart-resource-allocatio-156d4.firebaseapp.com",
+      projectId: "smart-resource-allocatio-156d4",
+      storageBucket: "smart-resource-allocatio-156d4.firebasestorage.app",
+      messagingSenderId: "82443517756",
+      appId: "1:82443517756:web:1af5cd853875348ae62839",
+      measurementId: "G-G9J65KRSPV"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+# Dependencies — never commit these, npm install recreates them
+node_modules/
+
+# Environment secrets — NEVER commit your real .env!
+.env
+
+# Vercel deployment cache
+.vercel/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.vscode/
+*.log

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NGO Dashboard — Smart Resource Allocation</title>
+    <meta
+      name="description"
+      content="NGO coordination dashboard showing all community requests categorised by status and matched to volunteers."
+    />
+
+    <!-- Bootstrap 5 CSS (CDN) -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Our custom styles -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- ── Navigation Bar ────────────────────────────────────── -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background:#1e1b4b;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+          <i class="bi bi-heart-pulse-fill me-2 text-danger"></i>
+          Smart Resource Allocation
+        </a>
+        <div class="ms-auto d-flex align-items-center gap-2">
+          <!-- Refresh button to reload all requests -->
+          <button id="refresh-btn" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+          </button>
+          <a href="index.html" class="btn btn-light btn-sm">
+            <i class="bi bi-plus-circle me-1"></i>New Request
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ── Dashboard Header ───────────────────────────────────── -->
+    <header class="dashboard-header">
+      <div class="container-fluid">
+        <h1><i class="bi bi-grid-3x3-gap me-2"></i>NGO Coordination Dashboard</h1>
+        <p class="mb-0 opacity-75" style="font-size:0.92rem;">
+          All incoming community needs, ranked by urgency. Assign and update statuses below.
+        </p>
+      </div>
+    </header>
+
+    <main class="container-fluid px-4">
+
+      <!-- ── Stats Bar ────────────────────────────────────────── -->
+      <div class="row g-3 mb-4" id="stats-bar">
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-total">—</div>
+            <div class="stat-label">Total Requests</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-number text-danger" id="stat-open">—</div>
+            <div class="stat-label">Open</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-number text-warning" id="stat-progress">—</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-card">
+            <div class="stat-number text-success" id="stat-resolved">—</div>
+            <div class="stat-label">Resolved</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Filter Bar ───────────────────────────────────────── -->
+      <div class="filter-card">
+        <div class="d-flex align-items-center gap-2 flex-grow-1">
+          <i class="bi bi-search text-muted"></i>
+          <input type="text" id="search-filter" class="filter-input" placeholder="Search requests by description, address, or phone..." />
+        </div>
+        <div class="btn-filter-group" id="category-filter-group">
+          <button class="btn-filter active" data-category="All">All</button>
+          <button class="btn-filter" data-category="Medical">🏥 Medical</button>
+          <button class="btn-filter" data-category="Food">🍎 Food</button>
+          <button class="btn-filter" data-category="Shelter">🏠 Shelter</button>
+          <button class="btn-filter" data-category="Other">ℹ️ Other</button>
+        </div>
+      </div>
+
+      <!-- ── Loading Spinner (visible while fetching) ──────────── -->
+      <div id="loading-state" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="text-muted mt-2 mb-0" style="font-size:0.9rem;">Loading requests…</p>
+      </div>
+
+      <!-- ── Error Message ─────────────────────────────────────── -->
+      <div id="error-state" class="alert alert-danger d-none" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span id="error-message"></span>
+      </div>
+
+      <!-- ── Kanban Board (3 columns) ──────────────────────────── -->
+      <!--
+        Each column holds cards for one status: Open, In Progress, Resolved.
+        Cards are inserted here dynamically by dashboard.js logic in app.js.
+      -->
+      <div class="row g-3 d-none" id="kanban-board">
+        <!-- Kanban Columns -->
+        <div class="col-12 col-xl-9">
+          <div class="row g-3">
+            <!-- OPEN Column -->
+            <div class="col-12 col-lg-4">
+              <div class="kanban-column-header open">
+                <i class="bi bi-circle"></i>
+                Open
+                <span class="ms-auto badge" style="background:#7c3aed;" id="count-open">0</span>
+              </div>
+              <div id="col-open">
+                <!-- Request cards injected here -->
+              </div>
+            </div>
+
+            <!-- IN PROGRESS Column -->
+            <div class="col-12 col-lg-4">
+              <div class="kanban-column-header progress">
+                <i class="bi bi-arrow-repeat"></i>
+                In Progress
+                <span class="ms-auto badge bg-warning text-dark" id="count-progress">0</span>
+              </div>
+              <div id="col-progress">
+                <!-- Request cards injected here -->
+              </div>
+            </div>
+
+            <!-- RESOLVED Column -->
+            <div class="col-12 col-lg-4">
+              <div class="kanban-column-header resolved">
+                <i class="bi bi-check-circle"></i>
+                Resolved
+                <span class="ms-auto badge bg-success" id="count-resolved">0</span>
+              </div>
+              <div id="col-resolved">
+                <!-- Request cards injected here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Volunteer Roster Sidebar -->
+        <div class="col-12 col-xl-3">
+          <div class="form-card w-100 m-0 p-3" style="max-width: 100%; height: fit-content; background: rgba(30, 27, 75, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border-radius: 1rem;">
+            <h3 class="fs-6 fw-bold mb-3 d-flex align-items-center text-white" style="letter-spacing: 0.5px;">
+              <i class="bi bi-people-fill me-2 text-primary"></i>Volunteer Roster
+            </h3>
+            <!-- Search for volunteers -->
+            <div class="mb-3">
+              <div class="input-group input-group-sm">
+                <span class="input-group-text bg-dark border-secondary text-muted" style="border-right: none; background: rgba(15, 12, 41, 0.5) !important;"><i class="bi bi-search"></i></span>
+                <input type="text" id="volunteer-search" class="form-control form-control-sm border-secondary text-white" style="background: rgba(15, 12, 41, 0.5); border-left: none;" placeholder="Search roster..." />
+              </div>
+            </div>
+            <!-- Volunteers list container -->
+            <div id="volunteers-list" class="d-flex flex-column gap-2" style="max-height: 580px; overflow-y: auto; padding-right: 4px;">
+              <!-- Roster cards will be injected dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /kanban-board -->
+
+    </main>
+
+    <footer>
+      Built with ❤️ for the Hackathon &nbsp;·&nbsp; Smart Resource Allocation MVP
+    </footer>
+
+    <!-- Bootstrap 5 JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Our frontend logic -->
+    <script src="app.js"></script>
+  </body>
+</html>
