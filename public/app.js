@@ -116,6 +116,16 @@ if (isIndexPage) {
            </a>`;
       }
 
+      // AI translation banner if detected
+      let translationHtml = '';
+      if (data.detectedLanguage && data.detectedLanguage.toLowerCase() !== 'english' && data.translatedDescription) {
+        translationHtml = `
+          <div class="p-2 rounded mb-3 text-start" style="font-size:0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid var(--brand-primary); color: #c7d2fe;">
+            <i class="bi bi-translate me-1 text-primary animate-pulse"></i> <strong>AI Translated (${data.detectedLanguage} ➔ English):</strong> "${data.translatedDescription}"
+          </div>
+        `;
+      }
+
       resultBanner.classList.add("alert", "alert-success");
       resultBanner.innerHTML = `
         <h5 class="mb-2"><i class="bi bi-check-circle-fill me-2"></i>Request Submitted!</h5>
@@ -123,6 +133,7 @@ if (isIndexPage) {
           <strong>Category:</strong> ${getCategoryWithIcon(data.category)} &nbsp;|&nbsp;
           <strong>Urgency:</strong> ${data.urgency}/5
         </p>
+        ${translationHtml}
         <p class="mb-1"><strong>Matched Volunteer:</strong></p>
         <div class="p-3 rounded mb-3" style="font-size:0.88rem; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text-light);">${volunteer}</div>
         
@@ -293,7 +304,14 @@ if (isDashboardPage) {
             ⚡ ${urgencyLabel(req.urgency)}
           </span>
         </div>
-        <p class="description mb-2">${req.description}</p>
+        <p class="description mb-2">
+          ${req.description}
+          ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
+            `<span class="d-block mt-2 p-2 rounded text-indigo" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid var(--brand-primary); color: #c7d2fe;">
+              <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
+             </span>` : ''
+          }
+        </p>
         <div class="meta mb-1">
           <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Address:</strong> ${req.address || "N/A"}
         </div>

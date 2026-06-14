@@ -206,21 +206,23 @@ app.post("/api/submit", async (req, res) => {
   }
 
   try {
-    // ── Step 1: Ask Gemini to classify the request ──────────
+    // ── Step 1: Ask Gemini to classify and translate the request ──────────
     // We use a very strict system prompt to force Gemini to reply
-    // ONLY with valid JSON. This prevents unexpected text responses.
+    // ONLY with valid JSON. This handles classification, urgency, language detection, and translation.
     const systemPrompt = `
-You are a strict JSON-only classification API for a disaster relief system.
-Your ONLY job is to read a community need description and return a JSON object.
+You are a strict JSON-only classification and translation API for a disaster relief system.
+Your job is to read a community need description (which may be in English, Hindi, Marathi, Hinglish, or other regional languages), classify it, detect its language, and translate it to English.
 
 Rules:
 - Return ONLY a raw JSON object. No markdown, no explanation, no extra text.
-- The JSON must have exactly two keys: "category" and "urgency".
+- The JSON must have exactly four keys: "category", "urgency", "detectedLanguage", and "translatedDescription".
 - "category" must be exactly ONE of: "Food", "Medical", "Shelter", "Other".
 - "urgency" must be an integer between 1 and 5, where 1 = low and 5 = critical.
+- "detectedLanguage" should be the name of the language the request was written in (e.g. "English", "Hindi", "Marathi", "Hinglish", etc.).
+- "translatedDescription" must be the complete, accurate English translation of the description. If the original description is already in English, "translatedDescription" must match the original description exactly.
 
 Example output:
-{"category": "Medical", "urgency": 5}
+{"category": "Medical", "urgency": 5, "detectedLanguage": "Hindi", "translatedDescription": "An elderly man in our building has run out of insulin and cannot reach a hospital."}
     `.trim();
 
     const fullPrompt = `${systemPrompt}\n\nDescription: "${description}"`;
@@ -233,7 +235,7 @@ Example output:
     const cleanedText = rawText.replace(/```json|```/g, "").trim();
     const classified = JSON.parse(cleanedText);
 
-    const { category, urgency } = classified;
+    const { category, urgency, detectedLanguage, translatedDescription } = classified;
 
     // ── Step 2: Match a volunteer ────────────────────────────
     const matchedVolunteer = matchVolunteer(category, zone);
@@ -246,6 +248,8 @@ Example output:
       victimPhone,
       category,
       urgency: Number(urgency),
+      detectedLanguage: detectedLanguage || "English",
+      translatedDescription: translatedDescription || description,
       matchedVolunteer: matchedVolunteer
         ? {
             id: matchedVolunteer.id,
