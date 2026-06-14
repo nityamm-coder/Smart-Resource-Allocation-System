@@ -317,6 +317,9 @@ if (isDashboardPage) {
 
   function buildCard(req) {
     const urgencyClass = `u${req.urgency}`;
+    const sourceClass = req.source === "SMS" ? "sms" : "web";
+    const sourceLabel = req.source === "SMS" ? "📟 SMS" : "🌐 Web";
+    const sourceBadge = `<span class="badge-source ${sourceClass} ms-2">${sourceLabel}</span>`;
     
     // SLA and elapsed time calculations
     const createdDate = parseDate(req.createdAt);
@@ -375,7 +378,10 @@ if (isDashboardPage) {
     return `
       <div class="request-card urgency-${req.urgency} ${isSlaViolation ? 'sla-violation' : ''}" id="card-${req.id}">
         <div class="d-flex align-items-center justify-content-between gap-2 mb-2 flex-wrap">
-          <span class="badge-category">${getCategoryWithIcon(req.category)}</span>
+          <div>
+            <span class="badge-category">${getCategoryWithIcon(req.category)}</span>
+            ${sourceBadge}
+          </div>
           <div class="d-flex align-items-center">
             <span class="badge-urgency ${urgencyClass}">
               ⚡ ${urgencyLabel(req.urgency)}
@@ -697,6 +703,9 @@ if (isDashboardPage) {
   // Initial load
   loadRequests();
 
+  // Expose loadRequests globally so SMS gateway can trigger refresh
+  window.loadRequests = loadRequests;
+
   // Periodic rendering loop (every 10 seconds) to update timers and SLA checks in real-time
   setInterval(() => {
     if (allRequests.length > 0) {
@@ -704,3 +713,144 @@ if (isDashboardPage) {
     }
   }, 10000);
 }
+
+// ── Global: SMS Gateway Simulator Logic ──────────────────────
+const smsForm = document.getElementById("sms-simulator-form");
+if (smsForm) {
+  const smsComposer = document.getElementById("sms-composer");
+  const smsSenderPhone = document.getElementById("sms-sender-phone");
+  const smsChatBody = document.getElementById("sms-chat-body");
+  const smsConsoleContainer = document.getElementById("sms-console-container");
+  const smsConsoleLog = document.getElementById("sms-console-log");
+  const smsSendBtn = document.getElementById("sms-send-btn");
+  const smsTrackContainer = document.getElementById("sms-track-container");
+
+  function logConsole(message, type = "info") {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const logLine = document.createElement("div");
+    logLine.className = `console-line ${type}`;
+    logLine.innerHTML = `[${time}] ${message}`;
+    smsConsoleLog.appendChild(logLine);
+    smsConsoleLog.scrollTop = smsConsoleLog.scrollHeight;
+  }
+
+  function appendChatMessage(text, type = "received") {
+    const msgDiv = document.createElement("div");
+    msgDiv.className = `sms-message ${type}`;
+    msgDiv.innerHTML = `<div class="sms-text">${text}</div>`;
+    smsChatBody.appendChild(msgDiv);
+    smsChatBody.scrollTop = smsChatBody.scrollHeight;
+  }
+
+  smsForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const smsText = smsComposer.value.trim();
+    const senderPhone = smsSenderPhone.value.trim();
+
+    if (!smsText || !senderPhone) return;
+
+    // Reset UI
+    smsComposer.value = "";
+    smsSendBtn.disabled = true;
+    smsConsoleContainer.classList.remove("d-none");
+    smsConsoleLog.innerHTML = "";
+    smsTrackContainer.classList.add("d-none");
+    smsTrackContainer.innerHTML = "";
+
+    // 1. Show message in chat bubble
+    appendChatMessage(smsText, "sent");
+
+    // Helper sleep
+    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    try {
+      logConsole("📡 Simulating cellular SMS transmission...", "info");
+      await sleep(1000);
+
+      logConsole(`📥 SMS Gateway (+91 80000 12345) received raw text from ${senderPhone}`, "info");
+      await sleep(800);
+
+      logConsole("🧠 Routing to Gemini AI parser (gemini-2.5-flash)...", "warning");
+      await sleep(1200);
+
+      // Hit API
+      const res = await fetch("/api/simulate-sms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ smsText, senderPhone })
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || "Gateway classification failed.");
+      }
+
+      const data = await res.json();
+
+      logConsole(`✅ AI Parsing Complete! Language: ${data.detectedLanguage}`, "success");
+      logConsole(`   - Category: ${data.category}`, "success");
+      logConsole(`   - Urgency: ${data.urgency}/5`, "success");
+      logConsole(`   - Zone: ${data.zone}`, "success");
+      logConsole(`   - Address: ${data.address}`, "success");
+      logConsole(`   - Translated: "${data.translatedDescription}"`, "success");
+      await sleep(800);
+
+      logConsole(`💾 Saving request record to Firestore...`, "info");
+      await sleep(600);
+      logConsole(`✅ Request stored. Document ID: ${data.id}`, "success");
+
+      if (data.matchedVolunteer) {
+        logConsole(`🤝 Matched to Volunteer: ${data.matchedVolunteer.name} (${data.matchedVolunteer.phone})`, "success");
+      } else {
+        logConsole(`⚠️ No local volunteer available in ${data.zone} matching ${data.category}. Routed to NGO coordinator.`, "warning");
+      }
+
+      // Add a reply message on the phone chassis
+      appendChatMessage(`Gateway Reply: Request received. Urgency: ${data.urgency}/5. Matched Volunteer: ${data.matchedVolunteer ? data.matchedVolunteer.name : 'NGO Team'}. ID: ${data.id}`, "received");
+
+      // Auto-refresh the dashboard if we are on the dashboard page
+      if (window.loadRequests) {
+        logConsole("🔄 Refreshing NGO dashboard Kanban board...", "info");
+        await window.loadRequests();
+      } else {
+        // If we are on the index page, we can show a quick button in the console to track status
+        smsTrackContainer.classList.remove("d-none");
+        smsTrackContainer.innerHTML = `
+          <button class="btn btn-outline-info btn-xs text-white animate-pulse" style="font-size:0.75rem; border-color:#22d3ee;" onclick="trackSmsRequest('${data.id}')">
+            <i class="bi bi-eye-fill me-1"></i> Track Live Status
+          </button>
+        `;
+      }
+
+    } catch (err) {
+      logConsole(`❌ Gateway Error: ${err.message}`, "error");
+      appendChatMessage(`Gateway System Error: Unable to route request. Please retry.`, "received");
+    } finally {
+      smsSendBtn.disabled = false;
+    }
+  });
+}
+
+// Global helper for tracking simulated SMS request from the index page
+window.trackSmsRequest = (id) => {
+  // Close the SMS simulator modal
+  const smsModalEl = document.getElementById("sms-modal");
+  const modal = bootstrap.Modal.getInstance(smsModalEl);
+  if (modal) modal.hide();
+
+  // If we have showResult and status tracking (on index.html), load details
+  if (typeof showResult === "function") {
+    const placeholderContent = document.getElementById("placeholder-content");
+    if (placeholderContent) placeholderContent.classList.add("d-none");
+    
+    // Fetch and show status
+    fetch(`/api/requests/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          showResult(true, data.request);
+        }
+      })
+      .catch(err => console.error("Error loading status:", err));
+  }
+};

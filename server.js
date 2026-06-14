@@ -292,6 +292,107 @@ Example output:
   }
 });
 
+// ── Route: POST /api/simulate-sms ─────────────────────────────
+/**
+ * Simulates receiving an offline SMS request.
+ * Takes { smsText, senderPhone }. Uses Gemini to parse and extract information.
+ */
+app.post("/api/simulate-sms", async (req, res) => {
+  const { smsText, senderPhone } = req.body;
+  if (!smsText || !senderPhone) {
+    return res.status(400).json({ error: "Please provide smsText and senderPhone." });
+  }
+
+  try {
+    const systemPrompt = `
+You are a strict JSON-only parser and translation API for a disaster relief SMS gateway.
+Your job is to read a single raw SMS message from a victim (which may contain spelling errors, shorthand text, Hinglish, Hindi, Marathi, or English), extract the key details, classify it, and translate it to English.
+
+Rules:
+1. Return ONLY a raw JSON object. No markdown, no explanation, no extra text.
+2. The JSON must have exactly these keys: "name", "phone", "zone", "address", "description", "category", "urgency", "detectedLanguage".
+3. For keys:
+   - "name": Extracted name of the person needing help (e.g. "Amit Patil"). If not mentioned in the message, set this to "Unknown Victim".
+   - "phone": Extracted contact phone number from the message text. If no phone number is found in the text, set this to the sender's phone number: "${senderPhone}".
+   - "zone": Locate which of these hubs/zones is mentioned or is the closest match for the location: "Vasind", "Kalyan", "Thane", "Mumbai Central". If none matches and you can't guess, default to "Thane".
+   - "address": The specific address, landmarks, or street mentioned in the message.
+   - "description": Translate the request details into clean English. This should describe the specific need.
+   - "category": Must be exactly ONE of: "Food", "Medical", "Shelter", "Other".
+   - "urgency": An integer from 1 to 5, where 1 = low and 5 = critical.
+   - "detectedLanguage": The language the original text was written in (e.g. "English", "Hindi", "Marathi", "Hinglish").
+
+Example raw SMS:
+"Vasind area: need medical kit urgently for Amit, phone 9898989898, near station"
+Response:
+{"name": "Amit", "phone": "9898989898", "zone": "Vasind", "address": "near station", "description": "Need medical kit urgently", "category": "Medical", "urgency": 4, "detectedLanguage": "English"}
+
+Example raw SMS:
+"mumbai central, bhook lagi h khana bhejo door no 4"
+Response:
+{"name": "Unknown Victim", "phone": "${senderPhone}", "zone": "Mumbai Central", "address": "door no 4", "description": "Hungry, send food", "category": "Food", "urgency": 3, "detectedLanguage": "Hinglish"}
+    `.trim();
+
+    const fullPrompt = `${systemPrompt}\n\nSMS Message: "${smsText}"`;
+    const geminiResult = await geminiModel.generateContent(fullPrompt);
+    const rawText = geminiResult.response.text().trim();
+
+    const cleanedText = rawText.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(cleanedText);
+
+    const { name, phone, zone, address, description, category, urgency, detectedLanguage } = parsed;
+
+    // Match a volunteer
+    const matchedVolunteer = matchVolunteer(category, zone);
+
+    const timestamp = new Date().toISOString();
+    const requestRecord = {
+      description: smsText,
+      zone: zone || "Thane",
+      address: address || "N/A",
+      victimPhone: phone || senderPhone,
+      category: category || "Other",
+      urgency: Number(urgency) || 3,
+      detectedLanguage: detectedLanguage || "English",
+      translatedDescription: description || smsText,
+      matchedVolunteer: matchedVolunteer
+        ? {
+            id: matchedVolunteer.id,
+            name: matchedVolunteer.name,
+            skills: matchedVolunteer.skills,
+            zone: matchedVolunteer.zone,
+            phone: matchedVolunteer.phone,
+          }
+        : null,
+      status: "Open",
+      source: "SMS",
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      timeline: [
+        {
+          status: "Open",
+          timestamp,
+          note: `Request received via SMS Gateway (Simulated). Sender Phone: ${senderPhone}. AI extracted contact: ${phone || senderPhone}, name: ${name || "Unknown"}, language: ${detectedLanguage}. AI Urgency: ${urgency}/5.` +
+                (matchedVolunteer ? ` Automatically matched to volunteer ${matchedVolunteer.name}.` : " No volunteer matched.")
+        }
+      ]
+    };
+
+    // Save to Firestore
+    const docRef = await db.collection("requests").add(requestRecord);
+    console.log(`✅ SMS request saved to Firestore with ID: ${docRef.id}`);
+
+    return res.status(201).json({
+      success: true,
+      id: docRef.id,
+      ...requestRecord,
+      createdAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error("❌ Error in /api/simulate-sms:", err.message);
+    return res.status(500).json({ error: "Something went wrong processing SMS. Check server logs." });
+  }
+});
+
+
 // ── Route: GET /api/requests/:id ─────────────────────────────
 /**
  * Fetches the details/status of a single request.
