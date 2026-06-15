@@ -44,6 +44,66 @@ if (isIndexPage) {
     btnSpinner.classList.toggle("d-none", !loading);
   }
 
+  // ── Rate Limit Error Handler ──────────────────────────────────
+  // Called when the server returns HTTP 429 (Too Many Requests).
+  // Shows a distinctive banner with a live countdown timer so the
+  // user knows exactly when they can try again.
+  let rateLimitCountdownInterval = null;
+
+  function showRateLimitError(waitMinutes = 15) {
+    // Clear any previous countdown
+    if (rateLimitCountdownInterval) clearInterval(rateLimitCountdownInterval);
+
+    // Hide placeholder, show result panel
+    if (placeholderContent) placeholderContent.classList.add("d-none");
+    resultBanner.classList.remove("d-none", "alert-success", "alert-danger");
+    resultBanner.classList.add("rate-limit-banner");
+
+    // Disable the submit button for the full cooldown window
+    submitBtn.disabled = true;
+
+    let totalSeconds = waitMinutes * 60;
+
+    function formatTime(secs) {
+      const m = Math.floor(secs / 60).toString().padStart(2, "0");
+      const s = (secs % 60).toString().padStart(2, "0");
+      return `${m}:${s}`;
+    }
+
+    function renderBanner(secondsLeft) {
+      resultBanner.innerHTML = `
+        <div class="rate-limit-icon">🛡️</div>
+        <h5 class="rate-limit-title">Too Many Submissions</h5>
+        <p class="rate-limit-msg">
+          You've submitted too many requests in a short time.<br>
+          This limit protects our system and ensures genuine victims get priority.
+        </p>
+        <div class="rate-limit-countdown">
+          <span class="countdown-label">You can try again in</span>
+          <span class="countdown-timer" id="countdown-display">${formatTime(secondsLeft)}</span>
+        </div>
+        <p class="rate-limit-hint">The form will unlock automatically when the timer reaches 00:00.</p>
+      `;
+    }
+
+    renderBanner(totalSeconds);
+
+    rateLimitCountdownInterval = setInterval(() => {
+      totalSeconds--;
+      const display = document.getElementById("countdown-display");
+      if (display) display.textContent = formatTime(totalSeconds);
+
+      if (totalSeconds <= 0) {
+        clearInterval(rateLimitCountdownInterval);
+        // Re-enable the button and reset the banner
+        submitBtn.disabled = false;
+        resultBanner.classList.remove("rate-limit-banner");
+        resultBanner.classList.add("d-none");
+        if (placeholderContent) placeholderContent.classList.remove("d-none");
+      }
+    }, 1000);
+  }
+
   let statusInterval = null;
 
   function getCategoryWithIcon(category) {
@@ -232,6 +292,13 @@ if (isIndexPage) {
       });
 
       const data = await response.json();
+
+      // ── Special case: rate limit hit (HTTP 429) ──────────────
+      // Show a dedicated countdown banner instead of a generic error.
+      if (response.status === 429) {
+        showRateLimitError(15);
+        return; // Don't fall through to generic error handler
+      }
 
       if (!response.ok) {
         throw new Error(data.error || "Unknown server error.");
@@ -782,6 +849,14 @@ if (smsForm) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ smsText, senderPhone })
       });
+
+      if (res.status === 429) {
+        // Rate limit hit on the SMS simulator endpoint
+        logConsole("🛡️ RATE LIMIT: Too many SMS simulations. Please wait 1 hour before trying again.", "error");
+        appendChatMessage("⚠️ Gateway blocked: You have sent too many SMS simulations. Please wait 1 hour.", "received");
+        smsSendBtn.disabled = false;
+        return;
+      }
 
       if (!res.ok) {
         const err = await res.json();

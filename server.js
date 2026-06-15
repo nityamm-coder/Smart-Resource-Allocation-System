@@ -14,6 +14,7 @@ require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
+const rateLimit = require("express-rate-limit");
 
 // Google Gemini AI SDK
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -30,6 +31,62 @@ app.use(express.json());
 // Serve everything inside the /public folder as static files
 // e.g. GET /index.html → returns public/index.html
 app.use(express.static(path.join(__dirname, "public")));
+
+// ── Rate Limiters (Spam Control) ──────────────────────────────
+// These middleware functions block users who send too many requests
+// in a short time window — a strong signal of bot/spam activity.
+
+/**
+ * General API limiter — applied to ALL /api/* routes.
+ * Allows 100 requests per 15 minutes per IP address.
+ * This is a safety net to prevent any kind of API abuse.
+ */
+const generalApiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15-minute sliding window
+  max: 100,                  // Max 100 requests per window per IP
+  standardHeaders: true,     // Send RateLimit-* headers so clients know their limits
+  legacyHeaders: false,
+  message: {
+    error: "Too many requests from this IP. Please wait 15 minutes and try again.",
+    retryAfter: "15 minutes",
+  },
+});
+
+/**
+ * Strict submit limiter — applied ONLY to POST /api/submit.
+ * Each submission triggers Gemini AI + Firestore write — these are expensive.
+ * We allow only 5 submissions per 15 minutes per IP to prevent spam flooding.
+ */
+const submitLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15-minute window
+  max: 5,                   // Max 5 form submissions per window
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "You have submitted too many requests. Please wait 15 minutes before trying again. This limit prevents spam and ensures resources reach genuine victims.",
+    retryAfter: "15 minutes",
+  },
+});
+
+/**
+ * SMS simulation limiter — applied to POST /api/simulate-sms.
+ * Allows 10 SMS simulations per hour per IP.
+ */
+const smsLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1-hour window
+  max: 10,                   // Max 10 SMS simulations per hour
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    error: "Too many SMS simulation requests. Please wait an hour before trying again.",
+    retryAfter: "1 hour",
+  },
+});
+
+// Apply the general limiter to every /api/* route globally.
+// The stricter per-route limiters below add an extra layer on top of this.
+app.use("/api/", generalApiLimiter);
+console.log("🛡️  Rate limiting enabled: General(100/15min), Submit(5/15min), SMS(10/hr)");
 
 // ── Firebase Initialization ───────────────────────────────────
 // We parse the service account key from the environment variable.
@@ -229,7 +286,7 @@ function matchVolunteer(category, zone, dynamicVolunteersList = volunteers) {
  *  4. Save everything to Firestore
  *  5. Send the full result back to the frontend
  */
-app.post("/api/submit", async (req, res) => {
+app.post("/api/submit", submitLimiter, async (req, res) => {
   const { description, zone, address, victimPhone } = req.body;
 
   // Basic validation — make sure we got something to work with
@@ -332,7 +389,7 @@ Example output:
  * Simulates receiving an offline SMS request.
  * Takes { smsText, senderPhone }. Uses Gemini to parse and extract information.
  */
-app.post("/api/simulate-sms", async (req, res) => {
+app.post("/api/simulate-sms", smsLimiter, async (req, res) => {
   const { smsText, senderPhone } = req.body;
   if (!smsText || !senderPhone) {
     return res.status(400).json({ error: "Please provide smsText and senderPhone." });

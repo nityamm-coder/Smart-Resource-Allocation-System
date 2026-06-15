@@ -1133,3 +1133,87 @@ footer {
   border: 1px solid rgba(14, 165, 233, 0.25);
 }
 
+/* ── Rate Limit Banner ───────────────────────────────────────
+   Shown when server returns HTTP 429 (Too Many Requests).
+   Uses amber/orange palette — visually distinct from the
+   success (green) and generic error (red) banners.
+   ─────────────────────────────────────────────────────────── */
+@keyframes rate-limit-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  70%  { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+#result-banner.rate-limit-banner {
+  background: rgba(245, 158, 11, 0.07);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--border-radius);
+  color: #fde68a;
+  padding: 2rem 1.8rem;
+  text-align: center;
+  animation: rate-limit-pulse 2s ease-out infinite;
+}
+
+.rate-limit-icon {
+  font-size: 2.8rem;
+  margin-bottom: 0.6rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+}
+
+.rate-limit-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fbbf24;
+  margin-bottom: 0.5rem;
+}
+
+.rate-limit-msg {
+  font-size: 0.88rem;
+  color: #fde68a;
+  opacity: 0.85;
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.rate-limit-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: 12px;
+  padding: 0.9rem 1.5rem;
+  margin: 0 auto 1rem;
+  max-width: 220px;
+}
+
+.countdown-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fbbf24;
+  opacity: 0.7;
+}
+
+.countdown-timer {
+  font-family: "Outfit", monospace;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fbbf24;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.rate-limit-hint {
+  font-size: 0.75rem;
+  color: #fde68a;
+  opacity: 0.55;
+  margin-bottom: 0;
+}
+
+
