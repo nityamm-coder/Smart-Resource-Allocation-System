@@ -657,6 +657,7 @@ if (isDashboardPage) {
             <div class="roster-header">
               <span class="status-dot ${statusClass}" title="${statusLabel}"></span>
               <h4 class="roster-name">${vol.name}</h4>
+              <span class="roster-status-badge ${statusClass}">${statusLabel}</span>
             </div>
             <div class="roster-meta">
               <i class="bi bi-geo-alt-fill text-danger"></i>${vol.zone}
@@ -665,8 +666,8 @@ if (isDashboardPage) {
               <i class="bi bi-telephone-fill text-success"></i>
               <a href="tel:${vol.phone}">${vol.phone}</a>
             </div>
-            <div class="roster-skills mt-1">
-              ${skillsBadges}
+            <div class="roster-skills mt-2">
+              <div class="roster-skills-badges">${skillsBadges}</div>
             </div>
           </div>
         `;

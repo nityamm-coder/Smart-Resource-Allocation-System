@@ -660,7 +660,7 @@ footer {
   background: rgba(15, 23, 42, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 2rem 7.5rem 2rem ;
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
@@ -730,8 +730,9 @@ footer {
 
 .roster-card .roster-skills {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.3rem;
+  margin-top: 0.5rem;
 }
 
 .roster-skill-badge {
@@ -744,6 +745,47 @@ footer {
   border-radius: 6px;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+
+/* Skills section label ("🔧 Skills") */
+.roster-skills-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.35rem;
+}
+
+/* Wraps the skill badge pills */
+.roster-skills-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+/* Inline Available / Busy text badge next to volunteer name */
+.roster-status-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.roster-status-badge.available {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.roster-status-badge.busy {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 /* Custom Scrollbar for Roster List */
