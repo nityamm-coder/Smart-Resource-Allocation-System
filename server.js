@@ -678,6 +678,47 @@ app.patch("/api/requests/:id/status", async (req, res) => {
   }
 });
 
+// ── Route: DELETE /api/requests/resolved ──────────────────────
+/**
+ * Bulk deletes all requests with status "Resolved".
+ */
+app.delete("/api/requests/resolved", async (req, res) => {
+  try {
+    const snapshot = await db.collection("requests").where("status", "==", "Resolved").get();
+    if (snapshot.empty) {
+      return res.json({ success: true, message: "No resolved requests to delete." });
+    }
+
+    const batch = db.batch();
+    snapshot.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    await batch.commit();
+
+    console.log(`🗑️ Bulk deleted ${snapshot.size} resolved requests.`);
+    return res.json({ success: true, message: `Successfully deleted ${snapshot.size} resolved requests.` });
+  } catch (err) {
+    console.error("❌ Error bulk-deleting resolved requests:", err.message);
+    return res.status(500).json({ error: "Could not delete resolved requests." });
+  }
+});
+
+// ── Route: DELETE /api/requests/:id ───────────────────────────
+/**
+ * Deletes a single request by ID.
+ */
+app.delete("/api/requests/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.collection("requests").doc(id).delete();
+    console.log(`🗑️ Request deleted: ${id}`);
+    return res.json({ success: true, message: "Request deleted successfully." });
+  } catch (err) {
+    console.error("❌ Error deleting request:", err.message);
+    return res.status(500).json({ error: "Could not delete request." });
+  }
+});
+
 // ── Start Server (local dev only) ────────────────────────────
 // We only call app.listen when running locally (not on Vercel).
 // Vercel imports `module.exports = app` and handles listening itself.

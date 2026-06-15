@@ -593,6 +593,9 @@ if (isDashboardPage) {
               class="status-select"
               data-id="${req.id}"
             >${optionsHtml}</select>
+            <button class="delete-btn" data-id="${req.id}" title="Delete Request Permanently">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
           </div>
           ${durationText}
         </div>
@@ -642,6 +645,22 @@ if (isDashboardPage) {
         await updateStatus(requestId, newStatus);
       });
     });
+
+    document.querySelectorAll(".delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const button = e.target.closest(".delete-btn");
+        if (!button) return;
+        const requestId = button.dataset.id;
+        if (confirm("Are you sure you want to delete this request permanently from the database?")) {
+          await deleteRequest(requestId);
+        }
+      });
+    });
+
+    const clearResolvedBtn = document.getElementById("clear-resolved-btn");
+    if (clearResolvedBtn) {
+      clearResolvedBtn.style.display = resolved.length > 0 ? "inline-flex" : "none";
+    }
   }
 
   function applyFilters() {
@@ -816,6 +835,22 @@ if (isDashboardPage) {
     }
   }
 
+  async function deleteRequest(id) {
+    try {
+      const response = await fetch(`${API_BASE}/api/requests/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete request.");
+      }
+
+      await loadRequests();
+    } catch (err) {
+      alert(`Error deleting request: ${err.message}`);
+    }
+  }
+
   searchFilterInput.addEventListener("input", (e) => {
     searchQuery = e.target.value.trim();
     applyFilters();
@@ -878,6 +913,30 @@ if (isDashboardPage) {
   }
 
   refreshBtn.addEventListener("click", loadRequests);
+
+  const clearResolvedBtn = document.getElementById("clear-resolved-btn");
+  if (clearResolvedBtn) {
+    clearResolvedBtn.addEventListener("click", async () => {
+      const count = parseInt(statResolved.textContent, 10) || 0;
+      if (count === 0) return;
+      
+      if (confirm(`Are you sure you want to delete all ${count} resolved requests permanently from the database?`)) {
+        try {
+          const response = await fetch(`${API_BASE}/api/requests/resolved`, {
+            method: "DELETE",
+          });
+          
+          if (!response.ok) {
+            throw new Error("Failed to delete resolved requests.");
+          }
+          
+          await loadRequests();
+        } catch (err) {
+          alert(`Error clearing resolved requests: ${err.message}`);
+        }
+      }
+    });
+  }
 
   // Initial load
   loadRequests();

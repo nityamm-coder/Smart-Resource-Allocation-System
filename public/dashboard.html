@@ -201,10 +201,13 @@
 
             <!-- RESOLVED Column -->
             <div class="col-12 col-lg-4">
-              <div class="kanban-column-header resolved">
+              <div class="kanban-column-header resolved d-flex align-items-center">
                 <i class="bi bi-check-circle"></i>
-                Resolved
-                <span class="ms-auto badge bg-success" id="count-resolved">0</span>
+                <span class="me-2">Resolved</span>
+                <span class="badge bg-success me-auto" id="count-resolved">0</span>
+                <button id="clear-resolved-btn" class="btn btn-outline-danger btn-sm py-0 px-2 border-0" style="font-size:0.75rem; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #fca5a5; display: none;" title="Delete all resolved requests from database">
+                  <i class="bi bi-trash-fill me-1"></i>Clear All
+                </button>
               </div>
               <div id="col-resolved">
                 <!-- Request cards injected here -->
