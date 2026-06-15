@@ -142,7 +142,7 @@ const volunteers = [
     name: "Anita Desai",
     skills: ["Shelter", "Construction"],
     zone: "Thane",
-    available: false, // Currently busy
+    available: true,
     phone: "+91 76543 21098",
   },
   {
@@ -219,7 +219,7 @@ async function getDynamicVolunteers() {
       const isBusy = busyVolunteerIds.has(v.id);
       return {
         ...v,
-        available: v.id === "v003" ? false : !isBusy, // Keep Anita Desai (v003) busy as a sample, update others
+        available: !isBusy,
       };
     });
   } catch (err) {
