@@ -273,10 +273,34 @@ if (isIndexPage) {
       gpsBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" style="width:0.85rem; height:0.85rem;" role="status"></span>Locating...`;
 
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
-          addressField.value = `GPS: Lat ${lat.toFixed(6)}, Lng ${lng.toFixed(6)} (https://maps.google.com/?q=${lat},${lng})`;
+          
+          let localityText = "";
+          try {
+            // Use BigDataCloud's free reverse geocoding API for fast client-side locality lookup
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`);
+            if (res.ok) {
+              const data = await res.json();
+              const parts = [];
+              if (data.locality) parts.push(data.locality);
+              if (data.city && data.city !== data.locality) parts.push(data.city);
+              if (data.principalSubdivision) parts.push(data.principalSubdivision);
+              if (parts.length > 0) {
+                localityText = parts.join(", ") + " (GPS: Lat ";
+              }
+            }
+          } catch (e) {
+            console.warn("Reverse geocoding failed or offline, falling back to raw coordinates:", e);
+          }
+
+          if (localityText) {
+            addressField.value = `${localityText}${lat.toFixed(6)}, Lng ${lng.toFixed(6)}) (https://maps.google.com/?q=${lat},${lng})`;
+          } else {
+            addressField.value = `GPS: Lat ${lat.toFixed(6)}, Lng ${lng.toFixed(6)} (https://maps.google.com/?q=${lat},${lng})`;
+          }
+
           gpsBtn.disabled = false;
           gpsBtn.innerHTML = `<i class="bi bi-check-lg text-success me-1"></i>Shared`;
           setTimeout(() => {
