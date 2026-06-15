@@ -1270,4 +1270,220 @@ footer {
   margin-bottom: 0;
 }
 
+/* ============================================================
+   RESPONSIVE STYLES — Mobile & Tablet
+   ============================================================
+   Bootstrap handles column stacking, but custom overrides
+   are needed for typography, spacing, and component sizing.
+   ============================================================ */
+
+/* ── Tablet (≤ 992px) ──────────────────────────────────────── */
+@media (max-width: 992px) {
+  /* Reduce container-fluid side padding so content isn't squeezed */
+  .container-fluid {
+    padding-right: 1rem !important;
+    padding-left:  1rem !important;
+  }
+
+  /* Kanban cards: reduce side padding so text doesn't wrap too early */
+  .request-card {
+    padding: 1rem 1rem;
+  }
+
+  /* Stat cards: allow them to stack in 2 columns */
+  #stats-bar .stat-card .stat-number {
+    font-size: 1.75rem;
+  }
+
+  /* Dashboard header: smaller title */
+  .dashboard-header h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Filter bar: let buttons wrap naturally */
+  .filter-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .btn-filter-group {
+    width: 100%;
+  }
+
+  .filter-input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  /* Volunteer roster sidebar: full width below xl, reduce max-height */
+  #volunteers-list {
+    max-height: 400px;
+  }
+}
+
+/* ── Mobile (≤ 768px / md breakpoint) ─────────────────────── */
+@media (max-width: 768px) {
+  /* ── Navbar ── */
+  .navbar-brand {
+    font-size: 1.3rem;  /* Was 2.2rem — overflowed on phones */
+  }
+
+  .navbar > .container {
+    padding: 0.5rem 1rem;
+  }
+
+  /* ── Hero Section ── */
+  .hero-section {
+    padding: 2.5rem 1.25rem 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-section h1 {
+    font-size: 1.6rem;      /* Was 2.5rem — too large for narrow screens */
+    line-height: 1.25;
+  }
+
+  .hero-section p {
+    font-size: 0.95rem;
+  }
+
+  /* ── Form Card ── */
+  .form-card {
+    padding: 1.5rem 1.25rem; /* Was 2.5rem — wasted screen space on mobile */
+    margin-bottom: 1.5rem;
+    border-radius: 12px;
+  }
+
+  /* ── Status stepper inside result banner ── */
+  .status-stepper {
+    margin: 1.2rem 0 0.5rem;
+  }
+
+  .step {
+    font-size: 0.68rem;
+  }
+
+  .step-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.75rem;
+  }
+
+  /* ── Rate Limit Countdown banner ── */
+  .rate-limit-countdown {
+    max-width: 180px;
+  }
+
+  .countdown-timer {
+    font-size: 1.8rem;
+  }
+
+  /* ── Dashboard header ── */
+  .dashboard-header {
+    padding: 1.5rem 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.3rem;
+  }
+
+  /* ── Kanban column headers ── */
+  .kanban-column-header {
+    font-size: 1rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  /* ── SMS floating button: move up slightly on mobile ── */
+  .sms-simulator-btn {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+
+  /* ── SMS phone mock: fit narrow screens ── */
+  .phone-mock-container {
+    max-width: 100%;
+  }
+
+  .phone-screen {
+    border-radius: 12px;
+  }
+
+  /* ── How It Works section: tighten spacing ── */
+  .how-card {
+    padding: 0.75rem !important;
+  }
+
+  .how-card i {
+    font-size: 1.5rem !important;
+  }
+
+  .font-label {
+    font-size: 0.72rem;
+  }
+
+  /* ── Volunteer roster cards: compact on mobile ── */
+  .roster-card {
+    padding: 0.7rem 0.85rem 0.85rem 0.85rem;
+  }
+
+  .roster-card .roster-name {
+    font-size: 0.82rem;
+  }
+
+  /* ── Inventory bar: reduce card padding ── */
+  #inventory-bar .p-3 {
+    padding: 0.75rem !important;
+  }
+}
+
+/* ── Small Mobile (≤ 480px) ───────────────────────────────── */
+@media (max-width: 480px) {
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+
+  .hero-section h1 {
+    font-size: 1.35rem;
+  }
+
+  .form-card {
+    padding: 1.25rem 1rem;
+    border-radius: 10px;
+  }
+
+  /* Stack the badge filters in a 2-per-row wrap on very small phones */
+  .btn-filter {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  /* Make stat numbers slightly smaller */
+  .stat-card .stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* Result banner: tighter padding */
+  #result-banner {
+    padding: 1rem 1.1rem;
+    font-size: 0.88rem;
+  }
+
+  /* Countdown timer */
+  .countdown-timer {
+    font-size: 1.5rem;
+  }
+
+  /* Footer text */
+  footer {
+    font-size: 0.75rem;
+    padding: 1.5rem 1rem;
+  }
+}
+
+
 
