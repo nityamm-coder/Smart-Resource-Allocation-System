@@ -54,7 +54,7 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 | **Backend** | Node.js + Express.js | Fast, minimalist backend server handling APIs and logic. |
 | **Database** | Firebase Firestore | Real-time NoSQL cloud database for active requests, inventory, and logs. |
 | **AI / LLM** | Google Gemini 2.5 Flash | Free-tier friendly, lightning-fast LLM handling categorization, translation, and urgency analysis. |
-| **Frontend UI** | HTML5, CSS3, JavaScript (ES6+) | Vanilla framework-free web pages using custom responsive, glassmorphic styling. |
+| **Frontend UI** | HTML5, CSS3, JavaScript (ES6+), Leaflet.js | Vanilla web pages using glassmorphic styling, responsive layout, and interactive map widgets. |
 | **CSS Framework** | Bootstrap 5 + Icons | Grid layouts and premium UI components. |
 | **Security** | Express Rate Limit | Anti-spam and request throttling (General API, SMS Gateway, Form Submit limiters). |
 | **Dev Tools** | nodemon, dotenv | Fast development and local environment configuration. |
@@ -72,8 +72,9 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 7. **Rate Limiting & Client-Side Counter:** Prevents API abuse and flood submissions. When rate limits are reached, clients see an active countdown warning banner showing when they can submit again.
 8. **WhatsApp Quick-Connect:** One-click button allows coordinators to start a pre-filled WhatsApp conversation directly with matched volunteers.
 9. **One-Click GPS Geolocation & Geocoding:** Victims can share their real-time coordinates using their device's GPS. The system automatically performs a reverse-geocoding lookup to translate raw numbers into a human-readable city/state/locality string (e.g. `Shahapur, Maharashtra`), with a silent offline fallback to raw coordinates.
-10. **Interactive Google Maps Links:** The NGO Kanban dashboard dynamically parses coordinates inside requests, replacing messy, raw URL text with responsive, crimson glassmorphic button shortcuts labeled "Open in Google Maps".
-11. **Fully Responsive Layout:** Fully styled for optimal layout rendering on desktop, tablets, and smartphones.
+10. **Interactive Dark Mode Map View:** Toggle seamlessly between the Kanban Board and a live interactive map powered by Leaflet.js and CartoDB Dark Matter. It automatically plots all active requests as custom pulsating markers colored by status (Purple for Open, Amber/Orange for In Progress). Higher urgency requests pulse at faster intervals to highlight critical areas.
+11. **Map-Based Status Updates:** Click on any marker on the map to inspect full details, contact details, assigned volunteer status, and change request status directly from the map popup.
+12. **Fully Responsive Layout:** Fully styled for optimal layout rendering on desktop, tablets, and smartphones.
 
 ---
 
@@ -197,9 +198,9 @@ The backend calculates volunteer matching dynamically on each submission:
 smart-resource-allocation/
 ├── public/
 │   ├── index.html        # Victim Submission Form
-│   ├── dashboard.html    # NGO Kanban Board and Control Center
-│   ├── app.js            # Frontend JavaScript (Realtime feeds, timeline actions, UI updates)
-│   └── style.css         # Custom CSS (Sleek dark theme, glassmorphic styling, responsive layout)
+│   ├── dashboard.html    # NGO Kanban Board, Interactive Dark Map, and Control Center
+│   ├── app.js            # Frontend JavaScript (Realtime feeds, Leaflet map overlays, timeline actions, UI updates)
+│   └── style.css         # Custom CSS (Sleek dark theme, pulsating status markers, glassmorphic styling, responsive layout)
 ├── server.js             # Express Backend Server (Gemini integration, matching algorithm, API endpoints)
 ├── package.json          # Node project manifest
 ├── vercel.json           # Vercel Serverless hosting configurations
