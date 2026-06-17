@@ -38,6 +38,9 @@
           <button id="refresh-btn" class="btn btn-outline-light btn-sm">
             <i class="bi bi-arrow-clockwise me-1"></i>Refresh
           </button>
+          <button id="view-logs-btn" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-clock-history me-1"></i>History Logs
+          </button>
           <a href="index.html" class="btn btn-light btn-sm">
             <i class="bi bi-plus-circle me-1"></i>New Request
           </a>
@@ -469,6 +472,55 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Logs Full-screen Modal / Overlay -->
+    <div class="logs-overlay-container d-none" id="logs-modal-container">
+      <div class="logs-modal-content">
+        <div class="logs-modal-header">
+          <h2 class="logs-modal-title"><i class="bi bi-clock-history me-2"></i>Complete History Logs</h2>
+          <button type="button" class="logs-close-btn" id="logs-close-btn">&times;</button>
+        </div>
+        
+        <!-- Filter Tabs / Controls -->
+        <div class="logs-filters-bar mb-3">
+          <button class="log-filter-tab active" data-filter="all">All Logs</button>
+          <button class="log-filter-tab" data-filter="resolved">Resolved</button>
+          <button class="log-filter-tab" data-filter="resolved_deleted">Resolved (Deleted)</button>
+          <button class="log-filter-tab" data-filter="open_deleted">Open (Deleted)</button>
+          <button class="log-filter-tab" data-filter="inprogress_deleted">In Progress (Deleted)</button>
+        </div>
+        
+        <!-- Logs Table / Container -->
+        <div class="logs-table-wrapper">
+          <table class="logs-table">
+            <thead>
+              <tr>
+                <th>Issue Details</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Volunteer</th>
+                <th>Final Status</th>
+                <th>Archived At</th>
+              </tr>
+            </thead>
+            <tbody id="logs-table-body">
+              <!-- Logs rows will be populated dynamically -->
+            </tbody>
+          </table>
+          <div id="logs-empty-msg" class="text-center py-4 d-none text-muted">
+            <i class="bi bi-folder2-open display-4 mb-2"></i>
+            <p>No history logs found matching this filter.</p>
+          </div>
+        </div>
+
+        <!-- Pagination Bar -->
+        <div class="logs-pagination-footer mt-3 text-center">
+          <button id="logs-load-more-btn" class="btn btn-outline-primary btn-sm px-4">
+            <i class="bi bi-arrow-down-circle me-1"></i>Load More
+          </button>
         </div>
       </div>
     </div>

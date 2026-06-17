@@ -1605,3 +1605,236 @@ window.trackSmsRequest = (id) => {
       .catch(err => console.error("Error loading status:", err));
   }
 };
+
+// ── History Logs Logic ──────────────────────────────────────────
+let currentLogsFilter = "all";
+let lastArchivedAtCursor = null;
+let hasMoreLogs = true;
+const LOGS_LIMIT = 50;
+
+function initHistoryLogs() {
+  const viewLogsBtn = document.getElementById("view-logs-btn");
+  const logsModalContainer = document.getElementById("logs-modal-container");
+  const logsCloseBtn = document.getElementById("logs-close-btn");
+  const logsLoadMoreBtn = document.getElementById("logs-load-more-btn");
+  const logsTableBody = document.getElementById("logs-table-body");
+  const logsEmptyMsg = document.getElementById("logs-empty-msg");
+  const filterTabs = document.querySelectorAll(".log-filter-tab");
+
+  if (!viewLogsBtn || !logsModalContainer) return;
+
+  // Show Modal
+  viewLogsBtn.addEventListener("click", () => {
+    logsModalContainer.classList.remove("d-none");
+    fetchLogs(true);
+  });
+
+  // Close Modal
+  const closeModal = () => {
+    logsModalContainer.classList.add("d-none");
+  };
+  logsCloseBtn.addEventListener("click", closeModal);
+  logsModalContainer.addEventListener("click", (e) => {
+    if (e.target === logsModalContainer) closeModal();
+  });
+
+  // Filter tabs click
+  filterTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      filterTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentLogsFilter = tab.dataset.filter;
+      fetchLogs(true);
+    });
+  });
+
+  // Load More click
+  logsLoadMoreBtn.addEventListener("click", () => {
+    if (hasMoreLogs) {
+      fetchLogs(false);
+    }
+  });
+
+  async function fetchLogs(reset = false) {
+    if (reset) {
+      lastArchivedAtCursor = null;
+      hasMoreLogs = true;
+      logsTableBody.innerHTML = "";
+      logsEmptyMsg.classList.add("d-none");
+      logsLoadMoreBtn.disabled = false;
+      logsLoadMoreBtn.innerHTML = `<i class="bi bi-arrow-down-circle me-1"></i>Load More`;
+    }
+
+    try {
+      logsLoadMoreBtn.disabled = true;
+      logsLoadMoreBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Loading...`;
+
+      let url = `/api/logs?limit=${LOGS_LIMIT}&filter=${currentLogsFilter}`;
+      if (lastArchivedAtCursor) {
+        url += `&lastArchivedAt=${encodeURIComponent(lastArchivedAtCursor)}`;
+      }
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.success) {
+        renderLogs(data.logs, reset);
+        lastArchivedAtCursor = data.nextCursor;
+        hasMoreLogs = data.hasMore;
+
+        if (reset && data.logs.length === 0) {
+          logsEmptyMsg.classList.remove("d-none");
+          logsLoadMoreBtn.classList.add("d-none");
+        } else if (!hasMoreLogs) {
+          logsLoadMoreBtn.innerHTML = `No More Logs`;
+          logsLoadMoreBtn.disabled = true;
+          logsLoadMoreBtn.classList.remove("d-none");
+        } else {
+          logsLoadMoreBtn.innerHTML = `<i class="bi bi-arrow-down-circle me-1"></i>Load More`;
+          logsLoadMoreBtn.disabled = false;
+          logsLoadMoreBtn.classList.remove("d-none");
+        }
+      }
+    } catch (err) {
+      console.error("Error fetching logs:", err);
+      if (typeof showToast === "function") {
+        showToast("Could not load history logs.", "danger");
+      }
+      logsLoadMoreBtn.innerHTML = `Error Loading Logs`;
+    }
+  }
+
+  function renderLogs(logs, reset) {
+    const rows = logs.map(log => {
+      const archivedDate = new Date(log.archivedAt);
+      const dateStr = archivedDate.toLocaleDateString([], { month: "short", day: "numeric" });
+      const timeStr = archivedDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const formattedTime = `${dateStr}, ${timeStr}`;
+
+      const volunteerName = log.matchedVolunteer ? log.matchedVolunteer.name : "Unassigned";
+      
+      let statusClass = "resolved";
+      let statusLabel = "Resolved";
+      if (log.deleted) {
+        if (log.status === "Resolved") {
+          statusClass = "resolved-deleted";
+          statusLabel = "Resolved (Deleted)";
+        } else if (log.status === "In Progress") {
+          statusClass = "inprogress-deleted";
+          statusLabel = "In Progress (Deleted)";
+        } else {
+          statusClass = "open-deleted";
+          statusLabel = "Open (Deleted)";
+        }
+      }
+
+      return `
+        <tr class="clickable" data-log-id="${log.id}">
+          <td>
+            <div class="fw-semibold text-white">${log.description}</div>
+            <div class="small text-muted" style="font-size:0.75rem;">${log.address || log.zone}</div>
+          </td>
+          <td><span class="badge bg-secondary-subtle text-light-emphasis border border-secondary-subtle px-2 py-1" style="font-size:0.72rem;">${log.category || 'Other'}</span></td>
+          <td><span class="text-muted small"><i class="bi bi-geo-alt-fill text-danger me-1"></i>${log.zone}</span></td>
+          <td><span class="text-muted small"><i class="bi bi-person-fill me-1"></i>${volunteerName}</span></td>
+          <td><span class="badge-log-status ${statusClass}">${statusLabel}</span></td>
+          <td><span class="text-muted small">${formattedTime}</span></td>
+        </tr>
+      `;
+    }).join("");
+
+    if (reset) {
+      logsTableBody.innerHTML = rows;
+    } else {
+      logsTableBody.insertAdjacentHTML("beforeend", rows);
+    }
+
+    // Add expansion click handlers
+    document.querySelectorAll("#logs-table-body tr.clickable").forEach(row => {
+      if (row.dataset.listenerAdded) return;
+      row.dataset.listenerAdded = "true";
+
+      row.addEventListener("click", () => {
+        const logId = row.dataset.logId;
+        const nextRow = row.nextElementSibling;
+        
+        if (nextRow && nextRow.classList.contains("expanded-details-row")) {
+          nextRow.remove();
+          row.classList.remove("expanded");
+        } else {
+          const logObj = logs.find(l => l.id === logId);
+          if (!logObj) return;
+
+          row.classList.add("expanded");
+          const detailsHtml = buildLogDetailsHtml(logObj);
+          row.insertAdjacentHTML("afterend", `
+            <tr class="expanded-details-row">
+              <td colspan="6">
+                <div class="log-details-container" style="animation: slideDownFade 0.2s ease-out;">
+                  ${detailsHtml}
+                </div>
+              </td>
+            </tr>
+          `);
+        }
+      });
+    });
+  }
+
+  function buildLogDetailsHtml(log) {
+    const volName = log.matchedVolunteer ? log.matchedVolunteer.name : "None";
+    const volPhone = log.matchedVolunteer ? log.matchedVolunteer.phone : "N/A";
+    const createdDate = log.createdAt ? new Date(log.createdAt).toLocaleString() : "N/A";
+    const archivedDate = new Date(log.archivedAt).toLocaleString();
+
+    const timelineHtml = log.timeline && log.timeline.length > 0
+      ? `<div class="timeline-container p-2 mt-2" style="font-size:0.75rem; border-left:2px solid rgba(255,255,255,0.1); padding-left:1rem !important;">
+           ${log.timeline.map(t => {
+             const time = new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+             const date = new Date(t.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
+             return `
+               <div class="mb-1" style="border-bottom: 1px dashed rgba(255,255,255,0.03); pb-1;">
+                 <span class="text-info fw-semibold" style="font-size:0.72rem;">[${date} ${time}]</span>
+                 <span class="text-white-50 ms-1" style="font-size:0.75rem;">${t.note}</span>
+               </div>
+             `;
+           }).join("")}
+         </div>`
+      : "<span class='text-muted'>No timeline actions logged.</span>";
+
+    return `
+      <div class="log-details-grid">
+        <div class="log-details-section">
+          <div class="log-details-label">Incident Information</div>
+          <div><strong>Description:</strong> ${log.description}</div>
+          <div class="mt-1"><strong>Translation:</strong> ${log.translatedDescription || 'N/A'} (Language: ${log.detectedLanguage})</div>
+          <div class="mt-1"><strong>Urgency Level:</strong> ${log.urgency}/5</div>
+          <div class="mt-1"><strong>Victim Contact:</strong> ${log.victimPhone || 'N/A'}</div>
+        </div>
+        <div class="log-details-section">
+          <div class="log-details-label">Assignment & Location</div>
+          <div><strong>Assigned Volunteer:</strong> ${volName}</div>
+          <div class="mt-1"><strong>Volunteer Phone:</strong> ${volPhone}</div>
+          <div class="mt-1"><strong>Zone:</strong> ${log.zone}</div>
+          <div class="mt-1"><strong>Address:</strong> ${log.address || 'N/A'}</div>
+        </div>
+        <div class="log-details-section">
+          <div class="log-details-label">Dates & System Stats</div>
+          <div><strong>Created At:</strong> ${createdDate}</div>
+          <div class="mt-1"><strong>Archived At:</strong> ${archivedDate}</div>
+          <div class="mt-1"><strong>Archive Method:</strong> ${log.deleted ? 'Deleted/Removed' : 'Resolved Status Only'}</div>
+        </div>
+      </div>
+      <div class="log-details-section mt-2">
+        <div class="log-details-label">Request Action Timeline</div>
+        ${timelineHtml}
+      </div>
+    `;
+  }
+}
+
+// Call on load
+document.addEventListener("DOMContentLoaded", () => {
+  initHistoryLogs();
+});
+

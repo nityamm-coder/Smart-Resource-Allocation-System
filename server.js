@@ -714,6 +714,59 @@ app.get("/api/requests", async (req, res) => {
   }
 });
 
+// ── Route: GET /api/logs ──────────────────────────────────────
+/**
+ * Fetches paginated history logs from the archived_requests collection.
+ * Supports cursor pagination via lastArchivedAt, and filtering.
+ */
+app.get("/api/logs", async (req, res) => {
+  const limit = parseInt(req.query.limit) || 50;
+  const lastArchivedAt = req.query.lastArchivedAt || null;
+  const filter = req.query.filter || "all";
+
+  try {
+    let query = db.collection("archived_requests").orderBy("archivedAt", "desc");
+    
+    let snapshot;
+    if (lastArchivedAt) {
+      snapshot = await query.startAfter(lastArchivedAt).limit(200).get();
+    } else {
+      snapshot = await query.limit(200).get();
+    }
+
+    let logs = [];
+    snapshot.forEach(doc => {
+      logs.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Apply filtering in memory
+    if (filter === "resolved") {
+      logs = logs.filter(l => l.status === "Resolved" && !l.deleted);
+    } else if (filter === "resolved_deleted") {
+      logs = logs.filter(l => l.status === "Resolved" && l.deleted);
+    } else if (filter === "inprogress_deleted") {
+      logs = logs.filter(l => l.status === "In Progress" && l.deleted);
+    } else if (filter === "open_deleted") {
+      logs = logs.filter(l => l.status === "Open" && l.deleted);
+    }
+
+    const paginatedLogs = logs.slice(0, limit);
+    const nextCursor = paginatedLogs.length > 0 ? paginatedLogs[paginatedLogs.length - 1].archivedAt : null;
+    const hasMore = logs.length > limit;
+
+    return res.json({
+      success: true,
+      logs: paginatedLogs,
+      nextCursor,
+      hasMore
+    });
+  } catch (err) {
+    console.error("❌ Error fetching logs:", err.message);
+    return res.status(500).json({ error: "Could not fetch history logs." });
+  }
+});
+
+
 // ── Route: PATCH /api/requests/:id/status ────────────────────
 /**
  * Lets the NGO dashboard update the status of a request
@@ -779,6 +832,31 @@ app.patch("/api/requests/:id/status", async (req, res) => {
 
       // 3. Commit status and timeline updates
       transaction.update(docRef, { status, timeline: updatedTimeline });
+
+      // 4. Archive management
+      const archiveRef = db.collection("archived_requests").doc(id);
+      if (status === "Resolved") {
+        transaction.set(archiveRef, {
+          originalId: id,
+          description: currentData.description || "",
+          zone: currentData.zone || "",
+          address: currentData.address || "",
+          victimPhone: currentData.victimPhone || "",
+          category: category,
+          urgency: currentData.urgency || 3,
+          status: "Resolved",
+          detectedLanguage: currentData.detectedLanguage || "English",
+          translatedDescription: currentData.translatedDescription || "",
+          matchedVolunteer: currentData.matchedVolunteer || null,
+          timeline: updatedTimeline,
+          createdAt: currentData.createdAt || null,
+          archivedAt: timestamp,
+          deleted: false
+        }, { merge: true });
+      } else if (oldStatus === "Resolved" && status !== "Resolved") {
+        // If moved away from Resolved, delete from active resolved archives
+        transaction.delete(archiveRef);
+      }
     });
 
     return res.json({ success: true, id, status });
@@ -801,11 +879,38 @@ app.delete("/api/requests/resolved", async (req, res) => {
 
     const batch = db.batch();
     snapshot.forEach((doc) => {
+      const currentData = doc.data();
+      const timestamp = new Date().toISOString();
+      const updatedTimeline = [...(currentData.timeline || []), {
+        status: "Resolved",
+        timestamp,
+        note: "Request archived and deleted via bulk action."
+      }];
+
+      const archiveRef = db.collection("archived_requests").doc(doc.id);
+      batch.set(archiveRef, {
+        originalId: doc.id,
+        description: currentData.description || "",
+        zone: currentData.zone || "",
+        address: currentData.address || "",
+        victimPhone: currentData.victimPhone || "",
+        category: currentData.category || "Other",
+        urgency: currentData.urgency || 3,
+        status: "Resolved",
+        detectedLanguage: currentData.detectedLanguage || "English",
+        translatedDescription: currentData.translatedDescription || "",
+        matchedVolunteer: currentData.matchedVolunteer || null,
+        timeline: updatedTimeline,
+        createdAt: currentData.createdAt || null,
+        archivedAt: timestamp,
+        deleted: true
+      }, { merge: true });
+
       batch.delete(doc.ref);
     });
     await batch.commit();
 
-    console.log(`🗑️ Bulk deleted ${snapshot.size} resolved requests.`);
+    console.log(`🗑️ Bulk deleted and archived ${snapshot.size} resolved requests.`);
     return res.json({ success: true, message: `Successfully deleted ${snapshot.size} resolved requests.` });
   } catch (err) {
     console.error("❌ Error bulk-deleting resolved requests:", err.message);
@@ -820,8 +925,43 @@ app.delete("/api/requests/resolved", async (req, res) => {
 app.delete("/api/requests/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await db.collection("requests").doc(id).delete();
-    console.log(`🗑️ Request deleted: ${id}`);
+    const docRef = db.collection("requests").doc(id);
+    const archiveRef = db.collection("archived_requests").doc(id);
+    
+    await db.runTransaction(async (transaction) => {
+      const doc = await transaction.get(docRef);
+      if (doc.exists) {
+        const currentData = doc.data();
+        const timestamp = new Date().toISOString();
+        const updatedTimeline = [...(currentData.timeline || []), {
+          status: currentData.status,
+          timestamp,
+          note: `Request deleted (Status at deletion: ${currentData.status}).`
+        }];
+        
+        transaction.set(archiveRef, {
+          originalId: id,
+          description: currentData.description || "",
+          zone: currentData.zone || "",
+          address: currentData.address || "",
+          victimPhone: currentData.victimPhone || "",
+          category: currentData.category || "Other",
+          urgency: currentData.urgency || 3,
+          status: currentData.status || "Open",
+          detectedLanguage: currentData.detectedLanguage || "English",
+          translatedDescription: currentData.translatedDescription || "",
+          matchedVolunteer: currentData.matchedVolunteer || null,
+          timeline: updatedTimeline,
+          createdAt: currentData.createdAt || null,
+          archivedAt: timestamp,
+          deleted: true
+        }, { merge: true });
+        
+        transaction.delete(docRef);
+      }
+    });
+
+    console.log(`🗑️ Request archived and deleted: ${id}`);
     return res.json({ success: true, message: "Request deleted successfully." });
   } catch (err) {
     console.error("❌ Error deleting request:", err.message);
