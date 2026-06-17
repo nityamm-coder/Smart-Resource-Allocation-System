@@ -195,6 +195,29 @@ const volunteers = [
   },
 ];
 
+// ── Helper: Seed Volunteers To Firestore ──────────────────────
+/**
+ * Seeds the default mock volunteers list to Firestore if the collection is empty.
+ */
+async function seedVolunteersToDb() {
+  try {
+    const batch = db.batch();
+    for (const v of volunteers) {
+      const docRef = db.collection("volunteers").doc(v.id);
+      batch.set(docRef, {
+        name: v.name,
+        skills: v.skills,
+        zone: v.zone,
+        phone: v.phone
+      });
+    }
+    await batch.commit();
+    console.log("🌱 Seeded mock volunteers to Firestore 'volunteers' collection.");
+  } catch (err) {
+    console.error("⚠️ Error seeding volunteers to Firestore:", err.message);
+  }
+}
+
 // ── Helper: Get Dynamic Volunteers ─────────────────────────────
 /**
  * Calculates volunteer availability dynamically based on active requests in Firestore.
@@ -215,7 +238,22 @@ async function getDynamicVolunteers() {
       }
     });
 
-    return volunteers.map((v) => {
+    let currentVolunteers = [];
+    if (db) {
+      const volSnapshot = await db.collection("volunteers").get();
+      if (volSnapshot.empty) {
+        await seedVolunteersToDb();
+        currentVolunteers = volunteers;
+      } else {
+        volSnapshot.forEach((doc) => {
+          currentVolunteers.push({ id: doc.id, ...doc.data() });
+        });
+      }
+    } else {
+      currentVolunteers = volunteers;
+    }
+
+    return currentVolunteers.map((v) => {
       const isBusy = busyVolunteerIds.has(v.id);
       return {
         ...v,
@@ -576,6 +614,50 @@ app.get("/api/volunteers", async (req, res) => {
   const dynamicVolunteersList = await getDynamicVolunteers();
   return res.json({ success: true, volunteers: dynamicVolunteersList });
 });
+
+// ── Route: POST /api/volunteers ───────────────────────────────
+/**
+ * Registers a new volunteer. Saves to Firestore if connected,
+ * otherwise appends to in-memory volunteers array.
+ */
+app.post("/api/volunteers", async (req, res) => {
+  const { name, skills, zone, phone } = req.body;
+
+  if (!name || !skills || !zone || !phone) {
+    return res.status(400).json({ error: "Please provide all required volunteer details (name, skills, zone, phone)." });
+  }
+
+  if (!Array.isArray(skills) || skills.length === 0) {
+    return res.status(400).json({ error: "Skills must be a non-empty list." });
+  }
+
+  try {
+    const newVol = {
+      name,
+      skills,
+      zone,
+      phone,
+    };
+
+    if (db) {
+      const docRef = await db.collection("volunteers").add(newVol);
+      const addedVol = { id: docRef.id, ...newVol, available: true };
+      console.log(`✅ Volunteer registered in Firestore with ID: ${docRef.id}`);
+      return res.status(201).json({ success: true, volunteer: addedVol });
+    } else {
+      // In-memory fallback
+      const id = "v" + (volunteers.length + 1).toString().padStart(3, "0");
+      const addedVol = { id, ...newVol, available: true };
+      volunteers.push(addedVol);
+      console.log(`✅ Volunteer registered in-memory with ID: ${id}`);
+      return res.status(201).json({ success: true, volunteer: addedVol });
+    }
+  } catch (err) {
+    console.error("❌ Error registering volunteer:", err.message);
+    return res.status(500).json({ error: "Could not register volunteer. Check server logs." });
+  }
+});
+
 
 // ── Route: GET /api/requests ──────────────────────────────────
 /**

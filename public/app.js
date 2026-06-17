@@ -1039,6 +1039,64 @@ if (isDashboardPage) {
     });
   }
 
+  // ── Add Volunteer Form Submitter ─────────────────────────────
+  const addVolunteerForm = document.getElementById("add-volunteer-form");
+  if (addVolunteerForm) {
+    addVolunteerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById("vol-name").value.trim();
+      const phone = document.getElementById("vol-phone").value.trim();
+      const zone = document.getElementById("vol-zone").value;
+      
+      // Collect selected skills
+      const skillCheckboxes = document.querySelectorAll(".vol-skill-checkbox:checked");
+      const skills = Array.from(skillCheckboxes).map(cb => cb.value);
+      
+      const errorEl = document.getElementById("skills-error");
+      if (skills.length === 0) {
+        if (errorEl) errorEl.classList.remove("d-none");
+        return;
+      } else {
+        if (errorEl) errorEl.classList.add("d-none");
+      }
+      
+      try {
+        const res = await fetch(`${API_BASE}/api/volunteers`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, phone, zone, skills })
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          showToast(`Volunteer ${data.volunteer.name} added successfully!`, "success");
+          
+          // Hide Bootstrap Modal
+          const modalEl = document.getElementById("add-volunteer-modal");
+          const modal = bootstrap.Modal.getInstance(modalEl);
+          if (modal) {
+            modal.hide();
+          } else {
+            const closeBtn = modalEl.querySelector('[data-bs-dismiss="modal"]');
+            if (closeBtn) closeBtn.click();
+          }
+          
+          addVolunteerForm.reset();
+          
+          // Refresh requests & roster dynamically
+          await loadRequests();
+        } else {
+          const err = await res.json();
+          showToast("Error adding volunteer: " + (err.error || "Unknown error"), "danger");
+        }
+      } catch (err) {
+        console.error("Add volunteer request failed:", err);
+        showToast("Error adding volunteer. Check network connection.", "danger");
+      }
+    });
+  }
+
   refreshBtn.addEventListener("click", loadRequests);
 
   const clearResolvedBtn = document.getElementById("clear-resolved-btn");

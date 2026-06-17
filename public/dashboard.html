@@ -273,9 +273,14 @@
         <!-- Volunteer Roster Sidebar -->
         <div class="col-12 col-xl-3">
           <div class="form-card w-100 m-0 p-3" style="max-width: 100%; height: fit-content; background: rgba(30, 27, 75, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border-radius: 1rem;">
-            <h3 class="fs-6 fw-bold mb-3 d-flex align-items-center text-white" style="letter-spacing: 0.5px;">
-              <i class="bi bi-people-fill me-2 text-primary"></i>Volunteer Roster
-            </h3>
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h3 class="fs-6 fw-bold mb-0 d-flex align-items-center text-white" style="letter-spacing: 0.5px;">
+                <i class="bi bi-people-fill me-2 text-primary"></i>Volunteer Roster
+              </h3>
+              <button class="btn btn-primary btn-sm py-1 px-2.5" data-bs-toggle="modal" data-bs-target="#add-volunteer-modal" style="font-size:0.75rem; border-radius: 6px;">
+                <i class="bi bi-person-plus-fill me-1"></i>Add
+              </button>
+            </div>
             <!-- Search for volunteers -->
             <div class="mb-3">
               <div class="input-group input-group-sm">
@@ -322,6 +327,74 @@
             <div class="modal-footer border-top border-secondary">
               <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-primary btn-sm">Confirm Restock</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Add Volunteer Modal ─────────────────────────────────── -->
+    <div class="modal fade" id="add-volunteer-modal" tabindex="-1" aria-labelledby="addVolunteerModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
+          <div class="modal-header border-bottom border-secondary">
+            <h5 class="modal-title fw-bold" id="addVolunteerModalLabel"><i class="bi bi-person-plus-fill me-2 text-primary"></i>Add New Volunteer</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="add-volunteer-form">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="vol-name" class="form-label fw-semibold" style="font-size: 0.85rem;">Full Name</label>
+                <input type="text" class="form-control text-white border-secondary" id="vol-name" placeholder="e.g. Nikhil Sharma" style="background: rgba(15, 23, 42, 0.8);" required>
+              </div>
+              <div class="mb-3">
+                <label for="vol-phone" class="form-label fw-semibold" style="font-size: 0.85rem;">Phone Number</label>
+                <input type="tel" class="form-control text-white border-secondary" id="vol-phone" placeholder="e.g. +91 99999 88888" style="background: rgba(15, 23, 42, 0.8);" required>
+              </div>
+              <div class="mb-3">
+                <label for="vol-zone" class="form-label fw-semibold" style="font-size: 0.85rem;">Assigned Locality/Zone</label>
+                <select class="form-select text-white border-secondary" id="vol-zone" style="background: rgba(15, 23, 42, 0.8);" required>
+                  <option value="" disabled selected>Select zone...</option>
+                  <option value="Vasind">Vasind</option>
+                  <option value="Kalyan">Kalyan</option>
+                  <option value="Thane">Thane</option>
+                  <option value="Mumbai Central">Mumbai Central</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold d-block" style="font-size: 0.85rem;">Skills / Specialties</label>
+                <div class="d-flex flex-column gap-2 p-3 rounded" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.08);">
+                  <div class="form-check">
+                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Food" id="skill-food">
+                    <label class="form-check-label text-white-50" for="skill-food" style="font-size: 0.85rem; margin-bottom: 0;">
+                      🍎 Food (Logistics / Distribution)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Medical" id="skill-medical">
+                    <label class="form-check-label text-white-50" for="skill-medical" style="font-size: 0.85rem; margin-bottom: 0;">
+                      🏥 Medical (First Aid / Health Support)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Shelter" id="skill-shelter">
+                    <label class="form-check-label text-white-50" for="skill-shelter" style="font-size: 0.85rem; margin-bottom: 0;">
+                      🏠 Shelter (Construction / Supply setup)
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Other" id="skill-other">
+                    <label class="form-check-label text-white-50" for="skill-other" style="font-size: 0.85rem; margin-bottom: 0;">
+                      ℹ️ Other (General Support / Coordination)
+                    </label>
+                  </div>
+                </div>
+                <div id="skills-error" class="text-danger d-none mt-1" style="font-size: 0.78rem;">Please select at least one skill.</div>
+              </div>
+            </div>
+            <div class="modal-footer border-top border-secondary">
+              <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary btn-sm">Add Volunteer</button>
             </div>
           </form>
         </div>
