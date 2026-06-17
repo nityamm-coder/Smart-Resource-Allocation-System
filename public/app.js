@@ -896,8 +896,11 @@ if (isDashboardPage) {
           <div class="roster-card">
             <div class="roster-header">
               <span class="status-dot ${statusClass}" title="${statusLabel}"></span>
-              <h4 class="roster-name">${vol.name}</h4>
+              <h4 class="roster-name" title="${vol.name}">${vol.name}</h4>
               <span class="roster-status-badge ${statusClass}">${statusLabel}</span>
+              <button class="delete-vol-btn" data-id="${vol.id}" title="Remove Volunteer" style="background: transparent; border: none; color: var(--danger); font-size: 0.82rem; opacity: 0.5; transition: all 0.2s ease; cursor: pointer; padding: 2px 4px; display: inline-flex; align-items: center; justify-content: center; margin-left: 0.35rem; border-radius: 4px;">
+                <i class="bi bi-trash-fill"></i>
+              </button>
             </div>
             <div class="roster-meta">
               <i class="bi bi-geo-alt-fill text-danger"></i>${vol.zone}
@@ -913,6 +916,20 @@ if (isDashboardPage) {
         `;
       })
       .join("");
+
+    // Attach click events for deleting volunteers
+    document.querySelectorAll(".delete-vol-btn").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const volId = btn.dataset.id;
+        const volCard = btn.closest(".roster-card");
+        const volName = volCard ? volCard.querySelector(".roster-name").textContent : "this volunteer";
+        
+        if (confirm(`Are you sure you want to remove volunteer "${volName}" permanently from the database?`)) {
+          await deleteVolunteer(volId);
+        }
+      });
+    });
   }
 
   function applyVolunteerFilters() {
@@ -975,6 +992,23 @@ if (isDashboardPage) {
       showToast("Request permanently deleted from system.", "warning");
     } catch (err) {
       showToast(`Error deleting request: ${err.message}`, "danger");
+    }
+  }
+
+  async function deleteVolunteer(id) {
+    try {
+      const response = await fetch(`${API_BASE}/api/volunteers/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete volunteer.");
+      }
+
+      await loadRequests();
+      showToast("Volunteer removed successfully.", "warning");
+    } catch (err) {
+      showToast(`Error removing volunteer: ${err.message}`, "danger");
     }
   }
 

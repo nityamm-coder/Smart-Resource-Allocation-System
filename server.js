@@ -659,6 +659,34 @@ app.post("/api/volunteers", async (req, res) => {
 });
 
 
+// ── Route: DELETE /api/volunteers/:id ─────────────────────────
+/**
+ * Deletes a volunteer by ID.
+ */
+app.delete("/api/volunteers/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (db) {
+      await db.collection("volunteers").doc(id).delete();
+      console.log(`🗑️ Volunteer deleted from Firestore: ${id}`);
+      return res.json({ success: true, message: "Volunteer deleted successfully." });
+    } else {
+      const idx = volunteers.findIndex((v) => v.id === id);
+      if (idx !== -1) {
+        volunteers.splice(idx, 1);
+        console.log(`🗑️ Volunteer deleted from memory: ${id}`);
+        return res.json({ success: true, message: "Volunteer deleted successfully." });
+      } else {
+        return res.status(404).json({ error: "Volunteer not found." });
+      }
+    }
+  } catch (err) {
+    console.error("❌ Error deleting volunteer:", err.message);
+    return res.status(500).json({ error: "Could not delete volunteer." });
+  }
+});
+
+
 // ── Route: GET /api/requests ──────────────────────────────────
 /**
  * The dashboard calls this route to load all community requests.
