@@ -2123,6 +2123,7 @@ footer {
   margin: 0;
   background: linear-gradient(135deg, #a5b4fc, #818cf8);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
