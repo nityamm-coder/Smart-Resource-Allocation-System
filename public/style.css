@@ -1010,7 +1010,7 @@ footer {
   border-radius: 36px;
   padding: 12px;
   box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
-  max-width: 320px;
+  max-width: 380px;
   margin: 0 auto;
   position: relative;
 }
@@ -1032,13 +1032,13 @@ footer {
 
 .phone-screen {
   background: #0f172a;
+  border: 1px solid #1e293b;
   border-radius: 24px;
-  height: 380px;
+  height: 500px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  border: 1px solid #1e293b;
 }
 
 .phone-chat-header {
