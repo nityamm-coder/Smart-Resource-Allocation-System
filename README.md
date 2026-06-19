@@ -36,7 +36,7 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 
 ## 💡 Short Description
 
-**Smart Resource Allocation** is an AI-powered MVP that automates the collection, translation, classification, and volunteer-matching of disaster requests. It accepts structured web requests or simulated offline SMS messages, leverages Google Gemini 2.5 Flash to determine urgency (1-5) and translate multi-lingual text to English, matches the request with the best available volunteer based on local zone and skills, and provides a real-time responsive Kanban Dashboard with inventory tracking and custom volunteer management for relief coordinators.
+**Smart Resource Allocation** is an AI-powered MVP that automates the collection, translation, classification, and volunteer-matching of disaster requests. It accepts web requests or simulated offline SMS messages, leveraging Google Gemini 2.5 Flash to determine urgency (1-5), translate multi-lingual text, and generate custom life-saving safety instructions. Victims can monitor their rescue in real-time via a Live Tracking Portal and provide post-resolution star ratings. For coordinators, the platform provides a real-time Kanban Dashboard with inventory tracking, duplicate request clustering, and push notifications for critical emergencies.
 
 ---
 
@@ -77,6 +77,11 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 12. **Dynamic Hero Section:** A split grid landing layout featuring a custom blinking typewriter text effect cycling through critical resource types ("Food Packs", "Medical Aid", "Emergency Shelter", "Critical Supplies") and an animated CSS emergency radar beacon with rotating sweeps and pulsating coordinate nodes.
 13. **Fully Responsive Layout:** Fully styled for optimal layout rendering on desktop, tablets, and smartphones.
 14. **Custom Volunteer Management:** An integrated dashboard module allowing NGO coordinators to directly add and manage custom volunteers, assigning them specific skills and operating zones on the fly.
+15. **Live Victim Tracking Portal:** A dedicated portal for victims to track their request status (Submitted, Assigned, In Progress, Resolved) and view live timeline logs.
+16. **AI Life-Saving Instructions:** Generates real-time, situation-specific safety tips via Gemini AI to guide victims while they wait for help.
+17. **Volunteer Star Rating & Feedback:** A post-resolution feedback loop allowing victims to rate their rescue experience (1-5 stars) and leave comments, updating volunteer performance metrics.
+18. **Duplicate Request Clustering:** Automatically detects and groups similar incident reports in the same zone to prevent spam and duplicate volunteer dispatch.
+19. **Critical Push Notifications:** NGO Dashboard triggers an audio chime and browser push notifications whenever a critical (Urgency 5) request is received.
 
 ---
 
@@ -203,6 +208,7 @@ smart-resource-allocation/
 ├── public/
 │   ├── index.html        # Victim Submission Form
 │   ├── dashboard.html    # NGO Kanban Board, Interactive Dark Map, and Control Center
+│   ├── tracking.html     # Live Tracking Portal for victims (Status stepper, AI safety tips, Ratings)
 │   ├── app.js            # Frontend JavaScript (Realtime feeds, Leaflet map overlays, timeline actions, UI updates)
 │   └── style.css         # Custom CSS (Sleek dark theme, pulsating status markers, glassmorphic styling, responsive layout)
 ├── server.js             # Express Backend Server (Gemini integration, matching algorithm, API endpoints)
