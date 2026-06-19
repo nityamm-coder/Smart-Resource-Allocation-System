@@ -152,11 +152,14 @@
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
         <div>
           <span class="badge bg-indigo mb-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Live Tracker</span>
-          <h2 class="fs-4 fw-700 m-0" id="tracking-header">Loading Request Status...</h2>
-          <p class="text-muted small mt-1 mb-0" id="request-id-display">Request ID: --</p>
-        </div>
-        <div id="status-badge-container">
-          <span class="badge bg-secondary py-2 px-3 fs-6">Syncing...</span>
+          <div class="d-flex align-items-center gap-3">
+            <h2 class="fs-4 fw-700 m-0" id="tracking-header">Loading Request Status...</h2>
+            <div id="status-badge-container"></div>
+          </div>
+          <div class="mt-2 d-flex align-items-center gap-2">
+            <p class="text-muted small mb-0" style="font-size: 0.9rem;">Tracking ID: <strong id="request-id-display" class="text-warning user-select-all px-2 py-1 bg-dark rounded border border-warning">--</strong></p>
+            <button id="copy-id-btn" class="btn btn-sm btn-outline-warning" title="Copy Tracking ID"><i class="bi bi-clipboard"></i></button>
+          </div>
         </div>
       </div>
     </div>
@@ -172,6 +175,10 @@
         <div class="step" id="step-assigned">
           <div class="step-icon"><i class="bi bi-person-badge"></i></div>
           Assigned
+        </div>
+        <div class="step" id="step-inprogress">
+          <div class="step-icon"><i class="bi bi-truck"></i></div>
+          In Progress
         </div>
         <div class="step" id="step-resolved">
           <div class="step-icon"><i class="bi bi-check2-circle"></i></div>
@@ -311,11 +318,12 @@
     // UI Elements References
     const trackingHeader = document.getElementById("tracking-header");
     const requestIdDisplay = document.getElementById("request-id-display");
-    const statusBadgeContainer = document.getElementById("status-badge-container");
     const stepProgress = document.getElementById("step-progress");
     const stepSubmitted = document.getElementById("step-submitted");
     const stepAssigned = document.getElementById("step-assigned");
+    const stepInprogress = document.getElementById("step-inprogress");
     const stepResolved = document.getElementById("step-resolved");
+    const statusBadgeContainer = document.getElementById("status-badge-container");
 
     const infoCategory = document.getElementById("info-category");
     const infoUrgency = document.getElementById("info-urgency");
@@ -353,8 +361,24 @@
     if (!requestId) {
       showErrorView("Invalid URL: Missing Tracking ID parameter.");
     } else {
-      requestIdDisplay.textContent = `Request ID: ${requestId}`;
+      requestIdDisplay.textContent = requestId;
       initLiveListener();
+    }
+
+    // Copy Tracking ID to clipboard
+    const copyIdBtn = document.getElementById("copy-id-btn");
+    if (copyIdBtn) {
+      copyIdBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(requestId).then(() => {
+          const origHtml = copyIdBtn.innerHTML;
+          copyIdBtn.innerHTML = '<i class="bi bi-check2"></i>';
+          copyIdBtn.classList.replace("btn-outline-warning", "btn-success");
+          setTimeout(() => {
+            copyIdBtn.innerHTML = origHtml;
+            copyIdBtn.classList.replace("btn-success", "btn-outline-warning");
+          }, 2000);
+        });
+      });
     }
 
     // Set up interactive star rating behaviors
@@ -508,9 +532,8 @@
 
     // Main render function
     function renderRequest(data) {
-      // Set headers & badge
-      const categoryLabel = getCategoryEmoji(data.category);
-      trackingHeader.textContent = `${categoryLabel} Request status: ${data.status}`;
+      // Set headers
+      trackingHeader.textContent = `Request status: ${data.status}`;
       
       const badgeColors = {
         "Open": "bg-primary",
@@ -523,6 +546,7 @@
       // Visual stepper percentage & classes
       stepSubmitted.className = "step";
       stepAssigned.className = "step";
+      stepInprogress.className = "step";
       stepResolved.className = "step";
 
       if (data.status === "Open") {
@@ -530,18 +554,19 @@
         if (data.matchedVolunteer) {
           stepSubmitted.classList.replace("active", "completed");
           stepAssigned.classList.add("active");
-          stepProgress.style.width = "50%";
+          stepProgress.style.width = "33%";
         } else {
           stepProgress.style.width = "0%";
         }
       } else if (data.status === "In Progress") {
         stepSubmitted.classList.add("completed");
         stepAssigned.classList.add("completed");
-        stepResolved.classList.add("active");
-        stepProgress.style.width = "50%";
+        stepInprogress.classList.add("active");
+        stepProgress.style.width = "66%";
       } else if (data.status === "Resolved") {
         stepSubmitted.classList.add("completed");
         stepAssigned.classList.add("completed");
+        stepInprogress.classList.add("completed");
         stepResolved.classList.add("completed");
         stepProgress.style.width = "100%";
       }
