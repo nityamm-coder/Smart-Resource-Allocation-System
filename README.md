@@ -36,7 +36,7 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 
 ## 💡 Short Description
 
-**Smart Resource Allocation** is an AI-powered MVP that automates the collection, translation, classification, and volunteer-matching of disaster requests. It accepts structured web requests or simulated offline SMS messages, leverages Google Gemini 2.5 Flash to determine urgency (1-5) and translate multi-lingual text to English, matches the request with the best available volunteer based on local zone and skills, and provides a real-time responsive Kanban Dashboard with inventory tracking for relief coordinators.
+**Smart Resource Allocation** is an AI-powered MVP that automates the collection, translation, classification, and volunteer-matching of disaster requests. It accepts structured web requests or simulated offline SMS messages, leverages Google Gemini 2.5 Flash to determine urgency (1-5) and translate multi-lingual text to English, matches the request with the best available volunteer based on local zone and skills, and provides a real-time responsive Kanban Dashboard with inventory tracking and custom volunteer management for relief coordinators.
 
 ---
 
@@ -76,6 +76,7 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 11. **Map-Based Status Updates:** Click on any marker on the map to inspect full details, contact details, assigned volunteer status, and change request status directly from the map popup.
 12. **Dynamic Hero Section:** A split grid landing layout featuring a custom blinking typewriter text effect cycling through critical resource types ("Food Packs", "Medical Aid", "Emergency Shelter", "Critical Supplies") and an animated CSS emergency radar beacon with rotating sweeps and pulsating coordinate nodes.
 13. **Fully Responsive Layout:** Fully styled for optimal layout rendering on desktop, tablets, and smartphones.
+14. **Custom Volunteer Management:** An integrated dashboard module allowing NGO coordinators to directly add and manage custom volunteers, assigning them specific skills and operating zones on the fly.
 
 ---
 
@@ -190,6 +191,8 @@ The backend calculates volunteer matching dynamically on each submission:
 - **Push & SMS Notifications:** Automated WhatsApp/SMS alerts dispatched to volunteers when they are matched to a crisis.
 - **Offline Sync Capabilities:** Using PWA technologies to cache database updates client-side and automatically push changes once internet connection is restored.
 - **Predictive Analytics:** An AI module monitoring resource request frequency to predict restocking patterns for critical zones.
+- **Multi-Tenant NGO Hubs:** Logical partitioning of the platform allowing regional NGO branches (e.g., Vasind, Kalyan, Thane) to manage their respective local data and volunteers securely and independently.
+- **IVR Implementation:** An Interactive Voice Response system for victims to call a designated number and report emergencies using keypad inputs or voice commands.
 
 ---
 
