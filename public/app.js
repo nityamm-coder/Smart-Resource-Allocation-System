@@ -1329,6 +1329,11 @@ if (isDashboardPage) {
 
       await loadRequests();
       
+      const smsSenderPhoneInput = document.getElementById("sms-sender-phone");
+      if (smsSenderPhoneInput && smsSenderPhoneInput.value && typeof loadSmsHistory === 'function') {
+        await loadSmsHistory(smsSenderPhoneInput.value.trim());
+      }
+      
       if (status === "Resolved") {
         if (window.confetti) {
           confetti({

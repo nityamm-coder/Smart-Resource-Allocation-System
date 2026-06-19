@@ -559,6 +559,33 @@ Example output:
   }
 });
 
+// ── Route: GET /api/requests/by-phone/:phone ─────────────────────────
+app.get("/api/requests/by-phone/:phone", async (req, res) => {
+  const { phone } = req.params;
+  if (!db) {
+    return res.status(500).json({ error: "Database not connected" });
+  }
+  
+  try {
+    const snapshot = await db.collection("requests").where("victimPhone", "==", phone).get();
+    const requests = [];
+    snapshot.forEach(doc => {
+      requests.push({ id: doc.id, ...doc.data() });
+    });
+    
+    const archivedSnapshot = await db.collection("archived_requests").where("victimPhone", "==", phone).get();
+    archivedSnapshot.forEach(doc => {
+      requests.push({ id: doc.id, ...doc.data() });
+    });
+    
+    requests.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    res.json({ success: true, requests });
+  } catch (err) {
+    console.error("Error fetching requests by phone:", err);
+    res.status(500).json({ error: "Failed to fetch history" });
+  }
+});
+
 // ── Route: POST /api/simulate-sms ─────────────────────────────
 /**
  * Simulates receiving an offline SMS request.
