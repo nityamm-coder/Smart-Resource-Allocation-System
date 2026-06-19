@@ -228,9 +228,14 @@
           <div class="phone-mock-container">
             <div class="phone-screen">
               <!-- Header of mock chat -->
-              <div class="phone-chat-header">
-                <span class="chat-title">Emergency SMS Gateway</span>
-                <span class="chat-subtitle"><i class="bi bi-circle-fill text-success animate-pulse-green" style="font-size:0.5rem; margin-right:3px;"></i> Active (+91 80000 12345)</span>
+              <div class="phone-chat-header d-flex justify-content-between align-items-center">
+                <div class="text-start">
+                  <span class="chat-title">Emergency SMS Gateway</span>
+                  <span class="chat-subtitle"><i class="bi bi-circle-fill text-success animate-pulse-green" style="font-size:0.5rem; margin-right:3px;"></i> Active (+91 80000 12345)</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger border-0 px-2 py-1" id="clear-sms-btn" style="font-size: 0.75rem;" title="Clear Chat">
+                  <i class="bi bi-trash"></i>
+                </button>
               </div>
               
               <!-- Message Area -->

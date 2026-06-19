@@ -1400,6 +1400,37 @@ app.get("/api/requests/by-phone/:phone", async (req, res) => {
   }
 });
 
+// ── Route: DELETE /api/requests/by-phone/:phone ────────────────
+/**
+ * Deletes all active and archived requests matching a contact number.
+ * Used by the SMS Simulator to clear chat history permanently.
+ */
+app.delete("/api/requests/by-phone/:phone", async (req, res) => {
+  const { phone } = req.params;
+  if (!db) {
+    return res.status(500).json({ error: "Database not connected" });
+  }
+  try {
+    const snapshot = await db.collection("requests").where("victimPhone", "==", phone).get();
+    const archivedSnapshot = await db.collection("archived_requests").where("victimPhone", "==", phone).get();
+
+    const batch = db.batch();
+    snapshot.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+    archivedSnapshot.forEach(doc => {
+      batch.delete(doc.ref);
+    });
+
+    await batch.commit();
+    console.log(`🗑️ Permanently cleared all requests for phone: ${phone}`);
+    return res.json({ success: true, message: `Successfully cleared history for ${phone}` });
+  } catch (err) {
+    console.error("❌ Error deleting requests by phone:", err.message);
+    return res.status(500).json({ error: "Could not clear history." });
+  }
+});
+
 // ── Route: POST /api/requests/:id/rate ────────────────────────
 /**
  * Rates the volunteer assigned to a request.

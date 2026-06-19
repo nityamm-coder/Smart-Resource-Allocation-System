@@ -1753,6 +1753,53 @@ if (smsForm) {
   const smsConsoleLog = document.getElementById("sms-console-log");
   const smsSendBtn = document.getElementById("sms-send-btn");
   const smsTrackContainer = document.getElementById("sms-track-container");
+  const clearSmsBtn = document.getElementById("clear-sms-btn");
+
+  if (clearSmsBtn) {
+    clearSmsBtn.addEventListener("click", async () => {
+      const phone = smsSenderPhone ? smsSenderPhone.value.trim() : "";
+      if (!phone) {
+        showToast("No phone number selected to clear history.", "warning");
+        return;
+      }
+      
+      const originalHtml = clearSmsBtn.innerHTML;
+      clearSmsBtn.disabled = true;
+      clearSmsBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="width:0.75rem; height:0.75rem;"></span>`;
+      
+      try {
+        const res = await fetch(`/api/requests/by-phone/${encodeURIComponent(phone)}`, {
+          method: "DELETE"
+        });
+        if (res.ok) {
+          smsChatBody.innerHTML = `
+            <div class="sms-message received">
+              <div class="sms-text">SYSTEM: Gateway online. Compose your SMS emergency text below. You can use English, Hindi, Marathi, Hinglish, etc.</div>
+            </div>
+          `;
+          if (smsConsoleLog) smsConsoleLog.innerHTML = "";
+          if (smsConsoleContainer) smsConsoleContainer.classList.add("d-none");
+          if (smsTrackContainer) {
+            smsTrackContainer.classList.add("d-none");
+            smsTrackContainer.innerHTML = "";
+          }
+          showToast("Chat history cleared successfully!", "success");
+          
+          if (typeof window.loadRequests === "function") {
+            await window.loadRequests();
+          }
+        } else {
+          showToast("Failed to clear chat history on server.", "danger");
+        }
+      } catch (err) {
+        console.error("Error clearing SMS history:", err);
+        showToast("Error clearing chat history.", "danger");
+      } finally {
+        clearSmsBtn.disabled = false;
+        clearSmsBtn.innerHTML = originalHtml;
+      }
+    });
+  }
 
   function logConsole(message, type = "info") {
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
