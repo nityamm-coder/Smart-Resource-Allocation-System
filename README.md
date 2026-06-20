@@ -8,17 +8,23 @@ A real-time, AI-driven disaster response and relief coordination system designed
 
 ---
 
+## 🌐 Live Demo & Deployed Link
+
+* **Deployed Web URL:** https://smart-resource-allocation-six.vercel.app/  
+  *(Ready for Vercel deployment with configuration provided in `vercel.json`)*
+
+---
+
 ## 📌 Table of Contents
 1. [📖 Problem & Use Case](#-problem--use-case)
 2. [💡 Short Description](#-short-description)
-3. [🌐 Live Demo & Deployed Link](#-live-demo--deployed-link)
-4. [🛠️ Tech Stack](#️-tech-stack)
-5. [🌟 Key Features](#-key-features)
-6. [🎛️ Architecture & How It Works](#️-architecture--how-it-works)
-7. [⚙️ Local Setup & Installation](#️-local-setup--installation)
-8. [📊 Volunteer Matching Algorithm](#-volunteer-matching-algorithm)
-9. [🔮 Future Scope](#-future-scope)
-10. [📁 Directory Structure](#-directory-structure)
+3. [🛠️ Tech Stack](#️-tech-stack)
+4. [🌟 Key Features](#-key-features)
+5. [🎛️ Architecture & How It Works](#️-architecture--how-it-works)
+6. [⚙️ Local Setup & Installation](#️-local-setup--installation)
+7. [📊 Volunteer Matching Algorithm](#-volunteer-matching-algorithm)
+8. [🔮 Future Scope](#-future-scope)
+9. [📁 Directory Structure](#-directory-structure)
 
 ---
 
@@ -37,13 +43,6 @@ During natural or man-made disasters (e.g., floods, earthquakes, industrial acci
 ## 💡 Short Description
 
 **Smart Resource Allocation** is an AI-powered MVP that automates the collection, translation, classification, and volunteer-matching of disaster requests. It accepts web requests or simulated offline SMS messages, leveraging Google Gemini 2.5 Flash to determine urgency (1-5), translate multi-lingual text, and generate custom life-saving safety instructions. Victims can monitor their rescue in real-time via a Live Tracking Portal and provide post-resolution star ratings. For coordinators, the platform provides a real-time Kanban Dashboard with inventory tracking, duplicate request clustering, and push notifications for critical emergencies.
-
----
-
-## 🌐 Live Demo & Deployed Link
-
-* **Deployed Web URL:** https://smart-resource-allocation-six.vercel.app/  
-  *(Ready for Vercel deployment with configuration provided in `vercel.json`)*
 
 ---
 
