@@ -168,10 +168,10 @@
         </div>
       </div>
 
-      <!-- Right Column: Results & Live Tracker -->
-      <div class="col-12 col-md-6">
+      <!-- Right Column: AI Matchmaking Visualizer -->
+      <div class="col-12 col-md-6 d-flex flex-column">
         <!-- Track Existing Request Search Box -->
-        <div class="form-card mb-4" style="max-width: 100%; min-height: auto;">
+        <div class="form-card w-100 m-0 mb-4" style="max-width: 100%; min-height: auto;">
           <h2 class="fs-5 fw-700 mb-3">
             <i class="bi bi-search me-2 text-info"></i>
             Track Existing Request
@@ -186,17 +186,62 @@
           </form>
         </div>
 
-        <div id="result-container" class="form-card m-0 d-flex flex-column justify-content-center align-items-center text-center" style="max-width: 100%; min-height: 380px;">
-          <div id="placeholder-content">
-            <i class="bi bi-shield-fill-check text-indigo fs-1 mb-3"></i>
-            <h5>Real-time Tracker</h5>
-            <p class="text-muted mb-0" style="font-size: 0.88rem; max-width: 300px; margin: 0 auto;">
-              Submit a request on the left. Your matched volunteer details and live status progress tracker will display here immediately.
-            </p>
-          </div>
+        <div class="form-card m-0 flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center position-relative overflow-hidden" style="max-width: 100%; min-height: 480px;">
           
-          <!-- ── Result Banner (hidden until form is submitted) ── -->
-          <div id="result-banner" class="w-100 d-none text-start"></div>
+          <!-- Background Radar Sweep -->
+          <div class="radar-container position-absolute w-100 h-100 top-0 start-0 d-flex justify-content-center align-items-center">
+             <div class="radar-sweep"></div>
+             <div class="radar-circle circle-1"></div>
+             <div class="radar-circle circle-2"></div>
+             <div class="radar-circle circle-3"></div>
+          </div>
+
+          <!-- Foreground Content -->
+          <div class="position-relative z-1">
+            <div class="mb-4">
+              <i class="bi bi-radar text-info mb-3 d-inline-block" style="font-size: 3.5rem; text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);"></i>
+              <h2 class="fs-4 fw-700 text-white mb-2">AI Matchmaking Active</h2>
+              <p class="text-muted" style="max-width: 280px; margin: 0 auto; font-size: 0.95rem;">
+                While you fill out the form, our Smart AI is already scanning the area for available relief volunteers and logistics.
+              </p>
+            </div>
+
+            <!-- Dynamic Node Connections -->
+            <div class="nodes-visualizer d-flex justify-content-center align-items-center mt-4 mb-4">
+              <div class="node user-node p-3 rounded-circle bg-dark border border-secondary shadow-sm" style="background: rgba(30, 41, 59, 0.8) !important;">
+                 <i class="bi bi-person-bounding-box text-light fs-4"></i>
+              </div>
+              <div class="connection-line d-flex align-items-center">
+                 <div class="line-segment"></div>
+                 <i class="bi bi-robot text-info mx-3 fs-3 pulse-robot"></i>
+                 <div class="line-segment"></div>
+              </div>
+              <div class="node volunteer-node p-3 rounded-circle border border-success shadow-sm" style="background: rgba(16, 185, 129, 0.15) !important;">
+                 <i class="bi bi-shield-check text-success fs-4"></i>
+              </div>
+            </div>
+
+            <!-- Terminal Output -->
+            <div class="mt-4 pt-3 border-top border-secondary w-100 text-start">
+              <div class="d-flex align-items-center mb-2">
+                <span class="spinner-grow spinner-grow-sm text-info me-2" role="status" aria-hidden="true" style="width: 1rem; height: 1rem;"></span>
+                <span class="text-info fw-bold" style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">System Status</span>
+              </div>
+              <p class="text-muted mb-0" style="font-size: 0.8rem; font-family: monospace; line-height: 1.6;">
+                <span class="text-success">></span> Connecting to geographic grid...<br>
+                <span class="text-success">></span> Analyzing priority queues...<br>
+                <span class="text-success">></span> Standby for user input...
+              </p>
+            </div>
+            
+            <!-- Link to Tracking Portal -->
+            <div class="mt-4">
+               <a href="tracking.html" class="btn btn-outline-info btn-sm rounded-pill px-3 py-1" style="font-size: 0.8rem; font-weight: 600;">
+                 <i class="bi bi-box-arrow-up-right me-1"></i> Go to Dedicated Tracker
+               </a>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>

@@ -371,7 +371,7 @@
     const requestId = urlParams.get("id");
 
     if (!requestId) {
-      showErrorView("Invalid URL: Missing Tracking ID parameter.");
+      showNoRequestView();
     } else {
       requestIdDisplay.textContent = requestId;
       initLiveListener();
@@ -489,6 +489,32 @@
         <div class="text-muted p-3 text-center border border-secondary-subtle rounded">
           No tips available for invalid tracking sessions.
         </div>`;
+    }
+
+    // Friendly 'No Request' display
+    function showNoRequestView() {
+      const container = document.querySelector(".tracking-container");
+      container.innerHTML = `
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6">
+            <div class="form-card text-center py-5 px-4 mt-5" style="max-width: 100%;">
+              <i class="bi bi-clipboard-x text-warning mb-4 d-inline-block" style="font-size: 4rem; text-shadow: 0 0 20px rgba(245, 158, 11, 0.35);"></i>
+              <h2 class="fs-3 fw-800 text-white mb-3">No Active Request</h2>
+              <p class="text-muted mb-4 mx-auto" style="font-size: 1rem; max-width: 420px; line-height: 1.6;">
+                You don't have an active tracking session right now. Please submit a resource request first to get a live tracking ID.
+              </p>
+              <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                <a href="index.html" class="btn btn-primary px-4 py-2 rounded-pill font-label">
+                  <i class="bi bi-pencil-square me-2"></i>Make a Request First
+                </a>
+                <a href="index.html#track-search-form" class="btn btn-outline-light px-4 py-2 rounded-pill font-label">
+                  <i class="bi bi-search me-2"></i>Search Request ID
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     // Connect real-time snap listener
