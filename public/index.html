@@ -54,8 +54,12 @@
               <span class="active-dot animate-pulse-green"></span>
               Live Relief Operations
             </div>
-            <!-- Main Photo -->
-            <img src="ngo-work.png" alt="NGO Volunteer distributing aid packs" class="outreach-img img-fluid" />
+            <!-- Slideshow Photos -->
+            <div class="outreach-slideshow">
+              <img src="ngo-work.png" alt="NGO Volunteer distributing food" class="outreach-img active" />
+              <img src="ngo-work-2.jpg" alt="NGO Volunteer distributing health kits" class="outreach-img" />
+              <img src="ngo-work-3.jpg" alt="NGO Volunteer distributing flood relief" class="outreach-img" />
+            </div>
           </div>
         </div>
       </div>
@@ -319,6 +323,29 @@
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
   <!-- Our frontend logic -->
   <script src="app.js"></script>
+
+  <!-- Outreach Slideshow Transition Script -->
+  <script>
+    (function() {
+      const startSlideshow = () => {
+        const images = document.querySelectorAll(".outreach-slideshow .outreach-img");
+        if (images.length > 1) {
+          let currentIndex = 0;
+          setInterval(() => {
+            images[currentIndex].classList.remove("active");
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add("active");
+          }, 4000); // Transitions every 4 seconds
+        }
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", startSlideshow);
+      } else {
+        startSlideshow();
+      }
+    })();
+  </script>
 
 
 
