@@ -22,6 +22,9 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 // Firebase Admin SDK (for server-side Firestore access)
 const admin = require("firebase-admin");
 
+// Blockchain trust layer service
+const blockchain = require("./blockchainService");
+
 // ── App Setup ────────────────────────────────────────────────
 const app = express();
 
@@ -128,6 +131,7 @@ const volunteers = [
     zone: "Vasind",
     available: true,
     phone: "+91 98765 43210",
+    walletAddress: "0x261e0a053e1a067a122fd7a2875b9b3d01e46e6a"
   },
   {
     id: "v002",
@@ -136,6 +140,7 @@ const volunteers = [
     zone: "Kalyan",
     available: true,
     phone: "+91 87654 32109",
+    walletAddress: "0xf9a32c1b423871d3a51bc9b201a0f9b3e1f32cb4"
   },
   {
     id: "v003",
@@ -144,6 +149,7 @@ const volunteers = [
     zone: "Thane",
     available: true,
     phone: "+91 76543 21098",
+    walletAddress: "0x32a1f9e2b10a53b2188e6289b7a43501a1a1234c"
   },
   {
     id: "v004",
@@ -152,6 +158,7 @@ const volunteers = [
     zone: "Mumbai Central",
     available: true,
     phone: "+91 65432 10987",
+    walletAddress: "0x4fe63bc91addfa2875b9b3d01e46e6af98b8dc20"
   },
   {
     id: "v005",
@@ -160,6 +167,7 @@ const volunteers = [
     zone: "Vasind",
     available: true,
     phone: "+91 54321 09876",
+    walletAddress: "0x5a1b3c91dfb28e6289d7a43501ab1a1234e1234f"
   },
   {
     id: "v006",
@@ -168,6 +176,7 @@ const volunteers = [
     zone: "Thane",
     available: true,
     phone: "+91 91234 56789",
+    walletAddress: "0x6fba32c1b42387d3a51bc9b201a0f9b3e1f32cb4a"
   },
   {
     id: "v007",
@@ -176,6 +185,7 @@ const volunteers = [
     zone: "Kalyan",
     available: true,
     phone: "+91 92345 67890",
+    walletAddress: "0x7cda32c1b42387d3a51bc9b201a0f9b3e1f32cb4b"
   },
   {
     id: "v008",
@@ -184,6 +194,7 @@ const volunteers = [
     zone: "Thane",
     available: true,
     phone: "+91 93456 78901",
+    walletAddress: "0x8dba32c1b42387d3a51bc9b201a0f9b3e1f32cb4c"
   },
   {
     id: "v009",
@@ -192,7 +203,8 @@ const volunteers = [
     zone: "Kalyan",
     available: true,
     phone: "+91 94567 89012",
-  },
+    walletAddress: "0x9eba32c1b42387d3a51bc9b201a0f9b3e1f32cb4d"
+  }
 ];
 
 // ── Helper: Seed Volunteers To Firestore ──────────────────────
@@ -208,7 +220,8 @@ async function seedVolunteersToDb() {
         name: v.name,
         skills: v.skills,
         zone: v.zone,
-        phone: v.phone
+        phone: v.phone,
+        walletAddress: v.walletAddress
       });
     }
     await batch.commit();
@@ -246,7 +259,12 @@ async function getDynamicVolunteers() {
         currentVolunteers = volunteers;
       } else {
         volSnapshot.forEach((doc) => {
-          currentVolunteers.push({ id: doc.id, ...doc.data() });
+          const data = doc.data();
+          currentVolunteers.push({ 
+            id: doc.id, 
+            ...data,
+            walletAddress: data.walletAddress || blockchain.getDeterministicWalletAddress(doc.id)
+          });
         });
       }
     } else {
@@ -258,6 +276,7 @@ async function getDynamicVolunteers() {
       return {
         ...v,
         available: !isBusy,
+        walletAddress: v.walletAddress || blockchain.getDeterministicWalletAddress(v.id)
       };
     });
   } catch (err) {
@@ -1011,7 +1030,21 @@ app.post("/api/inventory/restock", async (req, res) => {
       transaction.set(docRef, updatedInv);
     });
 
-    return res.json({ success: true, inventory: updatedInv });
+    // ── On-chain Trust Layer Supply Minting ──────────────────────
+    let mintTxHash = null;
+    let mintBlock = null;
+    try {
+      const mintResult = await blockchain.mintSupply(category, numQty);
+      if (mintResult.success) {
+        mintTxHash = mintResult.txHash;
+        mintBlock = mintResult.blockNumber;
+        console.log(`⛓️ Blockchain Supply Minted: ${numQty} ${category} -> Tx ${mintTxHash}`);
+      }
+    } catch (bcErr) {
+      console.error("⚠️ Blockchain supply minting failed:", bcErr.message);
+    }
+
+    return res.json({ success: true, inventory: updatedInv, blockchainTx: mintTxHash, blockchainBlock: mintBlock });
   } catch (err) {
     console.error("❌ Error restocking inventory:", err.message);
     return res.status(500).json({ error: "Could not restock inventory." });
@@ -1026,7 +1059,11 @@ app.post("/api/inventory/restock", async (req, res) => {
  */
 app.get("/api/volunteers", async (req, res) => {
   const dynamicVolunteersList = await getDynamicVolunteers();
-  return res.json({ success: true, volunteers: dynamicVolunteersList });
+  const volunteersWithWallet = dynamicVolunteersList.map(v => ({
+    ...v,
+    walletAddress: v.walletAddress || blockchain.getDeterministicWalletAddress(v.id)
+  }));
+  return res.json({ success: true, volunteers: volunteersWithWallet });
 });
 
 // ── Route: POST /api/volunteers ───────────────────────────────
@@ -1035,7 +1072,7 @@ app.get("/api/volunteers", async (req, res) => {
  * otherwise appends to in-memory volunteers array.
  */
 app.post("/api/volunteers", async (req, res) => {
-  const { name, skills, zone, phone } = req.body;
+  const { name, skills, zone, phone, walletAddress } = req.body;
 
   if (!name || !skills || !zone || !phone) {
     return res.status(400).json({ error: "Please provide all required volunteer details (name, skills, zone, phone)." });
@@ -1046,11 +1083,13 @@ app.post("/api/volunteers", async (req, res) => {
   }
 
   try {
+    const determinedAddress = walletAddress || blockchain.getDeterministicWalletAddress(name + phone);
     const newVol = {
       name,
       skills,
       zone,
       phone,
+      walletAddress: determinedAddress
     };
 
     if (db) {
@@ -1274,6 +1313,63 @@ app.patch("/api/requests/:id/status", async (req, res) => {
       }
     });
 
+    // ── On-chain Trust Layer Dispatch (Supply Transfer NGO -> Volunteer) ──
+    if (status === "In Progress" && oldStatus !== "In Progress") {
+      try {
+        const volId = currentData.matchedVolunteer ? currentData.matchedVolunteer.id : null;
+        if (volId) {
+          const bcSupplyResult = await blockchain.transferSupply("NGO_ADMIN", volId, category, 1);
+          console.log(`⛓️ Blockchain Supply Dispatched: Request ${id} to Volunteer ${volId} -> Tx ${bcSupplyResult.txHash}`);
+          
+          const blockchainData = {
+            blockchainDispatchTx: bcSupplyResult.txHash,
+            blockchainDispatchBlock: bcSupplyResult.blockNumber
+          };
+          await db.collection("requests").doc(id).update(blockchainData);
+        }
+      } catch (bcErr) {
+        console.error("⚠️ Blockchain supply dispatch failed:", bcErr.message);
+      }
+    }
+
+    // ── On-chain Trust Layer Resolution Log ─────────────────────
+    if (status === "Resolved" && oldStatus !== "Resolved") {
+      try {
+        const volId = currentData.matchedVolunteer ? currentData.matchedVolunteer.id : "v_unknown";
+        const volName = currentData.matchedVolunteer ? currentData.matchedVolunteer.name : "NGO Volunteer";
+        
+        // Calculate estimated hours worked: In Progress -> Resolved duration
+        let hoursWorked = 2; // Default fallback
+        const inProgressEvent = (currentData.timeline || []).find(e => e.status === "In Progress");
+        if (inProgressEvent && inProgressEvent.timestamp) {
+          const durationMs = new Date(timestamp).getTime() - new Date(inProgressEvent.timestamp).getTime();
+          hoursWorked = Math.max(1, Math.round(durationMs / 3600000)); // Round to nearest hour, minimum 1 hour
+        }
+
+        const bcResult = await blockchain.recordResolution(
+          id,
+          volId,
+          volName,
+          category,
+          hoursWorked
+        );
+        
+        console.log(`⛓️ Blockchain Resolution Logged: Request ${id} -> Tx ${bcResult.txHash}`);
+        
+        // Save transaction coordinates to database
+        const blockchainData = {
+          blockchainResolutionTx: bcResult.txHash,
+          blockchainResolutionBlock: bcResult.blockNumber,
+          hoursWorked: hoursWorked
+        };
+        
+        await db.collection("requests").doc(id).update(blockchainData);
+        await db.collection("archived_requests").doc(id).update(blockchainData);
+      } catch (bcErr) {
+        console.error("⚠️ Blockchain resolution recording failed:", bcErr.message);
+      }
+    }
+
     return res.json({ success: true, id, status });
   } catch (err) {
     console.error("❌ Error updating status:", err.message);
@@ -1468,7 +1564,7 @@ app.delete("/api/requests/by-phone/:phone", async (req, res) => {
  */
 app.post("/api/requests/:id/rate", async (req, res) => {
   const { id } = req.params;
-  const { rating, feedback } = req.body;
+  const { rating, feedback, confirmSupplies } = req.body;
 
   const numRating = Number(rating);
   if (isNaN(numRating) || numRating < 1 || numRating > 5) {
@@ -1542,10 +1638,144 @@ app.post("/api/requests/:id/rate", async (req, res) => {
       console.log(`⭐ Updated volunteer ${volId} rating to ${averageRating} (${ratingCount} reviews)`);
     }
 
-    return res.json({ success: true, message: "Rating submitted successfully." });
+    // ── On-chain Trust Layer Soulbound Token (SBT) Minting ───────
+    let sbtResult = null;
+    try {
+      const requestDocUpdated = await db.collection("requests").doc(id).get();
+      const updatedRequestData = requestDocUpdated.exists ? requestDocUpdated.data() : requestData;
+      const hoursWorked = updatedRequestData.hoursWorked || 2;
+      
+      console.log(`[BACKEND] Minting SBT for Volunteer ${volunteer.name} (Request ID: ${id})`);
+      sbtResult = await blockchain.mintVolunteerSBT(
+        id,
+        volId,
+        volunteer.name,
+        updatedRequestData.category || "Other",
+        numRating,
+        feedback || "Service completed successfully.",
+        hoursWorked
+      );
+      
+      console.log(`⛓️ On-chain SBT Minted: Token ID ${sbtResult.tokenId} -> Tx ${sbtResult.txHash}`);
+      
+      const sbtUpdate = {
+        blockchainSbtId: sbtResult.tokenId,
+        blockchainSbtTx: sbtResult.txHash,
+        blockchainSbtBlock: sbtResult.blockNumber
+      };
+      
+      if (isArchived) {
+        await db.collection("archived_requests").doc(id).update(sbtUpdate);
+      } else {
+        await db.collection("requests").doc(id).update(sbtUpdate);
+        const archiveRef = db.collection("archived_requests").doc(id);
+        const archiveDoc = await archiveRef.get();
+        if (archiveDoc.exists) {
+          await archiveRef.update(sbtUpdate);
+        }
+      }
+    } catch (bcErr) {
+      console.error("⚠️ Blockchain SBT minting failed:", bcErr.message);
+    }
+
+    // ── On-chain Trust Layer Supply Delivery (Volunteer -> Victim) ─────
+    let supplyTxResult = null;
+    if (confirmSupplies) {
+      try {
+        const category = requestData.category || "Other";
+        const victimWallet = requestData.victimPhone || "v_unknown";
+        console.log(`[BACKEND] Delivering supply ERC-1155 token from volunteer ${volId} to victim ${victimWallet}`);
+        supplyTxResult = await blockchain.transferSupply(
+          volId,
+          victimWallet,
+          category,
+          1
+        );
+        console.log(`⛓️ On-chain Supply Transferred: Tx ${supplyTxResult.txHash}`);
+        
+        const supplyUpdate = {
+          blockchainSupplyTx: supplyTxResult.txHash,
+          blockchainSupplyBlock: supplyTxResult.blockNumber,
+          confirmSupplies: true
+        };
+        
+        if (isArchived) {
+          await db.collection("archived_requests").doc(id).update(supplyUpdate);
+        } else {
+          await db.collection("requests").doc(id).update(supplyUpdate);
+          const archiveRef = db.collection("archived_requests").doc(id);
+          const archiveDoc = await archiveRef.get();
+          if (archiveDoc.exists) {
+            await archiveRef.update(supplyUpdate);
+          }
+        }
+      } catch (bcErr) {
+        console.error("⚠️ Blockchain supply delivery tracking failed:", bcErr.message);
+      }
+    }
+
+    return res.json({ 
+      success: true, 
+      message: "Rating submitted successfully.",
+      tokenId: sbtResult ? sbtResult.tokenId : null,
+      txHash: sbtResult ? sbtResult.txHash : null,
+      blockNumber: sbtResult ? sbtResult.blockNumber : null,
+      supplyTxHash: supplyTxResult ? supplyTxResult.txHash : null,
+      supplyBlockNumber: supplyTxResult ? supplyTxResult.blockNumber : null
+    });
   } catch (err) {
     console.error("❌ Error rating request:", err.message);
     return res.status(500).json({ error: "Could not submit rating." });
+  }
+});
+
+// ── Route: GET /api/blockchain/explorer/stats ─────────────────
+app.get("/api/blockchain/explorer/stats", async (req, res) => {
+  try {
+    const stats = await blockchain.getStats();
+    return res.json({ success: true, stats });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Route: GET /api/blockchain/explorer/blocks ────────────────
+app.get("/api/blockchain/explorer/blocks", async (req, res) => {
+  try {
+    const blocks = await blockchain.getBlocks();
+    return res.json({ success: true, blocks });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Route: GET /api/blockchain/explorer/transactions ──────────
+app.get("/api/blockchain/explorer/transactions", async (req, res) => {
+  try {
+    const transactions = await blockchain.getTransactions();
+    return res.json({ success: true, transactions });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Route: GET /api/blockchain/balances ───────────────────────
+app.get("/api/blockchain/balances", async (req, res) => {
+  try {
+    const balances = await blockchain.getAllBalances();
+    return res.json({ success: true, balances });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Route: GET /api/blockchain/explorer/sbts ──────────────────
+app.get("/api/blockchain/explorer/sbts", async (req, res) => {
+  try {
+    const sbts = await blockchain.getSBTs();
+    return res.json({ success: true, sbts });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 });
 
