@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-nature-bg text-nature-text font-sans selection:bg-nature-sageLight selection:text-nature-primary;
+  }
+}
+
+/* Custom Scrollbar for list scroll */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Typewriter cursor blinking animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: blink 1s step-end infinite;
+}
+
+/* Radar ping sweep keyframes */
+@keyframes radar-sweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-radar-sweep {
+  animation: radar-sweep 6s linear infinite;
+}
+
+/* Custom toast styles since app uses toast-container */
+.custom-toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  max-width: 420px;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.custom-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.custom-toast.success {
+  border-left: 4px solid #10b981;
+}
+
+.custom-toast.danger {
+  border-left: 4px solid #ef4444;
+}
+
+.custom-toast.warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.custom-toast.info {
+  border-left: 4px solid #3b82f6;
+}

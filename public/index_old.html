@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report a Need — Smart Resource Allocation</title>
+  <meta name="description"
+    content="Submit a community need for food, medical aid, or shelter. Our AI will categorise and route your request to the nearest available volunteer." />
+
+  <!-- Bootstrap 5 CSS (CDN) — handles grid, buttons, forms, utilities -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <!-- Our custom styles (supplements Bootstrap) -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- ── Navigation Bar ────────────────────────────────────── -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-heart-pulse-fill me-2 text-danger"></i>
+        Smart Resource Allocation
+      </a>
+      <div class="ms-auto">
+        <a href="dashboard.html" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-grid-3x3-gap me-1"></i>NGO Dashboard
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Hero Section ──────────────────────────────────────── -->
+  <section class="hero-section">
+    <div class="container hero-container py-2">
+      <div class="row align-items-center g-4 text-start">
+        <!-- Left Column: Dynamic text & description -->
+        <div class="col-12 col-md-7">
+          <h1 class="hero-title mb-3" style="font-size: 3.5rem; font-weight: 800; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+            Report a Need for <br>
+            <span id="typewriter-text" class="text-indigo"></span><span class="typewriter-cursor">|</span>
+          </h1>
+          <p class="hero-desc text-muted mb-0" style="font-size: 1.05rem; max-width: 580px; line-height: 1.6;">
+            Describe what you or someone near you needs. Our AI will automatically translate, categorize, score urgency, and connect you to the right available volunteer in real-time.
+          </p>
+        </div>
+        <!-- Right Column: Real-world NGO Outreach Card -->
+        <div class="col-12 col-md-5 d-flex justify-content-center justify-content-md-end">
+          <div class="outreach-image-container" data-tilt data-tilt-max="5">
+            <!-- Pulsing Active Badge -->
+            <div class="outreach-active-badge">
+              <span class="active-dot animate-pulse-green"></span>
+              Live Relief Operations
+            </div>
+            <!-- Slideshow Photos -->
+            <div class="outreach-slideshow">
+              <img src="ngo-work.png" alt="NGO Volunteer distributing food" class="outreach-img active" />
+              <img src="ngo-work-2.jpg" alt="NGO Volunteer distributing health kits" class="outreach-img" />
+              <img src="ngo-work-3.jpg" alt="NGO Volunteer distributing flood relief" class="outreach-img" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── On-Ground Impact Section ───────────────────────────── -->
+  <section class="container mb-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10">
+        <div class="form-card m-0 w-100" style="max-width: 100%; min-height: auto; padding: 2rem 1.5rem;">
+          <div class="row g-4 align-items-center text-center">
+            <!-- Stat 1 -->
+            <div class="col-12 col-sm-4 border-end-sm">
+              <h3 id="stat-resolved-count" class="text-indigo mb-1 fw-800" style="font-size: 2.2rem;">0</h3>
+              <p class="text-muted mb-0 fw-bold uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Requests Resolved</p>
+            </div>
+            <!-- Stat 2 -->
+            <div class="col-12 col-sm-4 border-end-sm">
+              <h3 class="text-emerald mb-1 fw-800" style="font-size: 2.2rem;">&lt; 15m</h3>
+              <p class="text-muted mb-0 fw-bold uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Average Volunteer Dispatch</p>
+            </div>
+            <!-- Stat 3 -->
+            <div class="col-12 col-sm-4">
+              <h3 class="text-amber mb-1 fw-800" style="font-size: 2.2rem;">98.4%</h3>
+              <p class="text-muted mb-0 fw-bold uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Successful Aid Delivery</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Request Form & Status Column ───────────────────────── -->
+  <main class="container mb-5">
+    <div class="row g-4 justify-content-center">
+      <!-- Left Column: Submit Request Form -->
+      <div class="col-12 col-md-6">
+        <div class="form-card m-0" style="max-width: 100%;" data-tilt data-tilt-max="5">
+          <h2 class="fs-5 fw-700 mb-4">
+            <i class="bi bi-pencil-square me-2 text-primary"></i>
+            Submit a Request
+          </h2>
+
+          <form id="request-form" novalidate>
+            <!-- Description -->
+            <div class="mb-3">
+              <label for="description">Describe the need</label>
+              <textarea id="description" name="description" class="form-control" rows="4"
+                placeholder="e.g. An elderly man in our building has run out of insulin and cannot reach a hospital…"
+                required></textarea>
+              <div class="form-text text-muted mt-1">
+                Be as specific as possible — the AI uses this to prioritise your request.
+              </div>
+            </div>
+
+            <!-- Victim Contact Number -->
+            <div class="mb-3">
+              <label for="victim-phone">Your Contact Number</label>
+              <input type="tel" id="victim-phone" name="victimPhone" class="form-control"
+                placeholder="e.g. +91 98765 43210" required />
+              <div class="form-text text-muted mt-1">
+                So volunteers or coordinators can call you directly.
+              </div>
+            </div>
+
+            <!-- Victim Address -->
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <label for="address" class="mb-0">Exact Address / Location (Optional)</label>
+                <button type="button" id="gps-btn" class="btn btn-outline-info btn-sm py-0 px-2" style="font-size: 0.75rem; border-radius: 4px;">
+                  <i class="bi bi-geo-alt-fill me-1"></i>Share Location
+                </button>
+              </div>
+              <textarea id="address" name="address" class="form-control" rows="2"
+                placeholder="e.g. Flat 202, Building B, Tarmale Nagar, Vasind, Maharashtra (Or click Share Location)"></textarea>
+              <div class="form-text text-muted mt-1" id="address-help">
+                Include landmarks, or click 'Share Location' to grab coordinates automatically.
+              </div>
+            </div>
+
+            <!-- Zone -->
+            <div class="mb-4">
+              <label for="zone">Select Nearest Locality/Hub</label>
+              <select id="zone" name="zone" class="form-select" required>
+                <option value="" disabled selected>Select nearest locality…</option>
+                <option value="Vasind">Vasind</option>
+                <option value="Kalyan">Kalyan</option>
+                <option value="Thane">Thane</option>
+                <option value="Mumbai Central">Mumbai Central</option>
+              </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submit-btn" class="btn btn-primary w-100">
+              <span id="btn-text">
+                <i class="bi bi-send-fill me-2"></i>Submit Request
+              </span>
+              <!-- Shown while waiting for API response -->
+              <span id="btn-spinner" class="d-none">
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Analysing with AI…
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: AI Matchmaking Visualizer -->
+      <div class="col-12 col-md-6 d-flex flex-column">
+        <!-- Track Existing Request Search Box -->
+        <div class="form-card w-100 m-0 mb-4" style="max-width: 100%; min-height: auto;">
+          <h2 class="fs-5 fw-700 mb-3">
+            <i class="bi bi-search me-2 text-info"></i>
+            Track Existing Request
+          </h2>
+          <form id="track-search-form" class="row g-2">
+            <div class="col-8">
+              <input type="text" id="track-search-id" class="form-control text-white bg-dark border-secondary" placeholder="Enter Request ID..." style="background: rgba(15, 12, 41, 0.4) !important;" required />
+            </div>
+            <div class="col-4">
+              <button type="submit" class="btn btn-info w-100 text-white" style="font-weight:600;"><i class="bi bi-search"></i> Track</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="form-card m-0 flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center position-relative overflow-hidden" style="max-width: 100%; min-height: 480px;">
+          
+          <!-- Background Radar Sweep -->
+          <div class="radar-container position-absolute w-100 h-100 top-0 start-0 d-flex justify-content-center align-items-center">
+             <div class="radar-sweep"></div>
+             <div class="radar-circle circle-1"></div>
+             <div class="radar-circle circle-2"></div>
+             <div class="radar-circle circle-3"></div>
+          </div>
+
+          <!-- Foreground Content -->
+          <div class="position-relative z-1">
+            <div class="mb-4">
+              <i class="bi bi-radar text-info mb-3 d-inline-block" style="font-size: 3.5rem; text-shadow: 0 0 20px rgba(6, 182, 212, 0.6);"></i>
+              <h2 class="fs-4 fw-700 text-white mb-2">AI Matchmaking Active</h2>
+              <p class="text-muted" style="max-width: 280px; margin: 0 auto; font-size: 0.95rem;">
+                While you fill out the form, our Smart AI is already scanning the area for available relief volunteers and logistics.
+              </p>
+            </div>
+
+            <!-- Dynamic Node Connections -->
+            <div class="nodes-visualizer d-flex justify-content-center align-items-center mt-4 mb-4">
+              <div class="node user-node p-3 rounded-circle bg-dark border border-secondary shadow-sm" style="background: rgba(30, 41, 59, 0.8) !important;">
+                 <i class="bi bi-person-bounding-box text-light fs-4"></i>
+              </div>
+              <div class="connection-line d-flex align-items-center">
+                 <div class="line-segment"></div>
+                 <i class="bi bi-robot text-info mx-3 fs-3 pulse-robot"></i>
+                 <div class="line-segment"></div>
+              </div>
+              <div class="node volunteer-node p-3 rounded-circle border border-success shadow-sm" style="background: rgba(16, 185, 129, 0.15) !important;">
+                 <i class="bi bi-shield-check text-success fs-4"></i>
+              </div>
+            </div>
+
+            <!-- Terminal Output -->
+            <div class="mt-4 pt-3 border-top border-secondary w-100 text-start">
+              <div class="d-flex align-items-center mb-2">
+                <span class="spinner-grow spinner-grow-sm text-info me-2" role="status" aria-hidden="true" style="width: 1rem; height: 1rem;"></span>
+                <span class="text-info fw-bold" style="font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;">System Status</span>
+              </div>
+              <p class="text-muted mb-0" style="font-size: 0.8rem; font-family: monospace; line-height: 1.6;">
+                <span class="text-success">></span> Connecting to geographic grid...<br>
+                <span class="text-success">></span> Analyzing priority queues...<br>
+                <span class="text-success">></span> Standby for user input...
+              </p>
+            </div>
+            
+            <!-- Link to Tracking Portal -->
+            <div class="mt-4">
+               <a href="tracking.html" class="btn btn-outline-info btn-sm rounded-pill px-3 py-1" style="font-size: 0.8rem; font-weight: 600;">
+                 <i class="bi bi-box-arrow-up-right me-1"></i> Go to Dedicated Tracker
+               </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+    <!-- How It Works Section -->
+    <div class="row g-3 mb-5" style="max-width:560px; margin:0 auto;">
+      <div class="col-12">
+        <p class="text-center how-it-works-title fw-600 mb-3"
+          style="font-size:0.88rem; text-transform:uppercase; letter-spacing:0.06em;">
+          How it works
+        </p>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-blue p-3 rounded-3" data-tilt data-tilt-scale="1.05" data-tilt-max="10">
+          <i class="bi bi-pencil fs-3 text-indigo"></i>
+          <p class="mt-2 mb-0 font-label">You describe the need</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-green p-3 rounded-3" data-tilt data-tilt-scale="1.05" data-tilt-max="10">
+          <i class="bi bi-cpu fs-3 text-emerald"></i>
+          <p class="mt-2 mb-0 font-label">AI classifies & scores urgency</p>
+        </div>
+      </div>
+      <div class="col-4 text-center">
+        <div class="how-card card-yellow p-3 rounded-3" data-tilt data-tilt-scale="1.05" data-tilt-max="10">
+          <i class="bi bi-person-check fs-3 text-amber"></i>
+          <p class="mt-2 mb-0 font-label">Volunteer gets matched</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating SMS Gateway Simulator Button -->
+  <button class="sms-simulator-btn" data-bs-toggle="modal" data-bs-target="#sms-modal" title="Simulate Offline SMS Gateway">
+    <i class="bi bi-chat-dots-fill"></i>
+  </button>
+
+  <!-- SMS Gateway Simulator Modal -->
+  <div class="modal fade" id="sms-modal" tabindex="-1" aria-labelledby="smsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content sms-modal-content" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title text-white fw-bold" id="smsModalLabel">
+            <i class="bi bi-broadcast text-info me-2"></i>Offline SMS Gateway Simulator
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted small mb-3">
+            In areas without internet, victims send a standard SMS to our gateway. Use this phone mock to simulate sending a raw SMS message and watch how our AI parses it.
+          </p>
+
+          <!-- Simulated Phone Chassis -->
+          <div class="phone-mock-container">
+            <div class="phone-screen">
+              <!-- Header of mock chat -->
+              <div class="phone-chat-header d-flex justify-content-between align-items-center">
+                <div class="text-start">
+                  <span class="chat-title">Emergency SMS Gateway</span>
+                  <span class="chat-subtitle"><i class="bi bi-circle-fill text-success animate-pulse-green" style="font-size:0.5rem; margin-right:3px;"></i> Active (+91 80000 12345)</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger border-0 px-2 py-1" id="clear-sms-btn" style="font-size: 0.75rem;" title="Clear Chat">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+              
+              <!-- Message Area -->
+              <div class="phone-chat-body" id="sms-chat-body">
+                <div class="sms-message received">
+                  <div class="sms-text">SYSTEM: Gateway online. Compose your SMS emergency text below. You can use English, Hindi, Marathi, Hinglish, etc.</div>
+                </div>
+              </div>
+
+              <!-- Input Area inside Phone -->
+              <div class="phone-chat-footer">
+                <form id="sms-simulator-form" class="w-100">
+                  <!-- Sender Phone Input inside screen -->
+                  <div class="mb-2">
+                    <input type="tel" id="sms-sender-phone" class="form-control form-control-sm phone-input" placeholder="Sender's Phone (e.g. +91 99999 88888)" value="+91 98200 98200" required />
+                  </div>
+                  
+                  <!-- Composer -->
+                  <div class="input-group">
+                    <textarea id="sms-composer" class="form-control form-control-sm phone-textarea" placeholder="Type raw emergency SMS here..." rows="2" required></textarea>
+                    <button class="btn btn-info btn-sm px-3" type="submit" id="sms-send-btn">
+                      <i class="bi bi-send-fill text-white"></i>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gateway Processing Console -->
+          <div class="sms-console-container mt-3 d-none" id="sms-console-container">
+            <div class="console-title"><i class="bi bi-terminal-fill me-1"></i> Gateway Console Logs</div>
+            <div class="console-body" id="sms-console-log">
+              <!-- Stepped logs will appear here -->
+            </div>
+            <!-- Live Track Button -->
+            <div id="sms-track-container" class="mt-2 text-end d-none">
+              <!-- Will be populated with button -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container for Custom Glassmorphic Notifications -->
+  <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+  <footer>
+    Built with ❤️ for the Hackathon &nbsp;·&nbsp; Smart Resource Allocation MVP
+  </footer>
+
+  <!-- Bootstrap 5 JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- VanillaTilt CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.8.1/dist/vanilla-tilt.min.js"></script>
+  <!-- Our frontend logic -->
+  <script src="app.js"></script>
+
+  <!-- Outreach Slideshow & Live Stats Script -->
+  <script>
+    (function() {
+      const startSlideshow = () => {
+        const images = document.querySelectorAll(".outreach-slideshow .outreach-img");
+        if (images.length > 1) {
+          let currentIndex = 0;
+          setInterval(() => {
+            images[currentIndex].classList.remove("active");
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].classList.add("active");
+          }, 4000); // Transitions every 4 seconds
+        }
+      };
+
+      const fetchResolvedStats = async () => {
+        try {
+          const res = await fetch("/api/requests/stats");
+          const data = await res.json();
+          if (data.success) {
+            const countEl = document.getElementById("stat-resolved-count");
+            if (countEl) {
+              countEl.textContent = data.resolvedCount;
+            }
+          }
+        } catch (err) {
+          console.error("Error fetching resolved request statistics:", err);
+        }
+      };
+
+      const init = () => {
+        startSlideshow();
+        fetchResolvedStats();
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+
+
+
+
+
+
+</body>
+
+</html>
