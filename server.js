@@ -1030,7 +1030,21 @@ app.post("/api/inventory/restock", async (req, res) => {
       transaction.set(docRef, updatedInv);
     });
 
-    return res.json({ success: true, inventory: updatedInv });
+    // ── On-chain Trust Layer Supply Minting ──────────────────────
+    let mintTxHash = null;
+    let mintBlock = null;
+    try {
+      const mintResult = await blockchain.mintSupply(category, numQty);
+      if (mintResult.success) {
+        mintTxHash = mintResult.txHash;
+        mintBlock = mintResult.blockNumber;
+        console.log(`⛓️ Blockchain Supply Minted: ${numQty} ${category} -> Tx ${mintTxHash}`);
+      }
+    } catch (bcErr) {
+      console.error("⚠️ Blockchain supply minting failed:", bcErr.message);
+    }
+
+    return res.json({ success: true, inventory: updatedInv, blockchainTx: mintTxHash, blockchainBlock: mintBlock });
   } catch (err) {
     console.error("❌ Error restocking inventory:", err.message);
     return res.status(500).json({ error: "Could not restock inventory." });
@@ -1299,6 +1313,25 @@ app.patch("/api/requests/:id/status", async (req, res) => {
       }
     });
 
+    // ── On-chain Trust Layer Dispatch (Supply Transfer NGO -> Volunteer) ──
+    if (status === "In Progress" && oldStatus !== "In Progress") {
+      try {
+        const volId = currentData.matchedVolunteer ? currentData.matchedVolunteer.id : null;
+        if (volId) {
+          const bcSupplyResult = await blockchain.transferSupply("NGO_ADMIN", volId, category, 1);
+          console.log(`⛓️ Blockchain Supply Dispatched: Request ${id} to Volunteer ${volId} -> Tx ${bcSupplyResult.txHash}`);
+          
+          const blockchainData = {
+            blockchainDispatchTx: bcSupplyResult.txHash,
+            blockchainDispatchBlock: bcSupplyResult.blockNumber
+          };
+          await db.collection("requests").doc(id).update(blockchainData);
+        }
+      } catch (bcErr) {
+        console.error("⚠️ Blockchain supply dispatch failed:", bcErr.message);
+      }
+    }
+
     // ── On-chain Trust Layer Resolution Log ─────────────────────
     if (status === "Resolved" && oldStatus !== "Resolved") {
       try {
@@ -1531,7 +1564,7 @@ app.delete("/api/requests/by-phone/:phone", async (req, res) => {
  */
 app.post("/api/requests/:id/rate", async (req, res) => {
   const { id } = req.params;
-  const { rating, feedback } = req.body;
+  const { rating, feedback, confirmSupplies } = req.body;
 
   const numRating = Number(rating);
   if (isNaN(numRating) || numRating < 1 || numRating > 5) {
@@ -1645,12 +1678,50 @@ app.post("/api/requests/:id/rate", async (req, res) => {
       console.error("⚠️ Blockchain SBT minting failed:", bcErr.message);
     }
 
+    // ── On-chain Trust Layer Supply Delivery (Volunteer -> Victim) ─────
+    let supplyTxResult = null;
+    if (confirmSupplies) {
+      try {
+        const category = requestData.category || "Other";
+        const victimWallet = requestData.victimPhone || "v_unknown";
+        console.log(`[BACKEND] Delivering supply ERC-1155 token from volunteer ${volId} to victim ${victimWallet}`);
+        supplyTxResult = await blockchain.transferSupply(
+          volId,
+          victimWallet,
+          category,
+          1
+        );
+        console.log(`⛓️ On-chain Supply Transferred: Tx ${supplyTxResult.txHash}`);
+        
+        const supplyUpdate = {
+          blockchainSupplyTx: supplyTxResult.txHash,
+          blockchainSupplyBlock: supplyTxResult.blockNumber,
+          confirmSupplies: true
+        };
+        
+        if (isArchived) {
+          await db.collection("archived_requests").doc(id).update(supplyUpdate);
+        } else {
+          await db.collection("requests").doc(id).update(supplyUpdate);
+          const archiveRef = db.collection("archived_requests").doc(id);
+          const archiveDoc = await archiveRef.get();
+          if (archiveDoc.exists) {
+            await archiveRef.update(supplyUpdate);
+          }
+        }
+      } catch (bcErr) {
+        console.error("⚠️ Blockchain supply delivery tracking failed:", bcErr.message);
+      }
+    }
+
     return res.json({ 
       success: true, 
       message: "Rating submitted successfully.",
       tokenId: sbtResult ? sbtResult.tokenId : null,
       txHash: sbtResult ? sbtResult.txHash : null,
-      blockNumber: sbtResult ? sbtResult.blockNumber : null
+      blockNumber: sbtResult ? sbtResult.blockNumber : null,
+      supplyTxHash: supplyTxResult ? supplyTxResult.txHash : null,
+      supplyBlockNumber: supplyTxResult ? supplyTxResult.blockNumber : null
     });
   } catch (err) {
     console.error("❌ Error rating request:", err.message);
@@ -1683,6 +1754,16 @@ app.get("/api/blockchain/explorer/transactions", async (req, res) => {
   try {
     const transactions = await blockchain.getTransactions();
     return res.json({ success: true, transactions });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// ── Route: GET /api/blockchain/balances ───────────────────────
+app.get("/api/blockchain/balances", async (req, res) => {
+  try {
+    const balances = await blockchain.getAllBalances();
+    return res.json({ success: true, balances });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

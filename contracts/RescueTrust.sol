@@ -41,6 +41,10 @@ contract RescueTrust {
     mapping(string => RescueRecord) public rescueRecords;
     string[] public allRequestIds;
     
+    // ERC-1155-like supply balances: TokenID => Account => Balance
+    // IDs: 1 = Food, 2 = Medical, 3 = Shelter, 4 = Other
+    mapping(uint256 => mapping(address => uint256)) public supplyBalances;
+    
     // ERC721 metadata fields (minimal custom implementation for SBT)
     string public name = "Volunteer Rescue SBT";
     string public symbol = "VRES-SBT";
@@ -48,6 +52,8 @@ contract RescueTrust {
     // Events
     event RescueResolved(string indexed requestId, address indexed volunteer, string volunteerName, uint256 hoursWorked, uint256 timestamp);
     event SBTMinted(uint256 indexed tokenId, address indexed volunteer, string volunteerName, uint8 rating, uint256 hoursWorked, string requestId, uint256 timestamp);
+    event SupplyMinted(address indexed to, uint256 indexed tokenId, uint256 amount, uint256 timestamp);
+    event SupplyTransferred(address indexed from, address indexed to, uint256 indexed tokenId, uint256 amount, uint256 timestamp);
     
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner (NGO admin) can execute this action");
@@ -56,6 +62,11 @@ contract RescueTrust {
     
     constructor() {
         owner = msg.sender;
+        // Mint default ERC-1155 supplies to NGO admin wallet
+        supplyBalances[1][msg.sender] = 50;  // Food Packs
+        supplyBalances[2][msg.sender] = 30;  // Medical Kits
+        supplyBalances[3][msg.sender] = 20;  // Shelter Kits
+        supplyBalances[4][msg.sender] = 100; // Other Supplies
     }
     
     // Record a resolved rescue on-chain (prior to victim feedback)
@@ -156,5 +167,34 @@ contract RescueTrust {
     
     function getRescueRecord(string calldata _requestId) external view returns (RescueRecord memory) {
         return rescueRecords[_requestId];
+    }
+    
+    // ERC-1155-like supply functions
+    
+    // Mint supply tokens (called during restock by NGO admin)
+    function mintSupply(uint256 _tokenId, uint256 _amount) external onlyOwner {
+        require(_tokenId >= 1 && _tokenId <= 4, "Invalid supply token ID");
+        require(_amount > 0, "Amount must be greater than zero");
+        
+        supplyBalances[_tokenId][owner] += _amount;
+        
+        emit SupplyMinted(owner, _tokenId, _amount, block.timestamp);
+    }
+    
+    // Transfer supply tokens (NGO to volunteer, or volunteer to victim)
+    function transferSupply(address _from, address _to, uint256 _tokenId, uint256 _amount) external onlyOwner {
+        require(_tokenId >= 1 && _tokenId <= 4, "Invalid supply token ID");
+        require(_amount > 0, "Amount must be greater than zero");
+        require(supplyBalances[_tokenId][_from] >= _amount, "Insufficient supply balance");
+        
+        supplyBalances[_tokenId][_from] -= _amount;
+        supplyBalances[_tokenId][_to] += _amount;
+        
+        emit SupplyTransferred(_from, _to, _tokenId, _amount, block.timestamp);
+    }
+    
+    // Get supply balance of an account
+    function balanceOf(address _account, uint256 _tokenId) external view returns (uint256) {
+        return supplyBalances[_tokenId][_account];
     }
 }

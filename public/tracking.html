@@ -265,6 +265,13 @@
               <textarea id="feedback-text" class="form-control form-control-sm text-white" style="background: rgba(15, 12, 41, 0.4); border: 1px solid rgba(255,255,255,0.08);" rows="3" placeholder="Tell us how the volunteer helped you..."></textarea>
             </div>
 
+            <div class="mb-3 form-check text-start">
+              <input type="checkbox" class="form-check-input" id="confirm-supplies-checkbox" checked>
+              <label class="form-check-label text-muted small fw-bold ms-1" for="confirm-supplies-checkbox" style="cursor:pointer;">
+                📦 I confirm I received the requested relief supplies
+              </label>
+            </div>
+
             <button type="button" class="btn btn-warning w-100 py-2 text-dark font-title" id="submit-rating-btn" disabled>
               <i class="bi bi-chat-heart-fill me-2"></i>Submit Feedback
             </button>
@@ -274,10 +281,16 @@
             <i class="bi bi-shield-fill-check text-success fs-1 d-block mb-3" style="animation: pulse-indigo 2s infinite;"></i>
             <h4 class="fw-bold text-white mb-2">Thank You! Rating Secured On-Chain</h4>
             <p class="text-muted small mb-3">Your feedback was successfully written to the L2 EVM trust layer.</p>
-            <div class="p-3 rounded text-start mb-3 font-monospace" style="font-size:0.75rem; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);">
+            <div class="p-3 rounded text-start mb-2 font-monospace" style="font-size:0.75rem; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.06);">
               <div class="mb-1 text-white-50">SBT Minted: <strong class="text-warning" id="success-sbt-id">#0</strong></div>
               <div class="mb-1 text-white-50 text-truncate">L2 Tx: <a href="" id="success-tx-link" target="_blank" class="text-info text-break font-monospace">0x00...</a></div>
               <div class="text-muted">Block: <span id="success-block-num">--</span></div>
+            </div>
+            <!-- Supply token audit trail verification box -->
+            <div id="success-supply-info" class="p-3 rounded text-start mb-3 font-monospace d-none" style="font-size:0.75rem; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);">
+              <div class="mb-1 text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Supply Receipt Verified!</div>
+              <div class="mb-1 text-white-50 text-truncate">Supply L2 Tx: <a href="" id="success-supply-tx-link" target="_blank" class="text-info text-break font-monospace">0x00...</a></div>
+              <div class="text-muted">Block: <span id="success-supply-block-num">--</span></div>
             </div>
             <p class="text-muted small mb-0">This verified record has been minted as a Soulbound Token (SBT) for your volunteer.</p>
           </div>
@@ -447,13 +460,16 @@
       submitRatingBtn.disabled = true;
       submitRatingBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status"></span>Submitting feedback...`;
 
+      const confirmSupplies = document.getElementById("confirm-supplies-checkbox").checked;
+
       try {
         const res = await fetch(`/api/requests/${requestId}/rate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             rating: selectedRating,
-            feedback: feedbackText.value.trim()
+            feedback: feedbackText.value.trim(),
+            confirmSupplies: confirmSupplies
           })
         });
 
@@ -483,6 +499,22 @@
         const blockNumSpan = document.getElementById("success-block-num");
         if (blockNumSpan) {
           blockNumSpan.textContent = resData.blockNumber || '--';
+        }
+
+        // Display supply verification coordinates if confirmed
+        const supplyInfoContainer = document.getElementById("success-supply-info");
+        if (supplyInfoContainer) {
+          if (resData.supplyTxHash) {
+            document.getElementById("success-supply-block-num").textContent = resData.supplyBlockNumber || '--';
+            const supplyTxLink = document.getElementById("success-supply-tx-link");
+            if (supplyTxLink) {
+              supplyTxLink.textContent = `${resData.supplyTxHash.substring(0, 18)}...`;
+              supplyTxLink.href = `dashboard.html?view=blockchain&tx=${resData.supplyTxHash}`;
+            }
+            supplyInfoContainer.classList.remove("d-none");
+          } else {
+            supplyInfoContainer.classList.add("d-none");
+          }
         }
 
         ratingFormContainer.classList.add("d-none");
@@ -689,6 +721,22 @@
           const blockNumSpan = document.getElementById("success-block-num");
           if (blockNumSpan) {
             blockNumSpan.textContent = data.blockchainSbtBlock || '--';
+          }
+
+          // Populate supply verification coordinates if they exist
+          const supplyInfoContainer = document.getElementById("success-supply-info");
+          if (supplyInfoContainer) {
+            if (data.blockchainSupplyTx) {
+              document.getElementById("success-supply-block-num").textContent = data.blockchainSupplyBlock || '--';
+              const supplyTxLink = document.getElementById("success-supply-tx-link");
+              if (supplyTxLink) {
+                supplyTxLink.textContent = `${data.blockchainSupplyTx.substring(0, 18)}...`;
+                supplyTxLink.href = `dashboard.html?view=blockchain&tx=${data.blockchainSupplyTx}`;
+              }
+              supplyInfoContainer.classList.remove("d-none");
+            } else {
+              supplyInfoContainer.classList.add("d-none");
+            }
           }
           
           ratingSuccessContainer.classList.remove("d-none");

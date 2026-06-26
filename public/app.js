@@ -1162,6 +1162,22 @@ if (isDashboardPage) {
         const data = await res.json();
         updateInventoryUI(data.inventory);
       }
+
+      // Load on-chain supply balances
+      const bcRes = await fetch(`${API_BASE}/api/blockchain/balances`);
+      if (bcRes.ok) {
+        const bcData = await bcRes.json();
+        if (bcData.success && bcData.balances && bcData.balances.ngo) {
+          const ngoBalances = bcData.balances.ngo;
+          const categories = ["Food", "Medical", "Shelter", "Other"];
+          categories.forEach(cat => {
+            const bcCountEl = document.getElementById(`blockchain-${cat}-count`);
+            if (bcCountEl) {
+              bcCountEl.textContent = ngoBalances[cat] !== undefined ? ngoBalances[cat] : 0;
+            }
+          });
+        }
+      }
     } catch (err) {
       console.error("Error loading inventory:", err);
     }
@@ -1749,11 +1765,28 @@ if (isDashboardPage) {
           ledgerEmpty.classList.remove("d-none");
         } else {
           ledgerEmpty.classList.add("d-none");
+          const NGO_ADMIN_WALLET = "0x4fe63000000000000000000000000000000091ad";
           ledgerBody.innerHTML = txs.map(tx => {
             const shortHash = `${tx.hash.substring(0, 10)}...${tx.hash.substring(56)}`;
-            const methodBadge = tx.method === "mintSBT" 
-              ? `<span class="badge" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3) !important; color: #fcd34d;">MintSBT</span>`
-              : `<span class="badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3) !important; color: #c7d2fe;">RecordRescue</span>`;
+            
+            let methodBadge = "";
+            let description = "";
+            
+            if (tx.method === "mintSBT") {
+              methodBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3) !important; color: #fcd34d;">MintSBT</span>`;
+              description = `Mint SBT #${tx.payload.tokenId} to ${tx.payload.volunteerName}`;
+            } else if (tx.method === "mintSupply") {
+              methodBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3) !important; color: #34d399;">MintSupply</span>`;
+              description = `Mint ${tx.payload.amount} ${tx.payload.category} tokens`;
+            } else if (tx.method === "transferSupply") {
+              methodBadge = `<span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3) !important; color: #60a5fa;">TransferSupply</span>`;
+              const fromName = tx.payload.from === NGO_ADMIN_WALLET ? "NGO Admin" : `Vol...${tx.payload.from.substring(38)}`;
+              const toName = tx.payload.to === NGO_ADMIN_WALLET ? "NGO Admin" : (tx.payload.to.startsWith("0x") ? `Victim...${tx.payload.to.substring(38)}` : tx.payload.to);
+              description = `Transfer ${tx.payload.amount} ${tx.payload.category} from ${fromName} to ${toName}`;
+            } else {
+              methodBadge = `<span class="badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3) !important; color: #c7d2fe;">RecordRescue</span>`;
+              description = `Resolve Request: ${tx.payload.requestId.substring(0,8)}...`;
+            }
             
             return `
               <tr>
@@ -1765,7 +1798,7 @@ if (isDashboardPage) {
                 <td><span class="text-muted small">${tx.gasUsed}</span></td>
                 <td>
                   <span class="text-white-50 text-truncate d-inline-block" style="max-width: 180px; font-size:0.72rem;">
-                    ${tx.method === "mintSBT" ? `Mint SBT #${tx.payload.tokenId} to ${tx.payload.volunteerName}` : `Resolve Request: ${tx.payload.requestId.substring(0,8)}...`}
+                    ${description}
                   </span>
                 </td>
               </tr>
