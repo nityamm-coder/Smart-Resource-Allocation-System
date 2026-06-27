@@ -736,14 +736,23 @@ Example output if new request:
           if (volDoc.exists) {
             const volData = volDoc.data();
             const ratings = volData.ratings || [];
+            const feedbacks = volData.feedbacks || [];
             ratings.push(rating);
+            if (feedback && feedback.trim()) {
+              feedbacks.push({
+                rating: rating,
+                comment: feedback.trim(),
+                timestamp: new Date().toISOString()
+              });
+            }
             const ratingCount = ratings.length;
             const averageRating = ratings.reduce((sum, r) => sum + r, 0) / ratingCount;
 
             await volRef.update({
               ratings,
               ratingCount,
-              averageRating
+              averageRating,
+              feedbacks
             });
           }
         } else {
@@ -1626,14 +1635,23 @@ app.post("/api/requests/:id/rate", async (req, res) => {
     if (volDoc.exists) {
       const volData = volDoc.data();
       const ratings = volData.ratings || [];
+      const feedbacks = volData.feedbacks || [];
       ratings.push(numRating);
+      if (feedback && feedback.trim()) {
+        feedbacks.push({
+          rating: numRating,
+          comment: feedback.trim(),
+          timestamp: new Date().toISOString()
+        });
+      }
       const ratingCount = ratings.length;
       const averageRating = ratings.reduce((sum, r) => sum + r, 0) / ratingCount;
 
       await volRef.update({
         ratings,
         ratingCount,
-        averageRating
+        averageRating,
+        feedbacks
       });
       console.log(`⭐ Updated volunteer ${volId} rating to ${averageRating} (${ratingCount} reviews)`);
     }

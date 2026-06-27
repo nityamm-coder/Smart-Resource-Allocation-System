@@ -721,6 +721,24 @@
       </div>
     </div>
 
+    <!-- ── View Feedbacks Modal ────────────────────────────── -->
+    <div class="modal fade" id="feedbacks-modal" tabindex="-1" aria-labelledby="feedbacksModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
+          <div class="modal-header border-bottom border-secondary">
+            <h5 class="modal-title fw-bold" id="feedbacksModalLabel"><i class="bi bi-chat-text-fill me-2 text-warning" style="color: #d97706 !important;"></i>Volunteer Feedbacks</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="feedbacks-modal-body" style="max-height: 400px; overflow-y: auto;">
+            <!-- Populated via JS -->
+          </div>
+          <div class="modal-footer border-top border-secondary">
+            <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── History Logs Full-screen Modal / Overlay ───────────── -->
     <div class="logs-overlay-container d-none" id="logs-modal-container">
       <div class="logs-modal-content">

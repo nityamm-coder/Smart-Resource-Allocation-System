@@ -1272,8 +1272,9 @@ if (isDashboardPage) {
         const ratingVal = vol.averageRating ? vol.averageRating.toFixed(1) : "5.0";
         const reviewsCount = vol.ratingCount || 0;
         const ratingHtml = `
-          <div class="roster-meta text-warning">
-            <i class="bi bi-star-fill me-1"></i>Rating: <strong>${ratingVal}</strong> (${reviewsCount} review${reviewsCount === 1 ? '' : 's'})
+          <div class="roster-meta" style="color: #d97706 !important; font-weight: 600; display: flex; align-items: center; gap: 4px;">
+            <i class="bi bi-star-fill" style="color: #d97706 !important;"></i>Rating: <strong style="color: #d97706 !important;">${ratingVal}</strong> (${reviewsCount} review${reviewsCount === 1 ? '' : 's'})
+            ${reviewsCount > 0 ? `<button class="btn btn-link btn-sm p-0 ms-2 view-reviews-btn" data-id="${vol.id}" style="color: #047857 !important; font-size: 0.72rem; font-weight: 700; text-decoration: underline; cursor: pointer; border: none; background: transparent;">View Feedbacks</button>` : ''}
           </div>
         `;
 
@@ -1324,6 +1325,83 @@ if (isDashboardPage) {
         }
       });
     });
+
+    // Attach click events for viewing feedbacks
+    document.querySelectorAll(".view-reviews-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const volId = btn.dataset.id;
+        showVolunteerFeedbacks(volId);
+      });
+    });
+  }
+
+  function showVolunteerFeedbacks(volId) {
+    const vol = allVolunteers.find(v => v.id === volId);
+    if (!vol) return;
+
+    // Gather feedbacks
+    let volunteerFeedbacks = [];
+    if (vol.feedbacks && Array.isArray(vol.feedbacks)) {
+      volunteerFeedbacks = [...vol.feedbacks];
+    }
+
+    // Also pull dynamically from client-side requests list to make sure we get real-time ratings
+    allRequests.forEach(r => {
+      if (r.matchedVolunteer && r.matchedVolunteer.id === volId && r.rating !== undefined && r.rating !== null) {
+        const exists = volunteerFeedbacks.some(f => f.requestId === r.id);
+        if (!exists) {
+          volunteerFeedbacks.push({
+            requestId: r.id,
+            rating: r.rating,
+            comment: r.feedback || "No comment left.",
+            timestamp: r.timeline && r.timeline.length > 0 ? r.timeline[r.timeline.length - 1].timestamp : null
+          });
+        }
+      }
+    });
+
+    const modalBody = document.getElementById("feedbacks-modal-body");
+    const modalTitle = document.getElementById("feedbacksModalLabel");
+    if (!modalBody || !modalTitle) return;
+
+    modalTitle.innerHTML = `<i class="bi bi-chat-text-fill me-2" style="color: #d97706 !important;"></i>Feedbacks for ${vol.name}`;
+
+    if (volunteerFeedbacks.length === 0) {
+      modalBody.innerHTML = `<div class="text-center text-muted py-4">No feedback comments recorded yet.</div>`;
+    } else {
+      // Sort feedbacks by timestamp (newest first)
+      const sortedFeedbacks = volunteerFeedbacks.sort((a, b) => {
+        if (!a.timestamp) return 1;
+        if (!b.timestamp) return -1;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+
+      modalBody.innerHTML = sortedFeedbacks.map(f => {
+        const stars = Array.from({ length: 5 }, (_, i) => {
+          return i < f.rating 
+            ? `<i class="bi bi-star-fill" style="color: #d97706 !important;"></i>` 
+            : `<i class="bi bi-star text-white-50"></i>`;
+        }).join('');
+
+        const dateStr = f.timestamp 
+          ? new Date(f.timestamp).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) 
+          : "Recently";
+
+        return `
+          <div class="p-3 mb-3 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="d-flex gap-1">${stars}</div>
+              <span class="text-white-50" style="font-size: 0.72rem;">${dateStr}</span>
+            </div>
+            <p class="mb-0 text-light" style="font-size: 0.82rem; font-style: italic; font-weight: 450;">"${f.comment}"</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    const feedbacksModal = new bootstrap.Modal(document.getElementById("feedbacks-modal"));
+    feedbacksModal.show();
   }
 
   function applyVolunteerFilters() {
