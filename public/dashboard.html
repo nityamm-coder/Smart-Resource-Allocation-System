@@ -278,37 +278,20 @@
                 </div>
               </div>
             </div>
-            <!-- Right: Activity Feed -->
+            <!-- Right: Active Volunteers -->
             <div class="col-12 col-xl-4">
               <div class="overview-info-card p-0" style="padding:0 !important; height:380px; display:flex; flex-direction:column;">
-                <div class="px-3 pt-3 pb-2" style="border-bottom:1px solid rgba(45,154,78,0.1);">
+                <div class="px-3 pt-3 pb-2" style="border-bottom:1px solid rgba(45,154,78,0.1); background-color: #f8fafc; border-top-left-radius: 14px; border-top-right-radius: 14px;">
                   <h5 style="font-size:0.88rem; font-weight:700; color:#1b4332; margin:0; display:flex; align-items:center; gap:6px;">
-                    <i class="bi bi-activity" style="color:#2d9a4e;"></i>Live Activity Feed
+                    <i class="bi bi-people-fill" style="color:#2d9a4e;"></i>Active Volunteers in the Field
                     <span class="ms-auto" style="width:8px;height:8px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,0.2);display:inline-block;"></span>
                   </h5>
                 </div>
-                <div class="activity-feed-card" id="activity-feed-list" style="border:none; box-shadow:none; border-radius:0 0 14px 14px; flex:1; margin:0; padding:0.75rem 1rem;">
+                <div class="activity-feed-card" id="volunteers-active-list" style="border:none; box-shadow:none; border-radius:0 0 14px 14px; flex:1; margin:0; padding:0.75rem 1rem; overflow-y:auto; background: white;">
                   <!-- Dynamically populated -->
-                  <div class="activity-item">
-                    <div class="activity-dot activity-dot-green"></div>
-                    <div class="activity-content">
-                      <div class="activity-text">System initialized — Dashboard loaded successfully</div>
-                      <div class="activity-time">Just now</div>
-                    </div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-dot activity-dot-blue"></div>
-                    <div class="activity-content">
-                      <div class="activity-text">Firestore real-time listener connected</div>
-                      <div class="activity-time">Just now</div>
-                    </div>
-                  </div>
-                  <div class="activity-item">
-                    <div class="activity-dot activity-dot-teal"></div>
-                    <div class="activity-content">
-                      <div class="activity-text">L2 blockchain explorer syncing blocks...</div>
-                      <div class="activity-time">Just now</div>
-                    </div>
+                  <div class="text-center text-muted py-4">
+                    <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+                    <span class="ms-2" style="font-size: 0.8rem;">Loading field responders...</span>
                   </div>
                 </div>
               </div>
@@ -1167,42 +1150,76 @@
         setTimeout(syncOverviewWidgets, 2000);
         setInterval(syncOverviewWidgets, 3000);
 
-        // ── Activity Feed Reactive Updater ──────────────────────────
-        function addActivityItem(text, dotClass, timeLabel) {
-          const feed = document.getElementById("activity-feed-list");
-          if (!feed) return;
-          const timeStr = timeLabel || new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
-          const item = document.createElement("div");
-          item.className = "activity-item";
-          item.innerHTML = `
-            <div class="activity-dot ${dotClass}"></div>
-            <div class="activity-content">
-              <div class="activity-text">${text}</div>
-              <div class="activity-time">${timeStr}</div>
-            </div>
-          `;
-          // Prepend to top
-          feed.insertBefore(item, feed.firstChild);
-          // Keep max 15 items
-          while (feed.children.length > 15) feed.removeChild(feed.lastChild);
+        // ── Active Volunteers Live Sync ──────────────────────────
+        async function syncVolunteersFieldList() {
+          const container = document.getElementById("volunteers-active-list");
+          if (!container) return;
+
+          try {
+            const res = await fetch("/api/volunteers");
+            if (!res.ok) throw new Error("Failed to fetch volunteers");
+            const data = await res.json();
+            
+            if (data.success && data.volunteers) {
+              if (data.volunteers.length === 0) {
+                container.innerHTML = `<div class="text-center text-muted py-4" style="font-size:0.8rem;">No volunteers registered yet.</div>`;
+                return;
+              }
+
+              // Sort: busy (on mission) first, then available (standby)
+              const sorted = [...data.volunteers].sort((a, b) => {
+                if (a.available === b.available) return a.name.localeCompare(b.name);
+                return a.available ? 1 : -1; // false (busy) comes first
+              });
+
+              container.innerHTML = sorted.map(v => {
+                const initialLetter = v.name ? v.name.charAt(0).toUpperCase() : "?";
+                const statusClass = v.available 
+                  ? "badge bg-success-subtle text-success border border-success-subtle" 
+                  : "badge bg-warning-subtle text-warning border border-warning-subtle";
+                const statusText = v.available ? "Ready" : "On Mission";
+                const skillsHtml = v.skills.slice(0, 2).map(skill => 
+                  `<span class="badge bg-light text-secondary border me-1" style="font-size:0.6rem; font-weight:500;">${skill}</span>`
+                ).join('');
+
+                // Pick a color theme for the avatar based on name hash
+                const colors = ["#2d9a4e", "#0d9488", "#0284c7", "#4f46e5", "#7c3aed"];
+                const colorIdx = (v.name.charCodeAt(0) || 0) % colors.length;
+                const avatarBg = colors[colorIdx];
+
+                return `
+                  <div class="d-flex align-items-center gap-2 py-2" style="border-bottom:1px solid rgba(45, 154, 78, 0.06); transition: background-color 0.2s;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center font-bold text-white shadow-sm" 
+                         style="width: 34px; height: 34px; font-size: 0.85rem; flex-shrink: 0; background-color: ${avatarBg}; font-weight: 700;">
+                      ${initialLetter}
+                    </div>
+                    <div class="flex-grow-1" style="min-width: 0;">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <span style="font-size:0.8rem; font-weight: 600; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${v.name}</span>
+                        <span class="${statusClass}" style="font-size:0.6rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 600;">${statusText}</span>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-between mt-1">
+                        <span class="text-muted" style="font-size:0.68rem; display: flex; align-items: center; gap: 3px; font-weight:555;">
+                          <i class="bi bi-geo-alt-fill text-danger" style="font-size:0.7rem;"></i> ${v.zone}
+                        </span>
+                        <div class="d-flex align-items-center">
+                          ${skillsHtml}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join('');
+            }
+          } catch (err) {
+            console.error("⚠️ Error syncing volunteers list:", err);
+            container.innerHTML = `<div class="text-center text-danger py-4" style="font-size:0.8rem;">Failed to load volunteers feed.</div>`;
+          }
         }
 
-        // Watch stat counters for changes and log to activity
-        let lastOpen = null, lastResolved = null;
-        setInterval(() => {
-          const open = parseInt(document.getElementById("stat-open")?.textContent) || 0;
-          const resolved = parseInt(document.getElementById("stat-resolved")?.textContent) || 0;
-
-          if (lastOpen !== null && open > lastOpen) {
-            addActivityItem(`⚠️ ${open - lastOpen} new emergency request(s) received`, "activity-dot-red");
-          }
-          if (lastResolved !== null && resolved > lastResolved) {
-            addActivityItem(`✅ ${resolved - lastResolved} request(s) resolved successfully`, "activity-dot-green");
-          }
-
-          lastOpen = open;
-          lastResolved = resolved;
-        }, 2000);
+        // Run sync initially and then every 4 seconds
+        syncVolunteersFieldList();
+        setInterval(syncVolunteersFieldList, 4000);
       });
     </script>
   </body>
