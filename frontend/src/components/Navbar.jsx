@@ -3,18 +3,18 @@ import { LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 bg-white/70 backdrop-blur-xl border-b border-emerald-900/5 py-4 transition-all shadow-[0_2px_20px_rgba(45,90,39,0.03)]">
+    <nav className="sticky top-0 z-50 border-b py-4 transition-all shadow-[0_2px_20px_rgba(45,90,39,0.08)]" style={{ backgroundColor: '#1d573b', borderColor: '#16432d' }}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         <a href="index.html" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center text-2xl shadow-[0_0_10px_rgba(16,185,129,0.05)] group-hover:scale-105 group-hover:border-emerald-500/40 transition-all duration-300">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shadow-[0_0_10px_rgba(0,0,0,0.1)] group-hover:scale-105 transition-all duration-300" style={{ backgroundColor: '#ffffff', border: '1px solid rgba(255, 255, 255, 0.2)' }}>
             <span>🌱</span>
           </div>
           <div className="flex flex-col">
-            <span className="font-display font-extrabold text-2xl md:text-3xl tracking-tight text-slate-800 leading-none">
+            <span className="font-display font-extrabold text-3xl md:text-4xl tracking-tight leading-none animate-pulse-slow" style={{ color: '#ffffff', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
               SRAS
             </span>
-            <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-[11px] font-bold uppercase tracking-widest leading-none mt-1.5 flex items-center gap-1" style={{ color: '#a7f3d0' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
               Smart Resource Allocation System
             </span>
           </div>
@@ -23,9 +23,22 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <a
             href="dashboard.html"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-200 bg-white text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all duration-300 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-300 shadow-sm"
+            style={{
+              color: '#ffffff',
+              borderColor: 'rgba(255,255,255,0.3)',
+              backgroundColor: 'rgba(255,255,255,0.1)'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)';
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)';
+            }}
           >
-            <LayoutDashboard size={15} className="text-emerald-600" />
+            <LayoutDashboard size={15} className="text-emerald-300" />
             <span className="hidden sm:inline">NGO Dashboard</span>
           </a>
         </div>

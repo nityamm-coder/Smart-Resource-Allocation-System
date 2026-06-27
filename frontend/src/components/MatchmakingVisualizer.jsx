@@ -40,7 +40,7 @@ export default function MatchmakingVisualizer({ isSubmitting }) {
   return (
     <div className="flex flex-col h-full gap-5">
       {/* Search / Track Box */}
-      <div className="glass-card rounded-3xl p-5 shadow-sm">
+      <div className="glass-card glass-card-darker rounded-3xl p-5 shadow-sm">
         <h3 className="font-display font-extrabold text-sm text-slate-800 mb-4 flex items-center gap-2">
           <Search size={15} className="text-emerald-600" />
           Track Existing Request
