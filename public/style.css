@@ -358,9 +358,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Dashboard Filter Bar ────────────────────────────────── */
 .filter-card {
-  background: rgba(30, 41, 59, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.15);
   border-radius: var(--border-radius);
   padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
@@ -368,24 +367,28 @@ h1, h2, h3, h4, h5, h6 {
   flex-wrap: wrap;
   gap: 1rem;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(45, 154, 78, 0.08);
 }
 
 .filter-input {
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f0fdf4;
+  border: 1px solid rgba(45, 154, 78, 0.25);
   border-radius: 8px;
-  color: white;
+  color: #1b4332;
   padding: 0.5rem 1rem;
   font-size: 0.88rem;
   flex: 1;
   min-width: 200px;
 }
 
+.filter-input::placeholder {
+  color: #6b9c7b;
+}
+
 .filter-input:focus {
-  border-color: var(--brand-primary);
+  border-color: #2d9a4e;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 3px rgba(45, 154, 78, 0.15);
 }
 
 .btn-filter-group {
@@ -395,9 +398,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-filter {
-  background: rgba(15, 23, 42, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: var(--text-muted);
+  background: #f0fdf4;
+  border: 1px solid rgba(45, 154, 78, 0.2);
+  color: #4b7a5c;
   border-radius: 8px;
   padding: 0.5rem 1rem;
   font-size: 0.82rem;
@@ -406,15 +409,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-filter:hover {
-  background: rgba(99, 102, 241, 0.1);
-  color: white;
+  background: #dcfce7;
+  color: #1b4332;
+  border-color: #2d9a4e;
 }
 
 .btn-filter.active {
-  background: var(--brand-primary);
+  background: #2d9a4e;
   color: white;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 10px rgba(99, 102, 241, 0.35);
+  border-color: #2d9a4e;
+  box-shadow: 0 0 12px rgba(45, 154, 78, 0.3);
 }
 
 /* ── Kanban Column Headers ───────────────────────────────── */
@@ -432,9 +436,9 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.kanban-column-header.open      { background: rgba(124, 58, 237, 0.15); color: #c084fc; border: 1px solid rgba(124, 58, 237, 0.25); }
-.kanban-column-header.progress  { background: rgba(245, 158, 11, 0.12); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
-.kanban-column-header.resolved  { background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+.kanban-column-header.open      { background: rgba(220, 38, 38, 0.08);  color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+.kanban-column-header.progress  { background: rgba(245, 158, 11, 0.08); color: #b45309; border: 1px solid rgba(245, 158, 11, 0.2); }
+.kanban-column-header.resolved  { background: rgba(22, 163, 74, 0.08);  color: #15803d; border: 1px solid rgba(22, 163, 74, 0.2); }
 
 .progress {
   --bs-progress-height: 3.4rem;
@@ -442,23 +446,21 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Request Card & Glow Keyframes ────────────────────────── */
 .request-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.12);
   border-radius: var(--border-radius);
   padding: 1.25rem 1.4rem;
   margin-bottom: 1.2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   border-left: 4px solid var(--brand-primary);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  color: var(--text-light);
+  color: #1b4332;
 }
 
 .request-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  border-color: rgba(45, 154, 78, 0.25);
+  box-shadow: 0 8px 24px rgba(45, 154, 78, 0.15);
 }
 
 @keyframes pulse-glow-critical {
@@ -483,38 +485,38 @@ h1, h2, h3, h4, h5, h6 {
 
 .request-card .description {
   font-size: 0.95rem;
-  color: var(--text-light);
+  color: #1b4332;
   line-height: 1.5;
   margin-bottom: 0.8rem;
 }
 
 .request-card .meta {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: #4b7a5c;
 }
 
 .request-card a {
-  color: var(--brand-primary);
+  color: #2d9a4e;
   text-decoration: none;
   font-weight: 600;
 }
 
 .request-card a:hover {
   text-decoration: underline;
-  color: #818cf8;
+  color: #16a34a;
 }
 
 /* ── Badges ──────────────────────────────────────────────── */
 .badge-category {
-  background-color: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background-color: rgba(45, 154, 78, 0.1);
+  color: #1b6b37;
   border-radius: 999px;
   padding: 0.3em 0.8em;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(45, 154, 78, 0.25);
 }
 
 .badge-urgency {
@@ -534,9 +536,9 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Volunteer Chip ──────────────────────────────────────── */
 .volunteer-chip {
   display: block;
-  background: rgba(16, 185, 129, 0.06);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  color: #34d399;
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  color: #15803d;
   border-radius: 8px;
   padding: 0.5rem 0.75rem;
   font-size: 0.8rem;
@@ -545,7 +547,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .volunteer-chip a {
-  color: #34d399;
+  color: #15803d;
 }
 
 /* ── Status Select inside cards ──────────────────────────── */
@@ -553,22 +555,23 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.78rem;
   padding: 0.3rem 0.6rem;
   border-radius: 6px;
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: #f0fdf4;
+  border: 1px solid rgba(45, 154, 78, 0.25);
+  color: #1b4332;
   cursor: pointer;
   margin-top: 0.6rem;
   transition: all 0.2s;
 }
 
 .status-select:focus {
-  border-color: var(--brand-primary);
+  border-color: #2d9a4e;
   outline: none;
+  box-shadow: 0 0 0 2px rgba(45, 154, 78, 0.15);
 }
 
 .status-select option {
-  background: #0f172a;
-  color: white;
+  background: white;
+  color: #1b4332;
 }
 
 /* ── Card Delete Button ──────────────────────────────────── */
@@ -595,12 +598,12 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Empty Column Message ────────────────────────────────── */
 .empty-column {
   text-align: center;
-  color: var(--text-muted);
+  color: #5a7c6b;
   font-size: 0.88rem;
   padding: 3rem 1rem;
-  border: 2px dashed rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(45, 154, 78, 0.2);
   border-radius: var(--border-radius);
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(45, 154, 78, 0.03);
 }
 
 /* ── Stats Bar (dashboard top) ───────────────────────────── */
@@ -708,20 +711,20 @@ footer {
 
 /* ── Volunteer Roster Sidebar Custom Styling ───────────────── */
 .roster-card {
-  background: rgba(15, 23, 42, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.15);
   border-radius: 12px;
   padding: 0.85rem 1rem 1rem 1rem;
   transition: all 0.25s ease;
   position: relative;
-  /* overflow: hidden removed — it was clipping phone & skills rows */
+  box-shadow: 0 2px 10px rgba(45, 154, 78, 0.07);
 }
 
 .roster-card:hover {
-  background: rgba(15, 23, 42, 0.65);
-  border-color: rgba(99, 102, 241, 0.2);
+  background: #f0fdf4;
+  border-color: rgba(45, 154, 78, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 20px rgba(45, 154, 78, 0.15);
 }
 
 .roster-card .roster-header {
@@ -734,7 +737,7 @@ footer {
 .roster-card .roster-name {
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-light);
+  color: #1b4332;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -761,7 +764,7 @@ footer {
 
 .roster-card .roster-meta {
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: #4b7a5c;
   margin-bottom: 0.45rem;
   display: flex;
   align-items: center;
@@ -769,13 +772,13 @@ footer {
 }
 
 .roster-card .roster-meta a {
-  color: var(--text-muted);
+  color: #2d9a4e;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .roster-card .roster-meta a:hover {
-  color: var(--brand-primary);
+  color: #1b4332;
   text-decoration: underline;
 }
 
@@ -787,11 +790,11 @@ footer {
 }
 
 .roster-skill-badge {
-  background: rgba(99, 102, 241, 0.1);
-  color: #a5b4fc;
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: rgba(45, 154, 78, 0.1);
+  color: #1b4332;
+  border: 1px solid rgba(45, 154, 78, 0.2);
   font-size: 0.68rem;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0.15rem 0.5rem;
   border-radius: 6px;
   text-transform: uppercase;
@@ -804,7 +807,7 @@ footer {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-muted);
+  color: #4b7a5c;
   margin-bottom: 0.35rem;
 }
 
@@ -2035,16 +2038,17 @@ footer {
   cursor: pointer;
   border-left-width: 3px !important;
   padding: 0.8rem 1rem !important;
-  background: rgba(30, 41, 59, 0.2) !important;
-  border-color: rgba(255, 255, 255, 0.04) !important;
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.95), rgba(220, 252, 231, 0.6)) !important;
+  border-color: rgba(45, 154, 78, 0.15) !important;
   border-left-color: var(--success) !important;
   transition: all 0.25s ease-in-out !important;
 }
 
 .resolved-compact-card:hover {
   transform: translateY(-2px) !important;
-  background: rgba(30, 41, 59, 0.35) !important;
-  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: linear-gradient(135deg, rgba(220, 252, 231, 0.95), rgba(187, 247, 208, 0.7)) !important;
+  border-color: rgba(45, 154, 78, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(45, 154, 78, 0.12) !important;
 }
 
 .resolved-compact-card .compact-header {
@@ -2057,7 +2061,7 @@ footer {
 
 .resolved-compact-card .compact-desc {
   font-size: 0.88rem;
-  color: #e2e8f0;
+  color: #1b4332;
   margin: 0;
   font-weight: 500;
   flex: 1;
@@ -2067,7 +2071,7 @@ footer {
 
 .resolved-compact-card .compact-meta {
   font-size: 0.72rem;
-  color: var(--text-muted);
+  color: #4b7a5c;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -2078,7 +2082,7 @@ footer {
 .resolved-compact-card .card-expanded-content {
   display: none;
   margin-top: 0.9rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(45, 154, 78, 0.15);
   padding-top: 0.9rem;
 }
 
@@ -2088,13 +2092,13 @@ footer {
 }
 
 .resolved-compact-card.expanded .compact-header {
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  border-bottom: 1px dashed rgba(45, 154, 78, 0.2);
   padding-bottom: 0.5rem;
   margin-bottom: 0.8rem;
 }
 
 .resolved-compact-card.expanded .compact-desc {
-  color: var(--text-muted);
+  color: #4b7a5c;
 }
 
 @keyframes slideDownFade {
@@ -3366,4 +3370,203 @@ footer {
   background: rgba(240, 253, 244, 0.6);
   color: #4b7a5c;
   border-top-color: rgba(45, 154, 78, 0.15);
+}
+
+/* ── Light Green/White Contrast and Accessibility Overrides ── */
+/* Filter bar wrapper adjustments */
+.filter-card {
+  background: white !important;
+  border: 1px solid rgba(45, 154, 78, 0.15) !important;
+  box-shadow: 0 4px 15px rgba(45, 154, 78, 0.06) !important;
+}
+
+.filter-input {
+  background: #f4fbf7 !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.25) !important;
+  color: #1b4332 !important;
+}
+
+.filter-input::placeholder {
+  color: #7ba88a !important;
+}
+
+.btn-filter {
+  background: #f4fbf7 !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.2) !important;
+  color: #4b7a5c !important;
+}
+
+.btn-filter:hover {
+  background: #e8f7ed !important;
+  color: #1b4332 !important;
+}
+
+.btn-filter.active {
+  background: #2d9a4e !important;
+  color: white !important;
+  border-color: #2d9a4e !important;
+  box-shadow: 0 0 10px rgba(45, 154, 78, 0.25) !important;
+}
+
+/* Volunteer cards styling */
+.roster-card {
+  background: white !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.15) !important;
+  box-shadow: 0 3px 12px rgba(45, 154, 78, 0.06) !important;
+}
+
+.roster-card:hover {
+  background: #fdfdfd !important;
+  border-color: #2d9a4e !important;
+  box-shadow: 0 6px 18px rgba(45, 154, 78, 0.12) !important;
+  transform: translateY(-2px);
+}
+
+.roster-card .roster-name {
+  color: #1b4332 !important;
+  font-weight: 700 !important;
+}
+
+.roster-card .roster-meta {
+  color: #4b7a5c !important;
+}
+
+.roster-card .roster-meta a {
+  color: #2d9a4e !important;
+}
+
+.roster-card .roster-meta a:hover {
+  color: #1b4332 !important;
+}
+
+.roster-skill-badge {
+  background: rgba(45, 154, 78, 0.08) !important;
+  color: #1b4332 !important;
+  border: 1px solid rgba(45, 154, 78, 0.2) !important;
+  font-weight: 700 !important;
+}
+
+.roster-skills-label {
+  color: #4b7a5c !important;
+}
+
+/* Kanban Cards and text contrast */
+.request-card {
+  background: white !important;
+  border-color: rgba(45, 154, 78, 0.15) !important;
+  color: #1b4332 !important;
+  box-shadow: 0 2px 10px rgba(45, 154, 78, 0.05) !important;
+}
+
+.request-card:hover {
+  border-color: rgba(45, 154, 78, 0.3) !important;
+  box-shadow: 0 6px 20px rgba(45, 154, 78, 0.12) !important;
+}
+
+.request-card .description {
+  color: #1b4332 !important;
+}
+
+.request-card .meta {
+  color: #4b7a5c !important;
+}
+
+.request-card a {
+  color: #2d9a4e !important;
+}
+
+.request-card a:hover {
+  color: #16a34a !important;
+}
+
+.volunteer-chip {
+  background: rgba(22, 163, 74, 0.06) !important;
+  border: 1px solid rgba(22, 163, 74, 0.18) !important;
+  color: #16a34a !important;
+}
+
+.volunteer-chip a {
+  color: #16a34a !important;
+  font-weight: 700;
+}
+
+.status-select {
+  background: #f4fbf7 !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.2) !important;
+  color: #1b4332 !important;
+}
+
+.status-select option {
+  background: white !important;
+  color: #1b4332 !important;
+}
+
+/* SBT list items theme matching */
+#blockchain-sbt-list > div {
+  background: white !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.15) !important;
+  color: #1b4332 !important;
+  box-shadow: 0 2px 8px rgba(45, 154, 78, 0.05) !important;
+}
+
+#blockchain-sbt-list > div h5 {
+  color: #1b4332 !important;
+}
+
+#blockchain-sbt-list > div .text-white-50 {
+  color: #4b7a5c !important;
+}
+
+#blockchain-sbt-list > div div[style*="background: rgba(0,0,0,0.2)"] {
+  background: #f4fbf7 !important;
+  color: #1b4332 !important;
+  border: 1px solid rgba(45, 154, 78, 0.1) !important;
+}
+
+#blockchain-sbt-list > div .verify-sbt-btn {
+  background: #fffbeb !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  color: #d97706 !important;
+}
+
+#blockchain-sbt-list > div .verify-sbt-btn:hover {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #b45309 !important;
+}
+
+/* Supply Cards counts readability */
+#inventory-bar .p-3.rounded.border {
+  background: white !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.15) !important;
+  box-shadow: 0 3px 12px rgba(45, 154, 78, 0.05) !important;
+}
+
+#inventory-bar .fs-4.fw-extrabold.text-white {
+  color: #1b4332 !important;
+}
+
+#inventory-bar div[style*="font-size: 0.7rem; opacity: 0.8;"] {
+  color: #4b7a5c !important;
+}
+
+#inventory-bar div[style*="font-size: 0.7rem; opacity: 0.8;"] span {
+  color: #1b4332 !important;
+}
+
+/* Search bar on volunteers directory */
+#volunteers-view-container input#volunteer-search {
+  background: white !important;
+  color: #1b4332 !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.25) !important;
+}
+
+#volunteers-view-container input#volunteer-search::placeholder {
+  color: #7ba88a !important;
+}
+
+#volunteers-view-container .input-group-text {
+  background: #f4fbf7 !important;
+  border: 1.5px solid rgba(45, 154, 78, 0.25) !important;
+  color: #4b7a5c !important;
 }

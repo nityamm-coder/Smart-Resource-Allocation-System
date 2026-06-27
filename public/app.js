@@ -911,7 +911,7 @@ if (isDashboardPage) {
             <p class="description mb-2" style="white-space: normal;">
               ${req.description}
               ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
-                `<span class="d-block mt-2 p-2 rounded text-indigo" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid var(--brand-primary); color: #c7d2fe;">
+                `<span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(45, 154, 78, 0.08); border: 1px solid rgba(45, 154, 78, 0.2); border-left: 4px solid var(--brand-primary); color: #1b6b37;">
                   <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
                  </span>` : ''
               }
@@ -1821,7 +1821,7 @@ if (isDashboardPage) {
         const sbts = sbtsData.sbts || [];
         if (sbts.length === 0) {
           sbtList.innerHTML = `
-            <div class="empty-column py-5" style="border-style: dashed; border-radius: 12px; background: rgba(0,0,0,0.15);">
+            <div class="empty-column py-5" style="border-style: dashed; border-radius: 12px; background: rgba(45, 154, 78, 0.04);">
               <i class="bi bi-shield-slash fs-3 d-block mb-2 text-warning"></i>
               No Soulbound Credentials minted yet
             </div>
