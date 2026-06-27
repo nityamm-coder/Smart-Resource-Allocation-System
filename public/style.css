@@ -1,6 +1,6 @@
 /* ============================================================
    style.css — Smart Resource Allocation UI Overhaul
-   Premium Dark Slate-Indigo Theme with Glassmorphic polish
+   Nature Green / Sap Green / White Glassmorphic Theme
    ============================================================ */
 
 /* ── Google Fonts ─────────────────────────────────────────── */
@@ -8,18 +8,22 @@
 
 /* ── CSS Variables (Design Tokens) ──────────────────────── */
 :root {
-  --brand-primary:   #6366f1;   /* Vibrant indigo                  */
-  --brand-glow:      rgba(99, 102, 241, 0.15);
-  --brand-light:     rgba(99, 102, 241, 0.1);
-  --success:         #10b981;   /* Emerald Green                   */
+  --brand-primary:   #2d9a4e;   /* Sap Green                       */
+  --brand-secondary: #4ade80;   /* Bright Mint Green               */
+  --brand-glow:      rgba(45, 154, 78, 0.2);
+  --brand-light:     rgba(45, 154, 78, 0.1);
+  --success:         #16a34a;   /* Forest Green                    */
   --warning:         #f59e0b;   /* Amber                           */
-  --danger:          #ef4444;   /* Crimson Red                     */
-  --text-light:      #f8fafc;   /* Slate 50                        */
-  --text-muted:      #94a3b8;   /* Slate 400                       */
+  --danger:          #dc2626;   /* Red                             */
+  --text-light:      #f0fdf4;   /* Green-tinted white              */
+  --text-dark:       #14532d;   /* Deep forest for light surfaces  */
+  --text-muted:      #6b7280;   /* Muted gray-green                */
   --border-radius:   16px;
-  --glass-bg:        rgba(30, 41, 59, 0.45);
-  --glass-border:    rgba(255, 255, 255, 0.08);
-  --glass-glow:      0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  --glass-bg:        rgba(255, 255, 255, 0.08);
+  --glass-bg-light:  rgba(255, 255, 255, 0.92);
+  --glass-border:    rgba(45, 154, 78, 0.2);
+  --glass-glow:      0 8px 32px 0 rgba(45, 154, 78, 0.12);
+  --dashboard-bg:    #f0fdf4;
 }
 
 /* ── Base Reset ──────────────────────────────────────────── */
@@ -29,10 +33,16 @@
 
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
-  background: radial-gradient(ellipse at top, #0f172a 0%, #020617 100%);
-  color: var(--text-light);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%);
+  color: #1a2e1f;
   min-height: 100vh;
   letter-spacing: -0.1px;
+}
+
+/* Dashboard body override for the specific dashboard page */
+body.dashboard-body {
+  background: linear-gradient(145deg, #e8f5e9 0%, #f1f8e9 40%, #e0f2f1 100%) !important;
+  color: #1b4332;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -595,35 +605,47 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Stats Bar (dashboard top) ───────────────────────────── */
 .stat-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.18);
   border-radius: var(--border-radius);
-  padding: 1.5rem;
-  box-shadow: var(--glass-glow);
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 4px 20px rgba(45, 154, 78, 0.1), 0 1px 4px rgba(0,0,0,0.06);
   text-align: center;
-  transition: transform 0.2s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2d9a4e, #4ade80);
+  border-radius: 16px 16px 0 0;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(45, 154, 78, 0.18), 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .stat-card .stat-number {
-  font-size: 2.25rem;
+  font-size: 2.4rem;
   font-weight: 800;
-  color: var(--text-light);
+  color: #1b4332;
   line-height: 1.1;
   margin-bottom: 0.2rem;
 }
 
 .stat-card .stat-label {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+  font-size: 0.75rem;
+  color: #4b7a5c;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
 }
 
 /* ── Footer ──────────────────────────────────────────────── */
@@ -2818,12 +2840,13 @@ footer {
 .status-resolved .marker-pulse { background-color: rgba(16, 185, 129, 0.4) !important; }
 
 /* ============================================================
-   NGO Dashboard Redesign Styles
+   NGO Dashboard Redesign Styles — Green / Sap Green / White
    ============================================================ */
 .dashboard-layout-container {
   display: flex;
   min-height: 100vh;
   width: 100%;
+  background: linear-gradient(145deg, #e8f5e9 0%, #f1f8e9 40%, #e0f2f1 100%);
 }
 
 .sidebar-container {
@@ -2832,13 +2855,14 @@ footer {
   left: 0;
   bottom: 0;
   width: 280px;
-  background: linear-gradient(180deg, #133b24 0%, #081a10 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(175deg, #1a5c35 0%, #145228 40%, #0d3b1e 100%);
+  border-right: 2px solid rgba(74, 222, 128, 0.15);
   display: flex;
   flex-direction: column;
   z-index: 1000;
   padding: 1.5rem;
   overflow-y: auto;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
 }
 
 .sidebar-logo {
@@ -2868,11 +2892,11 @@ footer {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 0.65rem 0.85rem;
   margin-bottom: 1.8rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(74, 222, 128, 0.15);
 }
 
 .sidebar-user-avatar {
@@ -2938,18 +2962,20 @@ footer {
 }
 
 .sidebar-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: white;
+  background: rgba(74, 222, 128, 0.12);
+  color: #4ade80;
 }
 
 .sidebar-item:hover i {
   transform: scale(1.1);
+  color: #4ade80;
 }
 
 .sidebar-item.active {
-  background: #a37254 !important; /* BrewMaster light clay brown */
+  background: linear-gradient(135deg, #2d9a4e, #16a34a) !important;
   color: white;
-  box-shadow: 0 4px 15px rgba(163, 114, 84, 0.25);
+  box-shadow: 0 4px 18px rgba(45, 154, 78, 0.4);
+  border: none;
 }
 
 .main-content-panel {
@@ -2959,15 +2985,16 @@ footer {
   padding: 2.2rem 2.5rem;
   display: flex;
   flex-direction: column;
+  background: transparent;
 }
 
 /* Charts and layout overview */
 .chart-container-card {
-  background: rgba(30, 41, 59, 0.25);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.18);
   border-radius: var(--border-radius);
   padding: 1.5rem;
-  box-shadow: var(--glass-glow);
+  box-shadow: 0 4px 20px rgba(45, 154, 78, 0.1), 0 1px 4px rgba(0,0,0,0.05);
   height: 380px;
   position: relative;
 }
@@ -2979,7 +3006,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: white;
+  color: #1b4332;
 }
 
 .top-action-bar {
@@ -2989,6 +3016,15 @@ footer {
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 1.2rem 1.5rem;
+  border: 1px solid rgba(45, 154, 78, 0.15);
+  box-shadow: 0 2px 12px rgba(45, 154, 78, 0.08);
+}
+
+.top-action-bar h1 {
+  color: #1b4332 !important;
 }
 
 .top-action-bar-right {
@@ -3028,4 +3064,306 @@ footer {
 
 #volunteers-list .roster-card {
   margin-bottom: 0 !important;
+}
+
+/* ── Green Theme Panel Cards (form-card override for dashboard) ── */
+.form-card {
+  background: white !important;
+  border: 1px solid rgba(45, 154, 78, 0.15) !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: 0 4px 20px rgba(45, 154, 78, 0.08), 0 1px 4px rgba(0,0,0,0.04) !important;
+  color: #1b4332 !important;
+}
+
+.form-card h3 {
+  color: #1b4332 !important;
+}
+
+/* Fix text visibility on light theme */
+.main-content-panel .text-muted {
+  color: #5a7c6b !important;
+}
+
+.main-content-panel .text-white {
+  color: #1b4332 !important;
+}
+
+.main-content-panel .text-white-50 {
+  color: #4b7a5c !important;
+}
+
+/* ── Overview Quick Info Rows ── */
+.overview-info-card {
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.15);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 3px 15px rgba(45, 154, 78, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%;
+}
+
+.overview-info-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(45, 154, 78, 0.14);
+}
+
+.overview-info-card .oi-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #5a7c6b;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.overview-info-card .oi-value {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #1b4332;
+  line-height: 1.1;
+}
+
+.overview-info-card .oi-sub {
+  font-size: 0.75rem;
+  color: #5a7c6b;
+  margin-top: 0.25rem;
+}
+
+.overview-info-card .oi-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.oi-icon-green  { background: rgba(45, 154, 78, 0.12); color: #2d9a4e; }
+.oi-icon-amber  { background: rgba(245, 158, 11, 0.12); color: #d97706; }
+.oi-icon-red    { background: rgba(220, 38, 38, 0.1);  color: #dc2626; }
+.oi-icon-teal   { background: rgba(20, 184, 166, 0.12); color: #0d9488; }
+.oi-icon-indigo { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+
+/* ── Activity Feed Widget ── */
+.activity-feed-card {
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.15);
+  border-radius: 14px;
+  padding: 1.25rem;
+  box-shadow: 0 3px 15px rgba(45, 154, 78, 0.08);
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.activity-feed-card::-webkit-scrollbar { width: 4px; }
+.activity-feed-card::-webkit-scrollbar-track { background: #f0fdf4; }
+.activity-feed-card::-webkit-scrollbar-thumb { background: #a7d7b8; border-radius: 4px; }
+
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(45, 154, 78, 0.08);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+.activity-dot-green  { background: #2d9a4e; }
+.activity-dot-amber  { background: #f59e0b; }
+.activity-dot-red    { background: #dc2626; }
+.activity-dot-blue   { background: #3b82f6; }
+.activity-dot-teal   { background: #0d9488; }
+
+.activity-content .activity-text {
+  font-size: 0.82rem;
+  color: #1b4332;
+  line-height: 1.4;
+}
+
+.activity-content .activity-time {
+  font-size: 0.7rem;
+  color: #5a7c6b;
+  margin-top: 2px;
+}
+
+/* ── System Status Bar ── */
+.system-status-row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.system-status-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 1px solid rgba(45, 154, 78, 0.15);
+  border-radius: 99px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #1b4332;
+  box-shadow: 0 1px 6px rgba(45, 154, 78, 0.08);
+}
+
+.system-status-chip .chip-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.chip-online  { background: #16a34a; box-shadow: 0 0 0 2px rgba(22,163,74,0.25); }
+.chip-warning { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.25); }
+.chip-offline { background: #dc2626; box-shadow: 0 0 0 2px rgba(220,38,38,0.25); }
+
+/* ── Quick Actions Bar ── */
+.quick-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: white;
+  border: 1.5px solid rgba(45, 154, 78, 0.2);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #1b4332;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none !important;
+  flex: 1;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(45, 154, 78, 0.07);
+}
+
+.quick-action-btn i {
+  font-size: 1.3rem;
+  color: #2d9a4e;
+}
+
+.quick-action-btn:hover {
+  background: #f0fdf4;
+  border-color: #2d9a4e;
+  box-shadow: 0 4px 20px rgba(45, 154, 78, 0.2);
+  transform: translateY(-2px);
+  color: #1b4332;
+}
+
+/* ── Overview Section Header ── */
+.overview-section-heading {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #4b7a5c;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.overview-section-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(45, 154, 78, 0.15);
+}
+
+/* ── Top action bar button overrides for light theme ── */
+.top-action-bar .btn-outline-light {
+  border-color: rgba(45, 154, 78, 0.4) !important;
+  color: #1b4332 !important;
+}
+
+.top-action-bar .btn-outline-light:hover {
+  background: rgba(45, 154, 78, 0.08) !important;
+  color: #1b4332 !important;
+}
+
+.top-action-bar .btn-outline-warning {
+  border-color: #f59e0b !important;
+  color: #92400e !important;
+}
+
+/* ── Override form-card bg inside supplies/volunteers panels ── */
+#supplies-view-container .form-card,
+#volunteers-view-container .form-card {
+  background: white !important;
+}
+
+/* Inventory bar cards green theme */
+#inventory-bar .p-3.rounded.border {
+  background: #f0fdf4 !important;
+  border-color: rgba(45, 154, 78, 0.2) !important;
+}
+
+.inventory-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #4b7a5c;
+  text-transform: uppercase;
+}
+
+/* Blockchain panel on green theme */
+#blockchain-view-container > .row > .col-md-3 > div,
+#blockchain-view-container > .row > .col-6 > div {
+  background: white !important;
+  border-color: rgba(45, 154, 78, 0.15) !important;
+  color: #1b4332 !important;
+}
+
+/* Logs table green theme */
+.logs-table {
+  color: #1b4332 !important;
+}
+
+.logs-table thead tr th {
+  color: #4b7a5c !important;
+  background: #f0fdf4 !important;
+  border-bottom-color: rgba(45, 154, 78, 0.15) !important;
+}
+
+.logs-table tbody tr {
+  border-bottom-color: rgba(45, 154, 78, 0.08) !important;
+}
+
+.logs-table tbody tr:hover {
+  background: rgba(45, 154, 78, 0.04) !important;
+}
+
+/* Progress / Trend indicator badges */
+.trend-up {
+  color: #16a34a;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.trend-down {
+  color: #dc2626;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ── Footer green theme ── */
+.main-content-panel footer {
+  background: rgba(240, 253, 244, 0.6);
+  color: #4b7a5c;
+  border-top-color: rgba(45, 154, 78, 0.15);
 }

@@ -27,7 +27,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body>
+  <body class="dashboard-body">
     <!-- Hidden original triggers for app.js compat -->
     <div class="d-none">
       <button id="btn-view-board" class="active">Board</button>
@@ -88,8 +88,8 @@
         <!-- Top Action Bar -->
         <div class="top-action-bar">
           <div>
-            <h1 class="fs-4 fw-extrabold mb-1 text-white">NGO Coordination Command Center</h1>
-            <p class="mb-0 text-muted" style="font-size:0.82rem;">Real-time resource allocation and automated AI dispatch portal.</p>
+            <h1 class="fs-4 fw-extrabold mb-1" style="color:#1b4332">NGO Coordination Command Center</h1>
+            <p class="mb-0" style="font-size:0.82rem; color:#5a7c6b;">Real-time resource allocation and automated AI dispatch portal.</p>
           </div>
           <div class="top-action-bar-right">
             <button id="notification-btn" class="btn btn-outline-warning btn-sm d-none">
@@ -138,52 +138,231 @@
 
         <!-- ── OVERVIEW VIEW CONTAINER ─────────────────────────── -->
         <div id="overview-view-container">
-          
+
+          <!-- System Status Chips -->
+          <div class="system-status-row">
+            <div class="system-status-chip">
+              <span class="chip-dot chip-online"></span>
+              Firestore DB — Online
+            </div>
+            <div class="system-status-chip">
+              <span class="chip-dot chip-online"></span>
+              L2 EVM Layer — Active
+            </div>
+            <div class="system-status-chip">
+              <span class="chip-dot chip-online"></span>
+              AI Matcher — Running
+            </div>
+            <div class="system-status-chip">
+              <span class="chip-dot chip-warning"></span>
+              SMS Gateway — Partial
+            </div>
+            <div class="system-status-chip" style="margin-left:auto;">
+              <i class="bi bi-clock me-1" style="font-size:0.75rem; color:#5a7c6b;"></i>
+              <span id="live-clock" style="color:#4b7a5c; font-size:0.75rem;">Loading...</span>
+            </div>
+          </div>
+
+          <!-- Quick Action Shortcuts -->
+          <p class="overview-section-heading"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Quick Actions</p>
+          <div class="d-flex gap-2 flex-wrap mb-4">
+            <a href="index.html" class="quick-action-btn">
+              <i class="bi bi-plus-circle-fill"></i>
+              New Request
+            </a>
+            <button class="quick-action-btn" id="qa-add-volunteer" data-bs-toggle="modal" data-bs-target="#add-volunteer-modal">
+              <i class="bi bi-person-plus-fill"></i>
+              Add Volunteer
+            </button>
+            <button class="quick-action-btn" id="qa-restock" data-bs-toggle="modal" data-bs-target="#restock-modal">
+              <i class="bi bi-box-seam-fill"></i>
+              Restock Supplies
+            </button>
+            <button class="quick-action-btn" id="qa-view-map" onclick="document.getElementById('sb-map').click()">
+              <i class="bi bi-map-fill"></i>
+              Live Map
+            </button>
+            <button class="quick-action-btn" id="qa-blockchain" onclick="document.getElementById('sb-blockchain').click()">
+              <i class="bi bi-database-fill-gear"></i>
+              Blockchain Ledger
+            </button>
+            <button class="quick-action-btn" id="qa-logs" onclick="document.getElementById('sb-logs').click()">
+              <i class="bi bi-clock-history"></i>
+              History Logs
+            </button>
+          </div>
+
           <!-- Stats Cards -->
+          <p class="overview-section-heading"><i class="bi bi-bar-chart-fill me-1" style="color:#2d9a4e;"></i>Request Metrics</p>
           <div class="row g-3 mb-4" id="stats-bar">
             <div class="col-6 col-lg-3">
-              <div class="stat-card" data-tilt data-tilt-max="10">
-                <div class="stat-number" id="stat-total">—</div>
+              <div class="stat-card">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-stack fs-5" style="color:#6366f1;"></i>
+                </div>
+                <div class="stat-number" id="stat-total" style="color:#1b4332;">—</div>
                 <div class="stat-label">Total Requests</div>
               </div>
             </div>
             <div class="col-6 col-lg-3">
-              <div class="stat-card" data-tilt data-tilt-max="10">
-                <div class="stat-number text-danger" id="stat-open">—</div>
+              <div class="stat-card">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-circle-fill fs-5" style="color:#dc2626;"></i>
+                </div>
+                <div class="stat-number" id="stat-open" style="color:#dc2626;">—</div>
                 <div class="stat-label">Open</div>
               </div>
             </div>
             <div class="col-6 col-lg-3">
-              <div class="stat-card" data-tilt data-tilt-max="10">
-                <div class="stat-number text-warning" id="stat-progress">—</div>
+              <div class="stat-card">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-arrow-repeat fs-5" style="color:#f59e0b;"></i>
+                </div>
+                <div class="stat-number" id="stat-progress" style="color:#d97706;">—</div>
                 <div class="stat-label">In Progress</div>
               </div>
             </div>
             <div class="col-6 col-lg-3">
-              <div class="stat-card" data-tilt data-tilt-max="10">
-                <div class="stat-number text-success" id="stat-resolved">—</div>
+              <div class="stat-card">
+                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                  <i class="bi bi-check-circle-fill fs-5" style="color:#16a34a;"></i>
+                </div>
+                <div class="stat-number" id="stat-resolved" style="color:#16a34a;">—</div>
                 <div class="stat-label">Resolved</div>
               </div>
             </div>
           </div>
 
-          <!-- Charts Trend Graphs -->
+          <!-- Extended Info Cards Row -->
+          <p class="overview-section-heading"><i class="bi bi-grid-1x2-fill me-1" style="color:#0d9488;"></i>Operations Snapshot</p>
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">Active Volunteers</div>
+                    <div class="oi-value" id="ov-volunteers">—</div>
+                    <div class="oi-sub">On duty now</div>
+                  </div>
+                  <div class="oi-icon oi-icon-green"><i class="bi bi-people-fill"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">Food Packs</div>
+                    <div class="oi-value" id="ov-food">—</div>
+                    <div class="oi-sub">In stock</div>
+                  </div>
+                  <div class="oi-icon oi-icon-green"><i class="bi bi-apple"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">Medical Kits</div>
+                    <div class="oi-value" id="ov-medical">—</div>
+                    <div class="oi-sub">Available</div>
+                  </div>
+                  <div class="oi-icon oi-icon-teal"><i class="bi bi-hospital"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">Shelter Kits</div>
+                    <div class="oi-value" id="ov-shelter">—</div>
+                    <div class="oi-sub">Available</div>
+                  </div>
+                  <div class="oi-icon oi-icon-amber"><i class="bi bi-house-door"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">L2 Blocks</div>
+                    <div class="oi-value" id="ov-blocks">—</div>
+                    <div class="oi-sub">Mined</div>
+                  </div>
+                  <div class="oi-icon oi-icon-indigo"><i class="bi bi-database-fill"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-4 col-xl-2">
+              <div class="overview-info-card">
+                <div class="d-flex align-items-start justify-content-between">
+                  <div>
+                    <div class="oi-label">SBT Credentials</div>
+                    <div class="oi-value" id="ov-sbts">—</div>
+                    <div class="oi-sub">Minted</div>
+                  </div>
+                  <div class="oi-icon oi-icon-indigo"><i class="bi bi-award-fill"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Trend Graphs + Activity Feed -->
+          <p class="overview-section-heading"><i class="bi bi-activity me-1" style="color:#dc2626;"></i>Analytics & Activity</p>
           <div class="row g-3 mb-4">
             <!-- Left Chart -->
-            <div class="col-12 col-lg-7">
+            <div class="col-12 col-xl-5">
               <div class="chart-container-card">
-                <h4><i class="bi bi-activity text-danger me-2"></i>Emergency Requests Status Trend</h4>
+                <h4><i class="bi bi-activity" style="color:#dc2626;"></i>Emergency Requests Status Trend</h4>
                 <div style="position: relative; height: 280px; width: 100%;">
                   <canvas id="requestsTrendChart"></canvas>
                 </div>
               </div>
             </div>
-            <!-- Right Chart -->
-            <div class="col-12 col-lg-5">
+            <!-- Middle Chart -->
+            <div class="col-12 col-xl-3">
               <div class="chart-container-card">
-                <h4><i class="bi bi-pie-chart-fill text-primary me-2"></i>Active Needs by Category</h4>
+                <h4><i class="bi bi-pie-chart-fill" style="color:#2d9a4e;"></i>Active Needs by Category</h4>
                 <div style="position: relative; height: 280px; width: 100%;">
                   <canvas id="categoryDistributionChart"></canvas>
+                </div>
+              </div>
+            </div>
+            <!-- Right: Activity Feed -->
+            <div class="col-12 col-xl-4">
+              <div class="overview-info-card p-0" style="padding:0 !important; height:380px; display:flex; flex-direction:column;">
+                <div class="px-3 pt-3 pb-2" style="border-bottom:1px solid rgba(45,154,78,0.1);">
+                  <h5 style="font-size:0.88rem; font-weight:700; color:#1b4332; margin:0; display:flex; align-items:center; gap:6px;">
+                    <i class="bi bi-activity" style="color:#2d9a4e;"></i>Live Activity Feed
+                    <span class="ms-auto" style="width:8px;height:8px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,0.2);display:inline-block;"></span>
+                  </h5>
+                </div>
+                <div class="activity-feed-card" id="activity-feed-list" style="border:none; box-shadow:none; border-radius:0 0 14px 14px; flex:1; margin:0; padding:0.75rem 1rem;">
+                  <!-- Dynamically populated -->
+                  <div class="activity-item">
+                    <div class="activity-dot activity-dot-green"></div>
+                    <div class="activity-content">
+                      <div class="activity-text">System initialized — Dashboard loaded successfully</div>
+                      <div class="activity-time">Just now</div>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-dot activity-dot-blue"></div>
+                    <div class="activity-content">
+                      <div class="activity-text">Firestore real-time listener connected</div>
+                      <div class="activity-time">Just now</div>
+                    </div>
+                  </div>
+                  <div class="activity-item">
+                    <div class="activity-dot activity-dot-teal"></div>
+                    <div class="activity-content">
+                      <div class="activity-text">L2 blockchain explorer syncing blocks...</div>
+                      <div class="activity-time">Just now</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -896,13 +1075,13 @@
             datasets: [{
               data: [0, 0, 0, 0],
               backgroundColor: [
-                'rgba(56, 189, 248, 0.75)',  // Sky blue
-                'rgba(20, 184, 166, 0.75)',  // Teal
-                'rgba(245, 158, 11, 0.75)',  // Gold
-                'rgba(148, 163, 184, 0.75)'  // Slate
+                'rgba(14, 165, 233, 0.8)',   // Sky Blue — Medical
+                'rgba(22, 163, 74, 0.8)',    // Forest Green — Food
+                'rgba(245, 158, 11, 0.8)',   // Amber — Shelter
+                'rgba(148, 163, 184, 0.8)'   // Slate — Other
               ],
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              borderWidth: 1
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+              borderWidth: 2
             }]
           },
           options: {
@@ -911,7 +1090,7 @@
             plugins: {
               legend: {
                 position: 'bottom',
-                labels: { color: '#cbd5e1', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                labels: { color: '#1b4332', font: { family: 'Plus Jakarta Sans', size: 10 }, padding: 12 }
               }
             }
           }
@@ -925,12 +1104,13 @@
               label: 'Active Requests',
               data: [0, 0, 0],
               backgroundColor: [
-                'rgba(239, 68, 68, 0.7)',   // Crimson Red
-                'rgba(245, 158, 11, 0.7)',   // Amber
-                'rgba(16, 185, 129, 0.7)'    // Emerald Green
+                'rgba(220, 38, 38, 0.75)',   // Red — Open
+                'rgba(245, 158, 11, 0.75)',  // Amber — In Progress
+                'rgba(22, 163, 74, 0.75)'    // Green — Resolved
               ],
-              borderColor: 'rgba(255, 255, 255, 0.08)',
-              borderWidth: 1
+              borderRadius: 6,
+              borderColor: 'rgba(255, 255, 255, 0)',
+              borderWidth: 0
             }]
           },
           options: {
@@ -941,12 +1121,12 @@
             },
             scales: {
               y: {
-                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 }, stepSize: 1 }
+                grid: { color: 'rgba(45, 154, 78, 0.08)' },
+                ticks: { color: '#4b7a5c', font: { family: 'Plus Jakarta Sans', size: 10 }, stepSize: 1 }
               },
               x: {
                 grid: { display: false },
-                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                ticks: { color: '#1b4332', font: { family: 'Plus Jakarta Sans', size: 10 } }
               }
             }
           }
@@ -993,6 +1173,89 @@
         // Periodic trigger syncing
         setTimeout(updateCharts, 1200);
         setInterval(updateCharts, 1500);
+
+        // ── Live Clock ──────────────────────────────────────────────
+        function updateLiveClock() {
+          const clockEl = document.getElementById("live-clock");
+          if (clockEl) {
+            const now = new Date();
+            clockEl.textContent = now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " IST";
+          }
+        }
+        updateLiveClock();
+        setInterval(updateLiveClock, 1000);
+
+        // ── Overview Mini Widgets Sync ──────────────────────────────
+        async function syncOverviewWidgets() {
+          // Volunteer count
+          const volList = document.getElementById("volunteers-list");
+          if (volList) {
+            const count = volList.querySelectorAll(".roster-card").length;
+            const ovVol = document.getElementById("ov-volunteers");
+            if (ovVol) ovVol.textContent = count > 0 ? count : "—";
+          }
+
+          // Supply counts from DOM (synced by app.js)
+          const supplyCats = ["Food", "Medical", "Shelter"];
+          const ovMap = { Food: "ov-food", Medical: "ov-medical", Shelter: "ov-shelter" };
+          supplyCats.forEach(cat => {
+            const countEl = document.getElementById(`inv-${cat}-count`);
+            const ovEl = document.getElementById(ovMap[cat]);
+            if (countEl && ovEl) {
+              const val = countEl.textContent.trim();
+              ovEl.textContent = val !== "—" && val !== "" ? val : "—";
+            }
+          });
+
+          // Blockchain blocks & SBTs
+          const blockHeight = document.getElementById("blockchain-block-height");
+          const sbtCount = document.getElementById("blockchain-total-sbts");
+          const ovBlocks = document.getElementById("ov-blocks");
+          const ovSbts = document.getElementById("ov-sbts");
+          if (blockHeight && ovBlocks) ovBlocks.textContent = blockHeight.textContent || "—";
+          if (sbtCount && ovSbts) ovSbts.textContent = sbtCount.textContent || "—";
+        }
+
+        // Run sync periodically
+        setTimeout(syncOverviewWidgets, 2000);
+        setInterval(syncOverviewWidgets, 3000);
+
+        // ── Activity Feed Reactive Updater ──────────────────────────
+        function addActivityItem(text, dotClass, timeLabel) {
+          const feed = document.getElementById("activity-feed-list");
+          if (!feed) return;
+          const timeStr = timeLabel || new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+          const item = document.createElement("div");
+          item.className = "activity-item";
+          item.innerHTML = `
+            <div class="activity-dot ${dotClass}"></div>
+            <div class="activity-content">
+              <div class="activity-text">${text}</div>
+              <div class="activity-time">${timeStr}</div>
+            </div>
+          `;
+          // Prepend to top
+          feed.insertBefore(item, feed.firstChild);
+          // Keep max 15 items
+          while (feed.children.length > 15) feed.removeChild(feed.lastChild);
+        }
+
+        // Watch stat counters for changes and log to activity
+        let lastOpen = null, lastResolved = null;
+        setInterval(() => {
+          const open = parseInt(document.getElementById("stat-open")?.textContent) || 0;
+          const resolved = parseInt(document.getElementById("stat-resolved")?.textContent) || 0;
+
+          if (lastOpen !== null && open > lastOpen) {
+            addActivityItem(`⚠️ ${open - lastOpen} new emergency request(s) received`, "activity-dot-red");
+          }
+          if (lastResolved !== null && resolved > lastResolved) {
+            addActivityItem(`✅ ${resolved - lastResolved} request(s) resolved successfully`, "activity-dot-green");
+          }
+
+          lastOpen = open;
+          lastResolved = resolved;
+        }, 2000);
       });
     </script>
   </body>
