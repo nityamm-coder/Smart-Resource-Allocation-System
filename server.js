@@ -414,7 +414,7 @@ Rules:
 - "urgency" must be an integer between 1 and 5, where 1 = low and 5 = critical.
 - "detectedLanguage" should be the name of the language the request was written in (e.g. "English", "Hindi", "Marathi", "Hinglish", etc.).
 - "translatedDescription" must be the complete, accurate English translation of the description. If the original description is already in English, "translatedDescription" must match the original description exactly.
-- "safetyTips" must be a JSON array of strings containing 4-5 extremely relevant, specific, actionable, and life-saving safety tips or instructions tailored to this specific scenario and its urgency level (e.g., immediate first aid tips if medical, emergency evacuation or water safety advice if flooding, etc.). Keep the tips concise, clear, and easy to read.
+- "safetyTips" must be a JSON array of strings containing 4-5 extremely relevant, specific, actionable, and life-saving safety tips or instructions tailored to this specific scenario and its urgency level (e.g., immediate first aid tips if medical, emergency evacuation or water safety advice if flooding, etc.). These safetyTips MUST be written in the SAME LANGUAGE as the user's description (detectedLanguage). For example, if the description is in Hindi, safetyTips must be in Hindi. If in Hinglish (Hindi written in English alphabet/script), safetyTips must be in Hinglish. If in Marathi, safetyTips must be in Marathi. If in English, safetyTips must be in English. Keep the tips concise, clear, and easy to read.
 
 Example output:
 {"category": "Medical", "urgency": 5, "detectedLanguage": "Hindi", "translatedDescription": "An elderly man in our building has run out of insulin and cannot reach a hospital.", "safetyTips": ["Keep the patient calm, resting, and hydrated.", "Do not administer insulin if you do not know the correct dose.", "Try to contact local pharmacy or emergency services immediately.", "Prepare a medical history summary for when help arrives."]}
@@ -684,7 +684,7 @@ This is a new emergency request.
 - "category": Must be exactly ONE of: "Food", "Medical", "Shelter", "Other".
 - "urgency": An integer from 1 to 5, where 1 = low and 5 = critical.
 - "detectedLanguage": The language the original text was written in (e.g. "English", "Hindi", "Marathi", "Hinglish").
-- "safetyTips": A JSON array of 4-5 extremely relevant, specific, and actionable life-saving safety tips or instructions tailored to this specific scenario and its urgency level. Ensure they are concise and easy to read.
+- "safetyTips": A JSON array of 4-5 extremely relevant, specific, and actionable life-saving safety tips or instructions tailored to this specific scenario and its urgency level. These safetyTips MUST be written in the SAME LANGUAGE as the user's SMS text. For example, if the SMS is in Hindi, safetyTips must be in Hindi. If in Hinglish (Hindi written in English alphabet/script), safetyTips must be in Hinglish. If in Marathi, safetyTips must be in Marathi. If in English, safetyTips must be in English. Keep the tips concise, clear, and easy to read.
 
 Example output if rating:
 {"isRating": true, "rating": 5, "feedback": "Priya was very helpful and arrived quickly."}
