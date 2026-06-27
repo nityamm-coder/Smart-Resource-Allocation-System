@@ -139,59 +139,6 @@
         <!-- ── OVERVIEW VIEW CONTAINER ─────────────────────────── -->
         <div id="overview-view-container">
 
-          <!-- System Status Chips -->
-          <div class="system-status-row">
-            <div class="system-status-chip">
-              <span class="chip-dot chip-online"></span>
-              Firestore DB — Online
-            </div>
-            <div class="system-status-chip">
-              <span class="chip-dot chip-online"></span>
-              L2 EVM Layer — Active
-            </div>
-            <div class="system-status-chip">
-              <span class="chip-dot chip-online"></span>
-              AI Matcher — Running
-            </div>
-            <div class="system-status-chip">
-              <span class="chip-dot chip-warning"></span>
-              SMS Gateway — Partial
-            </div>
-            <div class="system-status-chip" style="margin-left:auto;">
-              <i class="bi bi-clock me-1" style="font-size:0.75rem; color:#5a7c6b;"></i>
-              <span id="live-clock" style="color:#4b7a5c; font-size:0.75rem;">Loading...</span>
-            </div>
-          </div>
-
-          <!-- Quick Action Shortcuts -->
-          <p class="overview-section-heading"><i class="bi bi-lightning-charge-fill me-1 text-warning"></i>Quick Actions</p>
-          <div class="d-flex gap-2 flex-wrap mb-4">
-            <a href="index.html" class="quick-action-btn">
-              <i class="bi bi-plus-circle-fill"></i>
-              New Request
-            </a>
-            <button class="quick-action-btn" id="qa-add-volunteer" data-bs-toggle="modal" data-bs-target="#add-volunteer-modal">
-              <i class="bi bi-person-plus-fill"></i>
-              Add Volunteer
-            </button>
-            <button class="quick-action-btn" id="qa-restock" data-bs-toggle="modal" data-bs-target="#restock-modal">
-              <i class="bi bi-box-seam-fill"></i>
-              Restock Supplies
-            </button>
-            <button class="quick-action-btn" id="qa-view-map" onclick="document.getElementById('sb-map').click()">
-              <i class="bi bi-map-fill"></i>
-              Live Map
-            </button>
-            <button class="quick-action-btn" id="qa-blockchain" onclick="document.getElementById('sb-blockchain').click()">
-              <i class="bi bi-database-fill-gear"></i>
-              Blockchain Ledger
-            </button>
-            <button class="quick-action-btn" id="qa-logs" onclick="document.getElementById('sb-logs').click()">
-              <i class="bi bi-clock-history"></i>
-              History Logs
-            </button>
-          </div>
-
           <!-- Stats Cards -->
           <p class="overview-section-heading"><i class="bi bi-bar-chart-fill me-1" style="color:#2d9a4e;"></i>Request Metrics</p>
           <div class="row g-3 mb-4" id="stats-bar">
@@ -998,9 +945,9 @@
 
                   return `
                     <tr>
-                      <td><span class="text-white fw-bold">#${tx.blockNumber}</span></td>
+                      <td><span class="text-dark fw-bold">#${tx.blockNumber}</span></td>
                       <td><span class="badge ${badgeClass}" style="font-size:0.7rem; padding: 0.25rem 0.5rem; font-weight:700;">${actionLabel}</span></td>
-                      <td><span class="text-white-50" style="font-size:0.8rem;">${details}</span></td>
+                      <td><span class="text-muted" style="font-size:0.8rem;">${details}</span></td>
                       <td><span class="text-muted small">${time}</span></td>
                       <td>
                         <a href="#" class="font-monospace text-info verify-tx-hash" data-hash="${tx.hash}" style="font-size:0.75rem;">${shortHash}</a>
