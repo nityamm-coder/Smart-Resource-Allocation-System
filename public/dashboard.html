@@ -73,8 +73,8 @@
           <button class="sidebar-item" id="sb-volunteers">
             <i class="bi bi-people-fill"></i>Volunteers
           </button>
-          <button class="sidebar-item" data-bs-toggle="modal" data-bs-target="#restock-modal">
-            <i class="bi bi-box-seam-fill"></i>Restock Supplies
+          <button class="sidebar-item" id="sb-supplies">
+            <i class="bi bi-box-seam-fill"></i>Supplies Inventory
           </button>
           <button class="sidebar-item" id="sb-logs">
             <i class="bi bi-clock-history"></i>History Logs
@@ -189,14 +189,21 @@
             </div>
           </div>
 
+        </div><!-- /overview-view-container -->
+
+        <!-- ── SUPPLIES VIEW CONTAINER ─────────────────────────── -->
+        <div id="supplies-view-container" class="d-none mb-4">
           <!-- Relief Supply Inventory Panel -->
           <div class="row g-3 mb-4" id="inventory-bar">
             <div class="col-12">
               <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: rgba(30, 41, 59, 0.25); border: 1px solid var(--glass-border);">
                 <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                  <h3 class="fs-5 fw-bold mb-0 text-white d-flex align-items-center">
-                    <i class="bi bi-box-seam-fill me-2 text-primary"></i>Relief Supply Inventory
-                  </h3>
+                  <div>
+                    <h3 class="fs-5 fw-bold mb-1 text-white d-flex align-items-center">
+                      <i class="bi bi-box-seam-fill me-2 text-primary"></i>Relief Supply Inventory
+                    </h3>
+                    <p class="mb-0 text-muted" style="font-size:0.82rem;">Current community emergency relief stockpiles (local caches synced against the L2 EVM smart contract ledger).</p>
+                  </div>
                   <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#restock-modal">
                     <i class="bi bi-plus-circle me-1"></i>Restock Supplies
                   </button>
@@ -248,7 +255,31 @@
             </div>
           </div>
 
-        </div><!-- /overview-view-container -->
+          <!-- Stock History Ledger -->
+          <div class="form-card w-100 m-0 p-4 mt-4" style="max-width: 100%; background: rgba(30, 41, 59, 0.25); border: 1px solid var(--glass-border);">
+            <h3 class="fs-5 fw-bold mb-3 text-white"><i class="bi bi-clock-history text-primary me-2"></i>Supply Chain Audit Logs (Stock History)</h3>
+            <div class="logs-table-wrapper" style="max-height: 480px; overflow-y: auto;">
+              <table class="logs-table mb-0">
+                <thead>
+                  <tr>
+                    <th>Block #</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Timestamp</th>
+                    <th>Proof / Tx Hash</th>
+                  </tr>
+                </thead>
+                <tbody id="stock-history-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+              <div id="stock-history-empty" class="text-center py-4 d-none text-muted">
+                <i class="bi bi-hr fs-2"></i>
+                <p class="mb-0 mt-2">No stock restocks or transfer transactions recorded on L2 yet.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- ── VOLUNTEERS VIEW CONTAINER ───────────────────────── -->
         <div id="volunteers-view-container" class="d-none mb-4">
@@ -652,6 +683,7 @@
         const sbOverview = document.getElementById("sb-overview");
         const sbRequests = document.getElementById("sb-requests");
         const sbVolunteers = document.getElementById("sb-volunteers");
+        const sbSupplies = document.getElementById("sb-supplies");
         const sbMap = document.getElementById("sb-map");
         const sbBlockchain = document.getElementById("sb-blockchain");
         const sbLogs = document.getElementById("sb-logs");
@@ -659,6 +691,7 @@
         const overviewContainer = document.getElementById("overview-view-container");
         const kanbanBoardWrapper = document.getElementById("kanban-board-wrapper");
         const volunteersViewContainer = document.getElementById("volunteers-view-container");
+        const suppliesViewContainer = document.getElementById("supplies-view-container");
         const mapViewContainer = document.getElementById("map-view-container");
         const blockchainViewContainer = document.getElementById("blockchain-view-container");
 
@@ -674,21 +707,26 @@
           });
         }
 
+        function hideAllContainers() {
+          overviewContainer.classList.add("d-none");
+          kanbanBoardWrapper.classList.add("d-none");
+          volunteersViewContainer.classList.add("d-none");
+          suppliesViewContainer.classList.add("d-none");
+          mapViewContainer.classList.add("d-none");
+          blockchainViewContainer.classList.add("d-none");
+        }
+
         sbOverview.addEventListener("click", () => {
           clearSidebarActive();
           sbOverview.classList.add("active");
+          hideAllContainers();
           overviewContainer.classList.remove("d-none");
-          kanbanBoardWrapper.classList.add("d-none");
-          volunteersViewContainer.classList.add("d-none");
-          mapViewContainer.classList.add("d-none");
-          blockchainViewContainer.classList.add("d-none");
         });
 
         sbRequests.addEventListener("click", () => {
           clearSidebarActive();
           sbRequests.classList.add("active");
-          overviewContainer.classList.add("d-none");
-          volunteersViewContainer.classList.add("d-none");
+          hideAllContainers();
           btnViewBoard.click();
           kanbanBoardWrapper.classList.remove("d-none");
         });
@@ -696,34 +734,135 @@
         sbVolunteers.addEventListener("click", () => {
           clearSidebarActive();
           sbVolunteers.classList.add("active");
-          overviewContainer.classList.add("d-none");
-          kanbanBoardWrapper.classList.add("d-none");
+          hideAllContainers();
           volunteersViewContainer.classList.remove("d-none");
-          mapViewContainer.classList.add("d-none");
-          blockchainViewContainer.classList.add("d-none");
+        });
+
+        sbSupplies.addEventListener("click", () => {
+          clearSidebarActive();
+          sbSupplies.classList.add("active");
+          hideAllContainers();
+          suppliesViewContainer.classList.remove("d-none");
+          loadStockHistory();
         });
 
         sbMap.addEventListener("click", () => {
           clearSidebarActive();
           sbMap.classList.add("active");
-          overviewContainer.classList.add("d-none");
-          volunteersViewContainer.classList.add("d-none");
+          hideAllContainers();
           btnViewMap.click();
-          kanbanBoardWrapper.classList.add("d-none");
+          mapViewContainer.classList.remove("d-none");
         });
 
         sbBlockchain.addEventListener("click", () => {
           clearSidebarActive();
           sbBlockchain.classList.add("active");
-          overviewContainer.classList.add("d-none");
-          volunteersViewContainer.classList.add("d-none");
+          hideAllContainers();
           btnViewBlockchain.click();
-          kanbanBoardWrapper.classList.add("d-none");
+          blockchainViewContainer.classList.remove("d-none");
         });
 
         sbLogs.addEventListener("click", () => {
           btnViewLogs.click();
         });
+
+        // ── Supply Chain Stock History Ledger ───────────────────────
+        async function loadStockHistory() {
+          const historyBody = document.getElementById("stock-history-body");
+          const historyEmpty = document.getElementById("stock-history-empty");
+          if (!historyBody) return;
+
+          try {
+            const res = await fetch("/api/blockchain/explorer/blocks");
+            if (res.ok) {
+              const data = await res.json();
+              const blocks = data.blocks || [];
+
+              const txs = [];
+              blocks.forEach(block => {
+                (block.transactions || []).forEach(t => {
+                  if (t.method === "mintSupply" || t.method === "transferSupply") {
+                    txs.push({
+                      ...t,
+                      blockNumber: block.number,
+                      timestamp: block.timestamp
+                    });
+                  }
+                });
+              });
+
+              // Sort by block number descending
+              txs.sort((a, b) => b.blockNumber - a.blockNumber);
+
+              if (txs.length === 0) {
+                historyBody.innerHTML = "";
+                historyEmpty.classList.remove("d-none");
+              } else {
+                historyEmpty.classList.add("d-none");
+                historyBody.innerHTML = txs.map(tx => {
+                  const shortHash = `${tx.hash.substring(0, 10)}...${tx.hash.substring(56)}`;
+                  const time = new Date(tx.timestamp).toLocaleString();
+                  
+                  let actionLabel = "";
+                  let badgeClass = "";
+                  let details = "";
+                  if (tx.method === "mintSupply") {
+                    actionLabel = "Restock / Mint";
+                    badgeClass = "bg-success-subtle text-success border border-success-subtle";
+                    details = `Added <strong class="text-white">${tx.payload.amount}</strong> units of <span class="badge-category">${tx.payload.category}</span>`;
+                  } else {
+                    actionLabel = "Dispatch / Transfer";
+                    badgeClass = "bg-info-subtle text-info border border-info-subtle";
+                    const toLabel = tx.payload.to.startsWith("0x") ? `worker...${tx.payload.to.substring(38)}` : tx.payload.to;
+                    details = `Dispatched <strong class="text-white">${tx.payload.amount}</strong> units of <span class="badge-category">${tx.payload.category}</span> to ${toLabel}`;
+                  }
+
+                  return `
+                    <tr>
+                      <td><span class="text-white fw-bold">#${tx.blockNumber}</span></td>
+                      <td><span class="badge ${badgeClass}" style="font-size:0.7rem; padding: 0.25rem 0.5rem; font-weight:700;">${actionLabel}</span></td>
+                      <td><span class="text-white-50" style="font-size:0.8rem;">${details}</span></td>
+                      <td><span class="text-muted small">${time}</span></td>
+                      <td>
+                        <a href="#" class="font-monospace text-info verify-tx-hash" data-hash="${tx.hash}" style="font-size:0.75rem;">${shortHash}</a>
+                      </td>
+                    </tr>
+                  `;
+                }).join("");
+
+                // Click listener to verify tx details via the immutable receipt modal popup
+                historyBody.querySelectorAll(".verify-tx-hash").forEach(link => {
+                  link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const hash = link.dataset.hash;
+                    const txObj = txs.find(t => t.hash === hash);
+                    if (txObj) {
+                      document.getElementById("receipt-tx-hash").textContent = txObj.hash;
+                      document.getElementById("receipt-block-num").textContent = txObj.blockNumber;
+                      document.getElementById("receipt-timestamp").textContent = new Date(txObj.timestamp).toLocaleString();
+                      document.getElementById("receipt-from").textContent = txObj.from || "0x4fe63000000000000000000000000000000091ad";
+                      document.getElementById("receipt-to").textContent = txObj.to || "0x7a43f891F891F891F891F891F891F891F891F891";
+                      document.getElementById("receipt-gas").textContent = `${txObj.gasUsed || 21542} gas`;
+                      document.getElementById("receipt-payload").textContent = JSON.stringify(txObj.payload, null, 2);
+                      const modal = new bootstrap.Modal(document.getElementById("tx-receipt-modal"));
+                      modal.show();
+                    }
+                  });
+                });
+              }
+            }
+          } catch (err) {
+            console.error("Error loading stock history:", err);
+          }
+        }
+
+        // Attach listener to restock-form to reload history after success
+        const restockForm = document.getElementById("restock-form");
+        if (restockForm) {
+          restockForm.addEventListener("submit", () => {
+            setTimeout(loadStockHistory, 1000);
+          });
+        }
 
         // Synced active view state listeners (e.g. if routes/clicks on cards force view changes)
         setInterval(() => {
@@ -731,15 +870,15 @@
           const isMapActive = btnViewMap.classList.contains("active");
           const isBlockchainActive = btnViewBlockchain.classList.contains("active");
 
-          if (isBoardActive && !sbRequests.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none")) {
+          if (isBoardActive && !sbRequests.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
             clearSidebarActive();
             sbRequests.classList.add("active");
             kanbanBoardWrapper.classList.remove("d-none");
-          } else if (isMapActive && !sbMap.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none")) {
+          } else if (isMapActive && !sbMap.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
             clearSidebarActive();
             sbMap.classList.add("active");
             kanbanBoardWrapper.classList.add("d-none");
-          } else if (isBlockchainActive && !sbBlockchain.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none")) {
+          } else if (isBlockchainActive && !sbBlockchain.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
             clearSidebarActive();
             sbBlockchain.classList.add("active");
             kanbanBoardWrapper.classList.add("d-none");
