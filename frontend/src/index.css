@@ -90,7 +90,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 2px solid rgba(25, 102, 70, 0.65);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04), 0 1px 2px rgba(45, 90, 39, 0.01);
+  box-shadow: 0 15px 40px -5px rgba(20, 60, 30, 0.15), 0 5px 15px -3px rgba(20, 60, 30, 0.1);
 }
 
 .glass-card-darker {

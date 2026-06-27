@@ -75,32 +75,32 @@ export default function Hero() {
             AI Community-Driven Relief
           </div>
 
-          <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-slate-800 leading-[1.1] min-h-[120px] md:min-h-[160px] lg:min-h-[auto]">
+          <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-slate-900 drop-shadow-md leading-[1.1] min-h-[120px] md:min-h-[160px] lg:min-h-[auto]">
             Report a Need for <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-emerald-700 via-teal-600 to-green-700 bg-clip-text text-transparent text-neon-green">
+            <span className="bg-gradient-to-r from-emerald-800 via-teal-700 to-green-800 bg-clip-text text-transparent text-neon-green drop-shadow-sm">
               {typewriterText}
             </span>
-            <span className="typewriter-cursor text-emerald-600 font-light ml-0.5">|</span>
+            <span className="typewriter-cursor text-emerald-700 font-light ml-0.5">|</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-650 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg text-slate-800 font-medium drop-shadow-md max-w-2xl leading-relaxed">
             Describe what you or someone near you needs. Our AI will automatically translate, categorize, score urgency, and connect you to the right available volunteer in real-time.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-sm">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-md">
               <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-xs font-bold shadow-sm">
                 ✓
               </div>
               Multi-Language AI
             </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-sm">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-md">
               <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-xs font-bold shadow-sm">
                 ✓
               </div>
               Urgency Grading
             </div>
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-sm">
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-700 font-semibold bg-white/70 border border-slate-200/50 px-3.5 py-2.5 rounded-xl backdrop-blur-md shadow-md">
               <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600 text-xs font-bold shadow-sm">
                 ✓
               </div>
@@ -111,7 +111,7 @@ export default function Hero() {
 
         {/* Right card graphic */}
         <div className="lg:col-span-5 flex justify-center lg:justify-end animate-float">
-          <div className="relative w-full max-w-sm rounded-3xl bg-white/80 backdrop-blur-2xl border border-emerald-900/10 p-6 shadow-[0_15px_35px_rgba(45,90,39,0.06),_0_0_20px_rgba(16,185,129,0.01)] overflow-hidden">
+          <div className="relative w-full max-w-sm rounded-3xl bg-white/80 backdrop-blur-2xl border border-emerald-900/10 p-6 shadow-[0_25px_50px_-12px_rgba(20,60,30,0.25)] overflow-hidden">
             {/* Ambient spot behind the graphic */}
             <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl pointer-events-none" />
 

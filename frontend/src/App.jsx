@@ -12,13 +12,22 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAFBF9] via-[#ECF2EE] to-[#F1F6F3] text-slate-700 flex flex-col font-sans select-none antialiased selection:bg-emerald-500/10 selection:text-emerald-800 relative overflow-x-hidden">
+    <div className="min-h-screen text-slate-700 flex flex-col font-sans select-none antialiased selection:bg-emerald-500/10 selection:text-emerald-800 relative overflow-x-hidden">
       
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#FAFBF9] via-[#ECF2EE] to-[#F1F6F3] -z-20 pointer-events-none" />
+
       {/* Interactive Network Graph Background (Visible on Light Background) */}
       <NetworkCanvas />
 
       {/* Navbar */}
       <Navbar />
+
+      {/* Faded Leaves Background Image */}
+      <div className="absolute top-[80px] left-0 right-0 h-[650px] pointer-events-none -z-10 overflow-hidden opacity-[0.35] select-none">
+        <img src="/leaves.jpg" className="w-full h-full object-cover object-top" alt="" />
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-950/60 via-transparent to-[#F1F6F3]" />
+      </div>
 
       {/* Hero Section */}
       <Hero />
