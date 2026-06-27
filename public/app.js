@@ -2452,14 +2452,14 @@ function initHistoryLogs() {
     const archivedDate = new Date(log.archivedAt).toLocaleString();
 
     const timelineHtml = log.timeline && log.timeline.length > 0
-      ? `<div class="timeline-container p-2 mt-2" style="font-size:0.75rem; border-left:2px solid rgba(255,255,255,0.1); padding-left:1rem !important;">
+      ? `<div class="timeline-container p-2 mt-2" style="font-size:0.75rem; border-left:2px solid #cbd5e1; padding-left:1rem !important;">
            ${log.timeline.map(t => {
              const time = new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
              const date = new Date(t.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' });
              return `
-               <div class="mb-1" style="border-bottom: 1px dashed rgba(255,255,255,0.03); pb-1;">
-                 <span class="text-info fw-semibold" style="font-size:0.72rem;">[${date} ${time}]</span>
-                 <span class="text-white-50 ms-1" style="font-size:0.75rem;">${t.note}</span>
+               <div class="mb-1" style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 0.25rem;">
+                 <span class="text-primary fw-semibold" style="font-size:0.72rem;">[${date} ${time}]</span>
+                 <span class="text-secondary ms-1" style="font-size:0.75rem; color: #475569;">${t.note}</span>
                </div>
              `;
            }).join("")}
