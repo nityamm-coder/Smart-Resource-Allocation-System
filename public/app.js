@@ -2109,6 +2109,7 @@ if (isDashboardPage) {
   // Initial load
   startLiveListener();
   loadRequests();
+  loadBlockchainStats();
 
   // Expose loadRequests globally so SMS gateway can trigger refresh
   window.loadRequests = loadRequests;
@@ -2122,9 +2123,8 @@ if (isDashboardPage) {
     if (!unsubscribeFirestore) {
       loadRequests();
     }
-    if (currentView === "blockchain") {
-      loadBlockchainStats();
-    }
+    // Always load blockchain stats to keep dashboard Overview metrics updated
+    loadBlockchainStats();
   }, 10000);
 }
 
