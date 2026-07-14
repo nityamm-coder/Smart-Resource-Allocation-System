@@ -1,0 +1,174 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>RESPOND_OS - Live Tracking</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {secondary: "#006686", "on-surface": "#1b1b1b", "surface-container-high": "#e8e8e8", error: "#ba1a1a", "outline-variant": "#b9ccb5", tertiary: "#705d00", "tertiary-fixed": "#ffe170", "inverse-on-surface": "#f1f1f1", "on-secondary-fixed-variant": "#004d66", "surface-dim": "#dadada", "surface-container": "#eeeeee", "primary-fixed-dim": "#1ae45e", "secondary-fixed-dim": "#6fd2ff", "on-primary": "#ffffff", "on-error": "#ffffff", "secondary-fixed": "#c0e8ff", "on-error-container": "#93000a", "on-surface-variant": "#3b4b3a", "surface-bright": "#f9f9f9", "primary-fixed": "#6bff84", "tertiary-container": "#ffdb47", "on-background": "#1b1b1b", "on-secondary-fixed": "#001f2b", "on-secondary": "#ffffff", "surface-container-lowest": "#ffffff", "secondary-container": "#00c4fe", "primary-container": "#45fd73", "on-primary-container": "#007129", surface: "#f9f9f9", "error-container": "#ffdad6", outline: "#6b7c68", "on-tertiary-fixed": "#221b00", "on-tertiary": "#ffffff", "on-tertiary-fixed-variant": "#544600", "on-secondary-container": "#004d66", "on-primary-fixed": "#002107", "tertiary-fixed-dim": "#e9c400", "surface-container-highest": "#e2e2e2", "surface-container-low": "#f3f3f3", background: "#f9f9f9", "on-tertiary-container": "#736000", "on-primary-fixed-variant": "#00531c", "surface-tint": "#006e28", "inverse-primary": "#1ae45e", primary: "#006e28", "surface-variant": "#e2e2e2", "inverse-surface": "#303030"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {unit: "4px", xl: "32px", "margin-mobile": "16px", xs: "4px", md: "16px", sm: "8px", lg: "24px", gutter: "24px", "margin-desktop": "48px"}, fontFamily: {"headline-md": ["Space Grotesk"], "label-sm": ["Space Grotesk"], "label-bold": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "body-md": ["Space Grotesk"], "body-lg": ["Space Grotesk"], display: ["Space Grotesk"], "headline-lg": ["Space Grotesk"], headline: ["Space Grotesk"], body: ["Space Grotesk"], label: ["Space Grotesk"]}, fontSize: {"headline-md": ["24px", {lineHeight: "1.3", fontWeight: "700"}], "label-sm": ["12px", {lineHeight: "1.2", fontWeight: "500"}], "label-bold": ["14px", {lineHeight: "1.2", fontWeight: "700"}], "headline-lg-mobile": ["32px", {lineHeight: "1.2", fontWeight: "700"}], "body-md": ["16px", {lineHeight: "1.6", fontWeight: "500"}], "body-lg": ["18px", {lineHeight: "1.6", fontWeight: "500"}], display: ["64px", {lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "700"}], "headline-lg": ["40px", {lineHeight: "1.2", letterSpacing: "-0.01em", fontWeight: "700"}]}}}};</script>
+<style>
+        /* Neubrutalism specific utilities */
+        .neubrutalism-border {
+            border: 4px solid #000000;
+        }
+        .neubrutalism-shadow {
+            box-shadow: 4px 4px 0px 0px #000000;
+        }
+        .neubrutalism-shadow-lg {
+            box-shadow: 8px 8px 0px 0px #000000;
+        }
+        .neubrutalism-pressed {
+            box-shadow: 2px 2px 0px 0px #000000;
+            transform: translate(2px, 2px);
+        }
+        .neubrutalism-interactive:hover {
+            box-shadow: 8px 8px 0px 0px #000000;
+            transform: translate(-2px, -2px);
+        }
+        .neubrutalism-interactive:active {
+            box-shadow: 2px 2px 0px 0px #000000;
+            transform: translate(2px, 2px);
+        }
+        .divider {
+            border-bottom: 4px solid #000000;
+        }
+    </style>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""></head>
+<body class="bg-background text-on-background min-h-screen flex font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex flex-col h-screen sticky top-0 w-64 bg-surface neubrutalism-border border-l-0 border-t-0 border-b-0 neubrutalism-shadow z-50 p-md gap-sm shrink-0">
+<div class="mb-lg flex flex-col items-start gap-sm">
+<div class="w-16 h-16 neubrutalism-border bg-surface-variant overflow-hidden">
+<img alt="Unit Logo" class="w-full h-full object-cover" data-alt="A stark, high-contrast, minimalist logo design featuring geometric shapes typical of neubrutalist corporate identities, set against a stark white background. The image has a raw, unpolished feel with bold black outlines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwt7ydae4tg8e0RNRwFsT9obq-yn8s7QFtreMsQoNscj9pWdXgOg1Y_sPQElGZaUjBvAKsu9OajP1sJwZ4XVy5WEgRBJZl4lYln3Qc0TnrsvAxJQoObRR3sqEueWmUbYe8z4xMCdNRKN2X3Bk1r_y_h61qwRJZx1j_SYHtgftGenbcoeb4RK_7qJ3NKj11p4Ct56xe6IALhy6L80OUc4L-7x7v6Mfj7IhQ_t2D8zw3fFPTonKlsj5ExTJ7_UGs-6RVi7gwonBkwg">
+</div>
+<div>
+<h1 class="font-display text-headline-md text-primary truncate w-full" title="ALPHA_TEAM">ALPHA_TEAM</h1>
+<p class="font-label-bold text-label-bold text-on-surface-variant truncate w-full" title="Sector 7 Status: Active">Sector 7 Status: Active</p>
+</div>
+</div>
+<div class="flex flex-col gap-sm flex-1">
+<a class="flex items-center gap-sm p-sm neubrutalism-border text-on-surface hover:bg-surface-container-high font-label-bold text-label-bold transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-sm p-sm bg-primary-container text-on-primary-container neubrutalism-border shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[2px] translate-y-[2px] font-label-bold text-label-bold transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="map" data-weight="fill">map</span>
+                Live Map
+            </a>
+<a class="flex items-center gap-sm p-sm neubrutalism-border text-on-surface hover:bg-surface-container-high font-label-bold text-label-bold transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="package_2">package_2</span>
+                Resources
+            </a>
+<a class="flex items-center gap-sm p-sm neubrutalism-border text-on-surface hover:bg-surface-container-high font-label-bold text-label-bold transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+                Logistics
+            </a>
+<a class="flex items-center gap-sm p-sm neubrutalism-border text-on-surface hover:bg-surface-container-high font-label-bold text-label-bold transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+                Reports
+            </a>
+</div>
+<button class="w-full bg-primary-container neubrutalism-border neubrutalism-shadow neubrutalism-interactive p-sm font-label-bold text-label-bold uppercase text-on-primary-container mt-auto mb-sm transition-all">
+            DEPLOY UNIT
+        </button>
+<div class="mt-auto">
+<a class="flex items-center gap-sm p-sm neubrutalism-border text-on-surface hover:bg-surface-container-high font-label-bold text-label-bold transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Sign Out
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-h-screen w-full relative">
+<!-- TopNavBar (Mobile & Desktop) -->
+<header class="w-full sticky top-0 bg-background divider z-40 flex justify-between items-center px-lg py-md">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-on-background uppercase tracking-tighter md:hidden">RESPOND_OS</span>
+<span class="font-headline-md text-headline-md font-bold text-on-background uppercase tracking-tighter hidden md:block">LIVE TRACKING</span>
+</div>
+<div class="flex items-center gap-sm">
+<!-- Desktop Nav Items -->
+<div class="hidden md:flex gap-sm mr-lg">
+<a class="px-sm py-xs text-on-surface-variant font-medium hover:bg-secondary-container hover:text-on-secondary-container transition-colors font-label-bold text-label-bold" href="#">DASHBOARD</a>
+<a class="px-sm py-xs text-secondary font-bold hover:bg-secondary-container hover:text-on-secondary-container transition-colors font-label-bold text-label-bold" href="#">LIVE MAP</a>
+<a class="px-sm py-xs text-on-surface-variant font-medium hover:bg-secondary-container hover:text-on-secondary-container transition-colors font-label-bold text-label-bold" href="#">LOGISTICS</a>
+</div>
+<button class="p-xs hover:bg-secondary-container hover:text-on-secondary-container transition-colors neubrutalism-border">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-xs hover:bg-secondary-container hover:text-on-secondary-container transition-colors neubrutalism-border">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="p-xs hover:bg-secondary-container hover:text-on-secondary-container transition-colors neubrutalism-border hidden sm:block">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="w-10 h-10 neubrutalism-border bg-surface-variant overflow-hidden ml-sm">
+<img alt="System Administrator Avatar" class="w-full h-full object-cover" data-alt="A stark, minimalist avatar of a system administrator. High contrast black outlines on a stark white background, conveying a sense of authority and technical precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyjBrIlCC753LPAIpw-DSlO04Np1QJ9BsVNNviS4S8l2HyGazRoCRsqFeSoi3o1lPc-HdDIgDgbNb0EWnRibcrX2-u-TsteZxJvFRR_yQ-nebhtYGO9vaOW8hCnZuLG_gWTVG7Mcs8-Yn7KVhqkSLCdLcRi-ZHE2RBl2tZtybaBO1ICinQSIUZy3TDQ-pPuykhN4GOHA7-tgoq3DhEwucnv0Et7Sl-4KELUQqMqxaoIlDLiJbTA_bdw7QvUERZ4pHsRrUym7UJCQ">
+</div>
+</div>
+</header>
+<main class="flex-1 p-margin-mobile md:p-margin-desktop bg-surface-container-lowest grid-cols-1 gap-lg relative flex-col"><section class="w-full h-[500px] bg-surface neubrutalism-border neubrutalism-shadow relative overflow-hidden group cursor-crosshair mb-lg"><!-- Map Container for Leaflet -->
+<div id="map" class="absolute inset-0 w-full h-full bg-surface-dim"></div>
+
+<!-- Map UI Overlay (Preserved) -->
+<div class="absolute inset-0 p-md pointer-events-none flex flex-col justify-between z-10">
+    <div class="flex justify-between items-start">
+        <div class="bg-black text-white px-3 py-1 font-label-bold text-xs uppercase tracking-widest border-2 border-black pointer-events-auto">Sector 07 // Feed</div>
+        <div class="bg-error text-on-error px-3 py-1 font-label-bold text-xs uppercase tracking-widest border-2 border-black flex items-center gap-2 pointer-events-auto">
+            <span class="w-2 h-2 rounded-full bg-white animate-pulse"></span> Live Signal
+        </div>
+    </div>
+
+    <div class="flex justify-end pointer-events-auto">
+        <div class="flex flex-col gap-sm bg-surface neubrutalism-border p-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <button class="w-8 h-8 bg-surface-container hover:bg-surface-variant flex items-center justify-center neubrutalism-border transition-colors">
+                <span class="material-symbols-outlined">add</span>
+            </button>
+            <button class="w-8 h-8 bg-surface-container hover:bg-surface-variant flex items-center justify-center neubrutalism-border transition-colors">
+                <span class="material-symbols-outlined">remove</span>
+            </button>
+            <button class="w-8 h-8 bg-surface-container hover:bg-surface-variant flex items-center justify-center neubrutalism-border transition-colors mt-xs">
+                <span class="material-symbols-outlined">my_location</span>
+            </button>
+        </div>
+    </div>
+</div></section><section class="w-full bg-surface neubrutalism-border neubrutalism-shadow p-lg flex flex-col md:flex-row gap-lg items-center">
+    <div class="flex items-center gap-md flex-1">
+        <div class="w-16 h-16 neubrutalism-border bg-primary-container flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-on-primary-container" style="font-size: 40px;">person</span>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center gap-sm mb-xs">
+                <span class="px-xs py-[2px] bg-primary-container text-on-primary-container text-xs font-label-bold uppercase neubrutalism-border">Active Unit</span>
+                <span class="text-xs font-label-bold text-primary uppercase">Bravo-9</span>
+            </div>
+            <h2 class="font-display text-headline-md text-on-surface uppercase">OPERATIVE J. DOE</h2>
+            <p class="text-on-surface-variant font-label-bold text-label-bold">Status: In Pursuit • Signal Strength: 98%</p>
+        </div>
+    </div>
+    <div class="flex gap-sm w-full md:w-auto">
+        <button class="flex-1 md:flex-none px-lg py-sm bg-surface-container hover:bg-surface-variant neubrutalism-border neubrutalism-interactive font-label-bold text-label-bold uppercase transition-all">
+            Contact
+        </button>
+        <button class="flex-1 md:flex-none px-lg py-sm bg-error text-on-error neubrutalism-border neubrutalism-interactive font-label-bold text-label-bold uppercase transition-all">
+            Recall
+        </button>
+    </div>
+</section>
+<!-- Floating Action Button (Mobile Only) -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary-container neubrutalism-border neubrutalism-shadow z-50 flex items-center justify-center neubrutalism-interactive">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="add" data-weight="fill">add</span>
+</button>
+<!-- Column 1: Tracker & Details -->
+<!-- Column 2: Live Map & Feedback -->
+
+</main>
+</div>
+
+
+
+
+</body></html>

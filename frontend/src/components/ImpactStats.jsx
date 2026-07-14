@@ -27,51 +27,36 @@ export default function ImpactStats() {
 
   return (
     <section className="max-w-5xl mx-auto px-6 -mt-8 relative z-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="w-full bg-[#1b1b1b] text-white border-4 border-black shadow-neu flex flex-col md:flex-row justify-between items-center p-6 gap-6 rounded-none">
         
         {/* Stat 1 */}
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/20 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shadow-sm">
-            <Award size={22} />
-          </div>
-          <div>
-            <h3 className="font-display font-extrabold text-3xl text-slate-800 tracking-tight leading-none mb-1">
-              {resolvedCount > 0 ? resolvedCount : '14'}
-            </h3>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-              Requests Resolved
-            </p>
-          </div>
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-4 md:pb-0 md:pr-6">
+          <span className="font-display text-5xl font-extrabold text-primary-container leading-none mb-2">
+            {resolvedCount > 0 ? resolvedCount : '14'}
+          </span>
+          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
+            Rescues Completed
+          </span>
         </div>
 
         {/* Stat 2 */}
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/20 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shadow-sm">
-            <Zap size={22} className="text-emerald-500 animate-pulse" />
-          </div>
-          <div>
-            <h3 className="font-display font-extrabold text-3xl text-slate-800 tracking-tight leading-none mb-1">
-              &lt; 15m
-            </h3>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-              Avg Volunteer Dispatch
-            </p>
-          </div>
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-4 md:pb-0 md:pr-6 pl-0 md:pl-6">
+          <span className="font-display text-5xl font-extrabold text-tertiary-container leading-none mb-2">
+            &lt; 15m
+          </span>
+          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
+            Avg Dispatch Time
+          </span>
         </div>
 
         {/* Stat 3 */}
-        <div className="glass-card rounded-2xl p-6 flex items-center gap-4 transition-all duration-300 transform hover:-translate-y-1">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/20 border border-emerald-500/20 text-white flex items-center justify-center shadow-sm text-xl">
-            🤝
-          </div>
-          <div>
-            <h3 className="font-display font-extrabold text-3xl text-slate-800 tracking-tight leading-none mb-1">
-              98.4%
-            </h3>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-none">
-              Successful Aid Delivery
-            </p>
-          </div>
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 pl-0 md:pl-6">
+          <span className="font-display text-5xl font-extrabold text-secondary-container leading-none mb-2">
+            98.4%
+          </span>
+          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
+            Aid Success Rate
+          </span>
         </div>
 
       </div>

@@ -133,34 +133,34 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
   };
 
   return (
-    <div className="glass-card rounded-3xl p-6 sm:p-8 transition-all duration-300">
-      <h2 className="font-display font-extrabold text-xl md:text-2xl text-slate-800 mb-6 flex items-center gap-2.5">
-        <span className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-650 flex items-center justify-center text-sm shadow-sm">
-          📝
+    <div className="bg-white border-4 border-black p-6 sm:p-8 shadow-neu rounded-none">
+      <h2 className="font-display font-extrabold text-xl md:text-2xl text-on-surface mb-6 flex items-center gap-2.5 border-b-4 border-black pb-3 uppercase">
+        <span className="w-8 h-8 border-2 border-black bg-error-container text-on-error-container flex items-center justify-center text-sm shadow-neu-sm">
+          🚨
         </span>
         Submit a Help Request
       </h2>
 
       {errorMsg && (
-        <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2.5 shadow-sm">
-          <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
+        <div className="mb-6 p-4 border-4 border-black bg-error-container text-on-error-container text-sm flex items-start gap-2.5 shadow-neu-sm rounded-none">
+          <AlertTriangle size={18} className="shrink-0 mt-0.5" />
           <div>
-            <strong>Submission Error:</strong> {errorMsg}
+            <strong className="uppercase">Submission Error:</strong> {errorMsg}
           </div>
         </div>
       )}
 
       {successMsg && (
-        <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2.5 shadow-sm">
-          <CheckCircle size={18} className="text-emerald-600 shrink-0" />
-          <span>{successMsg}</span>
+        <div className="mb-6 p-4 border-4 border-black bg-primary-container text-on-primary-container text-sm flex items-center gap-2.5 shadow-neu-sm rounded-none">
+          <CheckCircle size={18} className="shrink-0" />
+          <span className="font-bold">{successMsg}</span>
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Description */}
         <div>
-          <label htmlFor="description" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label htmlFor="description" className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">
             Describe the need
           </label>
           <textarea
@@ -168,18 +168,18 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
             rows={4}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded-xl glass-input p-3.5 text-sm placeholder-slate-400 resize-none"
+            className="w-full border-4 border-black p-3.5 text-sm placeholder-on-surface-variant resize-none bg-surface focus:outline-none focus:ring-4 focus:ring-primary-container focus:ring-offset-0"
             placeholder="e.g. An elderly man in our building has run out of insulin and cannot reach a hospital..."
             required
           />
-          <span className="block text-[11px] text-slate-500 mt-1.5 leading-normal">
+          <span className="block text-[11px] text-on-surface-variant mt-1.5 leading-normal font-bold">
             Be as descriptive as possible — Gemini AI uses this to analyze category and grade urgency.
           </span>
         </div>
 
         {/* Contact Phone */}
         <div>
-          <label htmlFor="victimPhone" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label htmlFor="victimPhone" className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">
             Your Contact Number
           </label>
           <input
@@ -187,11 +187,11 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
             id="victimPhone"
             value={victimPhone}
             onChange={(e) => setVictimPhone(e.target.value)}
-            className="w-full rounded-xl glass-input p-3.5 text-sm placeholder-slate-400"
+            className="w-full border-4 border-black p-3.5 text-sm placeholder-on-surface-variant bg-surface focus:outline-none focus:ring-4 focus:ring-primary-container focus:ring-offset-0"
             placeholder="e.g. +91 98765 43210"
             required
           />
-          <span className="block text-[11px] text-slate-500 mt-1.5 leading-normal">
+          <span className="block text-[11px] text-on-surface-variant mt-1.5 leading-normal font-bold">
             Coordinators and matched volunteers will call you at this number.
           </span>
         </div>
@@ -199,27 +199,27 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
         {/* Address */}
         <div>
           <div className="flex justify-between items-center mb-2">
-            <label htmlFor="address" className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+            <label htmlFor="address" className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
               Exact Address / Landmark (Optional)
             </label>
             <button
               type="button"
               onClick={handleShareLocation}
               disabled={gpsLoading}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold border transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1 border-2 border-black font-bold uppercase transition-all shadow-neu-sm text-xs ${
                 gpsSuccess
-                  ? 'bg-emerald-500/10 text-emerald-700 border-emerald-500/35 shadow-sm'
-                  : 'bg-slate-50 hover:bg-emerald-50 text-emerald-600 border-slate-200 hover:border-emerald-300'
+                  ? 'bg-primary-container text-on-primary-container'
+                  : 'bg-tertiary-container hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none'
               }`}
             >
               {gpsLoading ? (
                 <>
-                  <Loader2 size={12} className="animate-spin text-emerald-600" />
+                  <Loader2 size={12} className="animate-spin" />
                   Locating...
                 </>
               ) : gpsSuccess ? (
                 <>
-                  <CheckCircle size={12} className="text-emerald-600" />
+                  <CheckCircle size={12} />
                   Shared
                 </>
               ) : (
@@ -235,40 +235,45 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
             rows={2}
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="w-full rounded-xl glass-input p-3.5 text-sm placeholder-slate-400 resize-none"
+            className="w-full border-4 border-black p-3.5 text-sm placeholder-on-surface-variant resize-none bg-surface focus:outline-none focus:ring-4 focus:ring-primary-container focus:ring-offset-0"
             placeholder="e.g. Flat 202, Building B, Tarmale Nagar, Vasind, Maharashtra (Or click Share GPS)"
           />
         </div>
 
         {/* Local Hub / Zone */}
         <div>
-          <label htmlFor="zone" className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">
+          <label htmlFor="zone" className="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-2">
             Select Nearest Locality/Hub
           </label>
-          <select
-            id="zone"
-            value={zone}
-            onChange={(e) => setZone(e.target.value)}
-            className="w-full rounded-xl glass-input p-3.5 text-sm cursor-pointer"
-            required
-          >
-            <option value="" disabled>Select nearest locality...</option>
-            <option value="Vasind">Vasind</option>
-            <option value="Kalyan">Kalyan</option>
-            <option value="Thane">Thane</option>
-            <option value="Mumbai Central">Mumbai Central</option>
-          </select>
+          <div className="relative">
+            <select
+              id="zone"
+              value={zone}
+              onChange={(e) => setZone(e.target.value)}
+              className="w-full border-4 border-black p-3.5 text-sm cursor-pointer bg-surface appearance-none font-bold focus:outline-none focus:ring-4 focus:ring-primary-container focus:ring-offset-0"
+              required
+            >
+              <option value="" disabled>Select nearest locality...</option>
+              <option value="Vasind">Vasind</option>
+              <option value="Kalyan">Kalyan</option>
+              <option value="Thane">Thane</option>
+              <option value="Mumbai Central">Mumbai Central</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
+              <span className="font-bold">▼</span>
+            </div>
+          </div>
         </div>
 
         {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 px-6 rounded-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.15)] hover:shadow-[0_4px_25px_rgba(16,185,129,0.35)] transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full flex items-center justify-center gap-2.5 py-4 px-6 border-4 border-black font-bold bg-primary-container text-on-primary-container shadow-neu-heavy hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all uppercase rounded-none disabled:opacity-50 disabled:pointer-events-none"
         >
           {loading ? (
             <>
-              <Loader2 size={16} className="animate-spin text-white" />
+              <Loader2 size={16} className="animate-spin" />
               AI Analyzing Emergency...
             </>
           ) : (
@@ -282,3 +287,4 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
     </div>
   );
 }
+

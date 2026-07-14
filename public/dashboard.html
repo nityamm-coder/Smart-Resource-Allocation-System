@@ -1,24 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NGO Dashboard — SRAS</title>
+    <title>NGO Command Center — SRAS</title>
     <meta
       name="description"
       content="NGO coordination dashboard showing all community requests categorised by status and matched to volunteers."
     />
 
-    <!-- Bootstrap 5 CSS (CDN) -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap Icons -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary": "#0050cc",
+              "on-surface": "#1b1b1b",
+              "surface-container-high": "#e8e8e8",
+              "error": "#ba1a1a",
+              "outline-variant": "#b9ccb5",
+              "tertiary": "#705d00",
+              "tertiary-fixed": "#ffe170",
+              "inverse-on-surface": "#f1f1f1",
+              "on-secondary-fixed-variant": "#003fa4",
+              "surface-dim": "#dadada",
+              "surface-container": "#eeeeee",
+              "primary-fixed-dim": "#00e55b",
+              "secondary-fixed-dim": "#b3c5ff",
+              "on-primary": "#ffffff",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#dae1ff",
+              "on-error-container": "#93000a",
+              "on-surface-variant": "#3b4b3a",
+              "surface-bright": "#f9f9f9",
+              "primary-fixed": "#6bff83",
+              "tertiary-container": "#ffdb47",
+              "on-background": "#1b1b1b",
+              "on-secondary-fixed": "#001849",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#0266ff",
+              "primary-container": "#00ff66",
+              "on-primary-container": "#007128",
+              "surface": "#f9f9f9",
+              "error-container": "#ffdad6",
+              "outline": "#6b7c68",
+              "on-tertiary-fixed": "#221b00",
+              "on-tertiary": "#ffffff",
+              "on-tertiary-fixed-variant": "#544600",
+              "on-secondary-container": "#f9f7ff",
+              "on-primary-fixed": "#002107",
+              "tertiary-fixed-dim": "#e9c400",
+              "surface-container-highest": "#e2e2e2",
+              "surface-container-low": "#f3f3f3",
+              "background": "#f9f9f9",
+              "on-tertiary-container": "#736000",
+              "on-primary-fixed-variant": "#00531b",
+              "surface-tint": "#006e27",
+              "inverse-primary": "#00e55b",
+              "primary": "#006e27",
+              "surface-variant": "#e2e2e2",
+              "inverse-surface": "#303030"
+            },
+            borderRadius: {
+              "none": "0px"
+            },
+            boxShadow: {
+              "neu": "4px 4px 0px 0px rgba(0,0,0,1)",
+              "neu-heavy": "8px 8px 0px 0px rgba(0,0,0,1)",
+              "neu-sm": "2px 2px 0px 0px rgba(0,0,0,1)"
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet" />
     <!-- Leaflet.js CSS for Map View -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <!-- Chart.js for data visualization -->
@@ -27,8 +86,9 @@
     <link rel="stylesheet" href="style.css" />
   </head>
 
-  <body class="dashboard-body">
-    <!-- Hidden original triggers for app.js compat -->
+  <body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+    
+    <!-- Hidden original triggers for app.js compatibility -->
     <div class="d-none">
       <button id="btn-view-board" class="active">Board</button>
       <button id="btn-view-map">Map</button>
@@ -36,778 +96,483 @@
       <button id="view-logs-btn">Logs</button>
     </div>
 
-    <!-- ── Main Dashboard Layout Container ────────────────────── -->
-    <div class="dashboard-layout-container">
+    <!-- ── Sidebar Left (Desktop) ───────────────────────────────── -->
+    <nav class="hidden md:flex bg-white text-on-surface font-bold h-screen sticky top-0 w-64 border-r-4 border-black shadow-neu flex-col p-4 gap-2 z-50">
+      <!-- Logo -->
+      <a class="flex items-center gap-2 mb-6 p-2 border-b-4 border-black" href="index.html">
+        <span class="text-3xl">🌱</span>
+        <div>
+          <h1 class="font-display text-xl font-extrabold leading-none text-primary uppercase">SRAS</h1>
+          <p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">NGO command center</p>
+        </div>
+      </a>
+
+      <!-- Navigation Menu -->
+      <div class="flex-1 flex flex-col gap-2">
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-primary-container text-on-primary-container sidebar-item active" id="sb-overview">
+          📊 Overview
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-requests">
+          📝 Requests Board
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-map">
+          🗺️ Interactive Map
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-blockchain">
+          🛡️ L2 Trust Layer
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-volunteers">
+          👥 Volunteers
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-supplies">
+          📦 Supplies Inventory
+        </button>
+        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-logs">
+          🕰️ Action History
+        </button>
+      </div>
+
+      <!-- Time Indicator -->
+      <div class="mt-auto border-t-4 border-black pt-4 p-2 text-center text-xs font-mono font-bold bg-[#f1f1f1] border-2 border-black">
+        SYSTEM CLOCK: <span id="live-clock">—</span>
+      </div>
+    </nav>
+
+    <!-- ── Topbar (Mobile) ──────────────────────────────────────── -->
+    <header class="md:hidden bg-white text-on-background font-bold w-full sticky top-0 border-b-4 border-black flex justify-between items-center px-4 py-3 z-50 shadow-neu">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌱</span>
+        <span class="text-lg font-bold uppercase tracking-tighter">SRAS COORDINATOR</span>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="document.getElementById('sb-overview').click()" class="p-1.5 border-2 border-black font-bold text-xs bg-primary-container">Home</button>
+        <button onclick="document.getElementById('sb-requests').click()" class="p-1.5 border-2 border-black font-bold text-xs bg-white">Board</button>
+      </div>
+    </header>
+
+    <!-- ── Scrollable Content Area Right ──────────────────────── -->
+    <main class="flex-grow p-4 md:p-8 flex flex-col gap-6 overflow-y-auto w-full max-w-[1600px] mx-auto">
       
-      <!-- ── Fixed Sidebar Left ───────────────────────────────── -->
-      <aside class="sidebar-container">
-        <!-- Logo -->
-        <a class="sidebar-logo" href="index.html" style="padding: 1.5rem 1rem;">
-          <span style="font-size: 2.8rem; margin-right: 0.5rem;">🌱</span>
-          <h2 style="font-size: 2rem; line-height: 1.1; margin: 0; font-weight: 800;">SRAS<br><span style="font-size:0.85rem; color:#84a98c; font-weight:700; display: block; margin-top: 0.2rem;">Smart Resource Allocation System</span></h2>
-        </a>
+      <!-- Top Action Bar -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b-4 border-black pb-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-on-surface uppercase">NGO Coordination Command Center</h2>
+          <p class="text-xs text-on-surface-variant font-bold mt-1">Real-time resource allocation and automated AI dispatch portal.</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button id="notification-btn" class="px-4 py-2 border-4 border-black bg-tertiary-container text-on-tertiary-container font-bold uppercase transition-all shadow-neu-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] text-xs">
+            Enable Alerts
+          </button>
+          <button id="refresh-btn" class="px-4 py-2 border-4 border-black bg-white text-on-surface font-bold uppercase transition-all shadow-neu-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] text-xs">
+            Refresh
+          </button>
+          <a href="index.html" class="px-4 py-2 border-4 border-black bg-primary-container text-on-primary-container font-bold uppercase transition-all shadow-neu-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] text-xs inline-block text-center">
+            New Request
+          </a>
+        </div>
+      </div>
 
-        <!-- User Info -->
-        <div class="sidebar-user">
-          <div class="sidebar-user-avatar">NM</div>
-          <div class="sidebar-user-info">
-            <span class="user-name">Nityam Mishra</span>
-            <span class="user-role">NGO Coordinator</span>
+      <!-- Skeleton Loading State (visible while fetching) -->
+      <div id="loading-state" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div class="bg-white border-4 border-black p-5 shadow-neu animate-pulse">
+          <div class="h-6 bg-surface-container mb-3 w-1/3"></div>
+          <div class="h-4 bg-surface-container mb-2 w-3/4"></div>
+          <div class="h-4 bg-surface-container w-1/2"></div>
+        </div>
+        <div class="bg-white border-4 border-black p-5 shadow-neu animate-pulse">
+          <div class="h-6 bg-surface-container mb-3 w-1/4"></div>
+          <div class="h-4 bg-surface-container mb-2 w-2/3"></div>
+        </div>
+        <div class="bg-white border-4 border-black p-5 shadow-neu animate-pulse">
+          <div class="h-6 bg-surface-container mb-3 w-1/2"></div>
+          <div class="h-4 bg-surface-container mb-2 w-3/4"></div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-state" class="p-4 border-4 border-black bg-error-container text-on-error-container font-bold text-sm d-none mb-4 shadow-neu">
+        🚨 <span id="error-message"></span>
+      </div>
+
+      <!-- ── OVERVIEW VIEW CONTAINER ─────────────────────────── -->
+      <div id="overview-view-container" class="space-y-6">
+        
+        <!-- Stats cards -->
+        <h3 class="text-lg font-bold flex items-center gap-2 uppercase tracking-wide border-b-2 border-black pb-1">
+          📊 Request Metrics
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="stats-bar">
+          <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Total Requests</span>
+            <span class="text-4xl font-extrabold mt-2 text-on-surface" id="stat-total">—</span>
+          </div>
+          <div class="bg-error-container border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-error-container uppercase tracking-wider">Open Needs</span>
+            <span class="text-4xl font-extrabold mt-2 text-on-error-container animate-pulse" id="stat-open">—</span>
+          </div>
+          <div class="bg-tertiary-container border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-tertiary-container uppercase tracking-wider">In Progress</span>
+            <span class="text-4xl font-extrabold mt-2 text-on-tertiary-container" id="stat-progress">—</span>
+          </div>
+          <div class="bg-primary-container border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-primary-container uppercase tracking-wider">Resolved</span>
+            <span class="text-4xl font-extrabold mt-2 text-on-primary-container" id="stat-resolved">—</span>
           </div>
         </div>
 
-        <!-- Navigation Menu -->
-        <nav class="sidebar-menu">
-          <button class="sidebar-item active" id="sb-overview">
-            <i class="bi bi-grid-1x2-fill"></i>Overview
-          </button>
-          <button class="sidebar-item" id="sb-requests">
-            <i class="bi bi-grid-3x3-gap-fill"></i>Requests Board
-          </button>
-          <button class="sidebar-item" id="sb-map">
-            <i class="bi bi-map-fill"></i>Interactive Map
-          </button>
-          <button class="sidebar-item" id="sb-blockchain">
-            <i class="bi bi-database-fill-gear"></i>L2 Trust Layer
-          </button>
-          <button class="sidebar-item" id="sb-volunteers">
-            <i class="bi bi-people-fill"></i>Volunteers
-          </button>
-          <button class="sidebar-item" id="sb-supplies">
-            <i class="bi bi-box-seam-fill"></i>Supplies Inventory
-          </button>
-          <button class="sidebar-item" id="sb-logs">
-            <i class="bi bi-clock-history"></i>History Logs
-          </button>
-        </nav>
-      </aside>
-
-      <!-- ── Scrollable Content Area Right ────────────────────── -->
-      <main class="main-content-panel">
-
-        <!-- Top Action Bar -->
-        <div class="top-action-bar">
-          <div>
-            <h1 class="fs-4 fw-extrabold mb-1" style="color:#1b4332">NGO Coordination Command Center</h1>
-            <p class="mb-0" style="font-size:0.82rem; color:#5a7c6b;">Real-time resource allocation and automated AI dispatch portal.</p>
+        <!-- Bento row info cards -->
+        <h3 class="text-lg font-bold flex items-center gap-2 uppercase tracking-wide border-b-2 border-black pb-1 mt-6">
+          ⚙️ Operations Snapshot
+        </h3>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Volunteers</span>
+            <span class="text-2xl font-extrabold mt-1 text-primary" id="ov-volunteers">—</span>
           </div>
-          <div class="top-action-bar-right">
-            <button id="notification-btn" class="btn btn-outline-warning btn-sm d-none">
-              <i class="bi bi-bell me-1"></i>Enable Alerts
-            </button>
-            <button id="refresh-btn" class="btn btn-outline-light btn-sm">
-              <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-            </button>
-            <a href="index.html" class="btn btn-primary btn-sm">
-              <i class="bi bi-plus-circle me-1"></i>New Request
-            </a>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Food (Packs)</span>
+            <span class="text-2xl font-extrabold mt-1 text-tertiary" id="ov-food">—</span>
+          </div>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">MedKits</span>
+            <span class="text-2xl font-extrabold mt-1 text-secondary" id="ov-medical">—</span>
+          </div>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Shelters</span>
+            <span class="text-2xl font-extrabold mt-1 text-on-surface" id="ov-shelter">—</span>
+          </div>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Blocks (L2)</span>
+            <span class="text-2xl font-extrabold mt-1 text-primary" id="ov-blocks">—</span>
+          </div>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">SBT Receipts</span>
+            <span class="text-2xl font-extrabold mt-1 text-secondary" id="ov-sbts">—</span>
           </div>
         </div>
 
-        <!-- ── Skeleton Loading State (visible while fetching) ───── -->
-        <div id="loading-state" class="row g-3 mb-4">
-          <div class="col-12 col-lg-4">
-            <div class="skeleton-header"></div>
-            <div class="skeleton-card">
-              <div class="skeleton-line width-40"></div>
-              <div class="skeleton-line width-80"></div>
-              <div class="skeleton-line width-60"></div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="skeleton-header"></div>
-            <div class="skeleton-card">
-              <div class="skeleton-line width-30"></div>
-              <div class="skeleton-line width-80"></div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="skeleton-header"></div>
-            <div class="skeleton-card">
-              <div class="skeleton-line width-40"></div>
-              <div class="skeleton-line width-90"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── Error Message ─────────────────────────────────────── -->
-        <div id="error-state" class="alert alert-danger d-none" role="alert">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          <span id="error-message"></span>
-        </div>
-
-        <!-- ── OVERVIEW VIEW CONTAINER ─────────────────────────── -->
-        <div id="overview-view-container">
-
-          <!-- Stats Cards -->
-          <p class="overview-section-heading"><i class="bi bi-bar-chart-fill me-1" style="color:#2d9a4e;"></i>Request Metrics</p>
-          <div class="row g-3 mb-4" id="stats-bar">
-            <div class="col-6 col-lg-3">
-              <div class="stat-card">
-                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-                  <i class="bi bi-stack fs-5" style="color:#6366f1;"></i>
-                </div>
-                <div class="stat-number" id="stat-total" style="color:#1b4332;">—</div>
-                <div class="stat-label">Total Requests</div>
+        <!-- Charts row + Volunteers mini list -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+          <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col h-[320px]">
+              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🚨 Need Urgency Trends</h4>
+              <div class="flex-grow relative">
+                <canvas id="requestsTrendChart"></canvas>
               </div>
             </div>
-            <div class="col-6 col-lg-3">
-              <div class="stat-card">
-                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-                  <i class="bi bi-circle-fill fs-5" style="color:#dc2626;"></i>
-                </div>
-                <div class="stat-number" id="stat-open" style="color:#dc2626;">—</div>
-                <div class="stat-label">Open</div>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="stat-card">
-                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-                  <i class="bi bi-arrow-repeat fs-5" style="color:#f59e0b;"></i>
-                </div>
-                <div class="stat-number" id="stat-progress" style="color:#d97706;">—</div>
-                <div class="stat-label">In Progress</div>
-              </div>
-            </div>
-            <div class="col-6 col-lg-3">
-              <div class="stat-card">
-                <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
-                  <i class="bi bi-check-circle-fill fs-5" style="color:#16a34a;"></i>
-                </div>
-                <div class="stat-number" id="stat-resolved" style="color:#16a34a;">—</div>
-                <div class="stat-label">Resolved</div>
+            <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col h-[320px]">
+              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🍕 Needs Category Share</h4>
+              <div class="flex-grow relative">
+                <canvas id="categoryDistributionChart"></canvas>
               </div>
             </div>
           </div>
-
-          <!-- Extended Info Cards Row -->
-          <p class="overview-section-heading"><i class="bi bi-grid-1x2-fill me-1" style="color:#0d9488;"></i>Operations Snapshot</p>
-          <div class="row g-3 mb-4">
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">Active Volunteers</div>
-                    <div class="oi-value" id="ov-volunteers">—</div>
-                    <div class="oi-sub">On duty now</div>
-                  </div>
-                  <div class="oi-icon oi-icon-green"><i class="bi bi-people-fill"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">Food Packs</div>
-                    <div class="oi-value" id="ov-food">—</div>
-                    <div class="oi-sub">In stock</div>
-                  </div>
-                  <div class="oi-icon oi-icon-green"><i class="bi bi-apple"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">Medical Kits</div>
-                    <div class="oi-value" id="ov-medical">—</div>
-                    <div class="oi-sub">Available</div>
-                  </div>
-                  <div class="oi-icon oi-icon-teal"><i class="bi bi-hospital"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">Shelter Kits</div>
-                    <div class="oi-value" id="ov-shelter">—</div>
-                    <div class="oi-sub">Available</div>
-                  </div>
-                  <div class="oi-icon oi-icon-amber"><i class="bi bi-house-door"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">L2 Blocks</div>
-                    <div class="oi-value" id="ov-blocks">—</div>
-                    <div class="oi-sub">Mined</div>
-                  </div>
-                  <div class="oi-icon oi-icon-indigo"><i class="bi bi-database-fill"></i></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-6 col-md-4 col-xl-2">
-              <div class="overview-info-card">
-                <div class="d-flex align-items-start justify-content-between">
-                  <div>
-                    <div class="oi-label">SBT Credentials</div>
-                    <div class="oi-value" id="ov-sbts">—</div>
-                    <div class="oi-sub">Minted</div>
-                  </div>
-                  <div class="oi-icon oi-icon-indigo"><i class="bi bi-award-fill"></i></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Charts Trend Graphs + Activity Feed -->
-          <p class="overview-section-heading"><i class="bi bi-activity me-1" style="color:#dc2626;"></i>Analytics & Activity</p>
-          <div class="row g-3 mb-4">
-            <!-- Left Chart -->
-            <div class="col-12 col-xl-5">
-              <div class="chart-container-card">
-                <h4><i class="bi bi-activity" style="color:#dc2626;"></i>Emergency Requests Status Trend</h4>
-                <div style="position: relative; height: 280px; width: 100%;">
-                  <canvas id="requestsTrendChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <!-- Middle Chart -->
-            <div class="col-12 col-xl-3">
-              <div class="chart-container-card">
-                <h4><i class="bi bi-pie-chart-fill" style="color:#2d9a4e;"></i>Active Needs by Category</h4>
-                <div style="position: relative; height: 280px; width: 100%;">
-                  <canvas id="categoryDistributionChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <!-- Right: Active Volunteers -->
-            <div class="col-12 col-xl-4">
-              <div class="overview-info-card p-0" style="padding:0 !important; height:380px; display:flex; flex-direction:column;">
-                <div class="px-3 pt-3 pb-2" style="border-bottom:1px solid rgba(45,154,78,0.1); background-color: #f8fafc; border-top-left-radius: 14px; border-top-right-radius: 14px;">
-                  <h5 style="font-size:0.88rem; font-weight:700; color:#1b4332; margin:0; display:flex; align-items:center; gap:6px;">
-                    <i class="bi bi-people-fill" style="color:#2d9a4e;"></i>Active Volunteers in the Field
-                    <span class="ms-auto" style="width:8px;height:8px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,0.2);display:inline-block;"></span>
-                  </h5>
-                </div>
-                <div class="activity-feed-card" id="volunteers-active-list" style="border:none; box-shadow:none; border-radius:0 0 14px 14px; flex:1; margin:0; padding:0.75rem 1rem; overflow-y:auto; background: white;">
-                  <!-- Dynamically populated -->
-                  <div class="text-center text-muted py-4">
-                    <div class="spinner-border spinner-border-sm text-success" role="status"></div>
-                    <span class="ms-2" style="font-size: 0.8rem;">Loading field responders...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /overview-view-container -->
-
-        <!-- ── SUPPLIES VIEW CONTAINER ─────────────────────────── -->
-        <div id="supplies-view-container" class="d-none mb-4">
-          <!-- Relief Supply Inventory Panel -->
-          <div class="row g-3 mb-4" id="inventory-bar">
-            <div class="col-12">
-              <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: rgba(240, 253, 244, 0.9); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                  <div>
-                    <h3 class="fs-5 fw-bold mb-1 text-dark d-flex align-items-center">
-                      <i class="bi bi-box-seam-fill me-2 text-primary"></i>Relief Supply Inventory (All Zones)
-                    </h3>
-                    <p class="mb-0 text-muted" style="font-size:0.82rem;">Current community emergency relief stockpiles by zone (local caches synced against the L2 EVM smart contract ledger).</p>
-                  </div>
-                  <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#restock-modal">
-                    <i class="bi bi-plus-circle me-1"></i>Restock Supplies
-                  </button>
-                </div>
-                
-                <div class="table-responsive">
-                  <table class="table table-bordered align-middle mb-0 text-dark" style="background: white;">
-                    <thead class="table-light">
-                      <tr>
-                        <th>Hub / Zone</th>
-                        <th>🍎 Food Packets</th>
-                        <th>🛟 Life Jackets</th>
-                        <th>🏥 Medical Kits</th>
-                        <th>🏠 Shelter Kits</th>
-                      </tr>
-                    </thead>
-                    <tbody id="inventory-table-body">
-                      <tr>
-                        <td colspan="5" class="text-center py-4 text-muted">
-                          <div class="spinner-border spinner-border-sm text-success" role="status"></div>
-                          <span class="ms-2">Loading stockpiles...</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- AI Logistics Insights Panel -->
-          <div class="row g-3 mb-4">
-            <div class="col-12">
-              <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(219, 234, 254, 0.95)); border: 1px solid rgba(59, 130, 246, 0.25);">
-                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-                  <div>
-                    <h3 class="fs-5 fw-bold mb-1 text-dark d-flex align-items-center">
-                      <i class="bi bi-cpu-fill me-2 text-primary animate-pulse"></i>AI Logistics Advisor
-                    </h3>
-                    <p class="mb-0 text-muted" style="font-size:0.82rem;">Get real-time predictions, shortage alerts, and recommendations based on current inventory and active requests.</p>
-                  </div>
-                  <button class="btn btn-info btn-sm text-white" id="generate-insights-btn" style="background-color: #3b82f6; border-color: #3b82f6;">
-                    <i class="bi bi-magic me-1"></i>Generate AI Logistics Report
-                  </button>
-                </div>
-                
-                <div class="p-3 rounded border text-dark bg-white" style="font-size: 0.88rem; min-height: 100px;" id="ai-insights-content">
-                  <div class="text-center text-muted py-4" id="ai-insights-placeholder">
-                    <i class="bi bi-robot fs-2"></i>
-                    <p class="mb-0 mt-2">Click "Generate AI Logistics Report" above to compile data and ask Gemini for optimization suggestions.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Stock History Ledger -->
-          <div class="form-card w-100 m-0 p-4 mt-4" style="max-width: 100%; background: rgba(240, 253, 244, 0.9); border: 1px solid rgba(45, 154, 78, 0.16);">
-            <h3 class="fs-5 fw-bold mb-3 text-dark"><i class="bi bi-clock-history text-primary me-2"></i>Supply Chain Audit Logs (Stock History)</h3>
-            <div class="logs-table-wrapper" style="max-height: 480px; overflow-y: auto;">
-              <table class="logs-table mb-0">
-                <thead>
-                  <tr>
-                    <th>Hub / Zone</th>
-                    <th>Action</th>
-                    <th>Details</th>
-                    <th>Timestamp</th>
-                    <th>Proof / Tx Hash</th>
-                  </tr>
-                </thead>
-                <tbody id="stock-history-body">
-                  <!-- Loaded dynamically -->
-                </tbody>
-              </table>
-              <div id="stock-history-empty" class="text-center py-4 d-none text-muted">
-                <i class="bi bi-hr fs-2"></i>
-                <p class="mb-0 mt-2">No stock restocks or transfer transactions recorded on L2 yet.</p>
-              </div>
+          
+          <div class="lg:col-span-4 bg-white border-4 border-black p-4 shadow-neu flex flex-col h-[320px]">
+            <h4 class="font-bold text-xs uppercase mb-2 border-b-2 border-black border-dashed pb-1.5 flex justify-between items-center">
+              <span>🟢 Active Responders</span>
+              <span class="text-[9px] bg-primary-container px-2 py-0.5 border-2 border-black font-bold">ONLINE</span>
+            </h4>
+            <div class="flex-grow overflow-y-auto" id="volunteers-active-list">
+              <!-- Rendered via JS -->
             </div>
           </div>
         </div>
 
-        <!-- ── VOLUNTEERS VIEW CONTAINER ───────────────────────── -->
-        <div id="volunteers-view-container" class="d-none mb-4">
-          <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-            <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
+      </div>
+
+      <!-- ── KANBAN BOARD WRAPPER ────────────────────────────── -->
+      <div id="kanban-board-wrapper" class="d-none space-y-4">
+        <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col md:flex-row justify-between items-center gap-4">
+          <input
+            type="text"
+            id="search-filter"
+            placeholder="Search requests by description, address, or phone..."
+            class="w-full md:flex-grow border-4 border-black px-4 py-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container"
+          />
+          <div class="flex flex-wrap gap-2 w-full md:w-auto justify-end" id="category-filter-group">
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-primary-container" data-category="All">All</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Food">Food</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Medical">Medical</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Shelter">Shelter</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Other">Other</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 align-start" id="kanban-board">
+          <!-- Open Column -->
+          <div class="bg-white border-4 border-black shadow-neu flex flex-col p-4">
+            <div class="flex justify-between items-center border-b-4 border-black pb-2 mb-4 bg-error-container p-2 border-2 border-black">
+              <span class="font-bold text-sm uppercase text-on-error-container">🚨 Needs Queue</span>
+              <span class="px-2 py-0.5 border-2 border-black bg-white font-bold text-xs text-error" id="count-open">0</span>
+            </div>
+            <div id="col-open" class="min-h-[400px]">
+              <!-- Cards -->
+            </div>
+          </div>
+
+          <!-- In Progress Column -->
+          <div class="bg-white border-4 border-black shadow-neu flex flex-col p-4">
+            <div class="flex justify-between items-center border-b-4 border-black pb-2 mb-4 bg-tertiary-container p-2 border-2 border-black">
+              <span class="font-bold text-sm uppercase text-on-tertiary-container">⚡ Dispatched / In Transit</span>
+              <span class="px-2 py-0.5 border-2 border-black bg-white font-bold text-xs text-tertiary" id="count-progress">0</span>
+            </div>
+            <div id="col-progress" class="min-h-[400px]">
+              <!-- Cards -->
+            </div>
+          </div>
+
+          <!-- Resolved Column -->
+          <div class="bg-white border-4 border-black shadow-neu flex flex-col p-4">
+            <div class="flex justify-between items-center border-b-4 border-black pb-2 mb-4 bg-primary-container p-2 border-2 border-black">
+              <span class="font-bold text-sm uppercase text-on-primary-container">✓ Resolved Ledger</span>
+              <span class="px-2 py-0.5 border-2 border-black bg-white font-bold text-xs text-primary" id="count-resolved">0</span>
+            </div>
+            <div id="col-resolved" class="min-h-[400px]">
+              <!-- Cards -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MAP VIEW CONTAINER ──────────────────────────────── -->
+      <div id="map-view-container" class="d-none">
+        <div class="bg-white border-4 border-black p-1 shadow-neu-heavy">
+          <div id="map" class="w-full" style="height:580px; z-index:1;"></div>
+        </div>
+      </div>
+
+      <!-- ── BLOCKCHAIN VIEW CONTAINER ────────────────────────── -->
+      <div id="blockchain-view-container" class="d-none space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-on-surface-variant uppercase">Current Block Height</span>
+              <h4 class="text-3xl font-extrabold mt-1 text-primary" id="blockchain-block-height">0</h4>
+            </div>
+            <span class="text-4xl">⛓️</span>
+          </div>
+          <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-on-surface-variant uppercase">Total Trust SBTs Minted</span>
+              <h4 class="text-3xl font-extrabold mt-1 text-secondary" id="blockchain-total-sbts">0</h4>
+            </div>
+            <span class="text-4xl">🏅</span>
+          </div>
+        </div>
+
+        <div class="bg-white border-4 border-black p-4 shadow-neu">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2">🛡️ Immutable L2 Supply Chain Ledger</h3>
+          <div class="overflow-x-auto">
+            <table class="neubrutalist-table">
+              <thead>
+                <tr>
+                  <th>Block</th>
+                  <th>Action Type</th>
+                  <th>Ledger Details</th>
+                  <th>Timestamp</th>
+                  <th>Proof Receipt</th>
+                </tr>
+              </thead>
+              <tbody id="stock-history-body">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+            <div id="stock-history-empty" class="text-center py-8 font-bold text-on-surface-variant d-none">
+              No transactions recorded in the local L2 ledger.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── VOLUNTEERS ROSTER CONTAINER ─────────────────────── -->
+      <div id="volunteers-view-container" class="d-none space-y-4">
+        <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center">
+          <input
+            type="text"
+            id="volunteer-search"
+            placeholder="Filter by volunteer name, location, or skills..."
+            class="w-full border-4 border-black px-4 py-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container"
+          />
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="volunteers-list">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+
+      <!-- ── SUPPLIES INVENTORY CONTAINER ────────────────────── -->
+      <div id="supplies-view-container" class="d-none space-y-6">
+        <!-- Live count indicator row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="inventory-bar">
+          <!-- Hydrated by app.js -->
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left side: inventory list & insights -->
+          <div class="lg:col-span-8 space-y-6">
+            <div class="bg-white border-4 border-black p-4 shadow-neu">
+              <div class="flex justify-between items-center mb-4 border-b-2 border-black pb-2 flex-wrap gap-2">
+                <h3 class="text-md font-bold uppercase">📦 ERC1155 Supply Assets</h3>
+                <button class="px-3 py-1.5 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all" id="generate-insights-btn">
+                  🧙‍♂️ AI Distribution Insights
+                </button>
+              </div>
+              
+              <div class="overflow-x-auto">
+                <table class="neubrutalist-table">
+                  <thead>
+                    <tr>
+                      <th>Token ID</th>
+                      <th>Supply Item</th>
+                      <th>Token Category</th>
+                      <th>Balance Available</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventory-table-body">
+                    <!-- Hydrated by app.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- AI Insights Content panel -->
+            <div class="bg-white border-4 border-black p-4 shadow-neu" id="ai-insights-panel">
+              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🧙‍♂️ Automated Relief Asset Insights</h4>
+              <div class="p-3 border-2 border-black bg-surface text-on-surface text-sm font-medium" id="ai-insights-content">
+                <div class="text-center text-on-surface-variant py-4 font-bold" id="ai-insights-placeholder">
+                  Click the button above to query Gemini AI for smart dispatch suggestions.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: restock form -->
+          <div class="lg:col-span-4 bg-white border-4 border-black p-5 shadow-neu h-fit">
+            <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2">📦 Mint Supply Assets</h3>
+            <form id="restock-form" class="space-y-4">
               <div>
-                <h3 class="fs-5 fw-bold mb-1 text-dark d-flex align-items-center">
-                  <i class="bi bi-people-fill me-2 text-primary"></i>Volunteer Directory
-                </h3>
-                <p class="mb-0 text-muted" style="font-size:0.82rem;">Manage active relief workers, check location assignments, skill specialties, and feedback scores.</p>
+                <label for="restock-category" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Select Token Category</label>
+                <div class="relative">
+                  <select id="restock-category" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container appearance-none" required>
+                    <option value="Food">Food</option>
+                    <option value="Medical">Medical</option>
+                    <option value="Shelter">Shelter</option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none font-bold">▼</div>
+                </div>
               </div>
-              <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#add-volunteer-modal">
-                <i class="bi bi-person-plus-fill me-1"></i>Add New Volunteer
+              <div>
+                <label for="restock-item" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Item Label / Type</label>
+                <input type="text" id="restock-item" placeholder="e.g. Rice 10kg, Bandages..." class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required />
+              </div>
+              <div>
+                <label for="restock-amount" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Quantity to Mint</label>
+                <input type="number" id="restock-amount" placeholder="e.g. 50" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required min="1" />
+              </div>
+              <button type="submit" class="w-full py-3 border-4 border-black bg-primary-container text-on-primary-container font-bold uppercase shadow-neu hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+                Mint Token Asset
               </button>
-            </div>
-
-            <!-- Search and Filter Roster -->
-            <div class="mb-4" style="max-width: 480px;">
-              <div class="input-group">
-                <span class="input-group-text border-secondary text-muted" style="border-right: none; background: rgba(220, 255, 223, 0.9) !important;"><i class="bi bi-search"></i></span>
-                <input type="text" id="volunteer-search" class="form-control border-secondary text-dark" style="background: rgba(240, 253, 244, 0.9); border-left: none; height: 42px;" placeholder="Filter by volunteer name, location, or skills..." />
-              </div>
-            </div>
-
-            <!-- Roster list grid container -->
-            <div id="volunteers-list">
-              <!-- Roster cards injected dynamically by app.js -->
-            </div>
-          </div>
-        </div>
-
-        <!-- ── KANBAN BOARD CONTAINER ──────────────────────────── -->
-        <div class="d-none mb-4" id="kanban-board-wrapper">
-          <!-- Filter and Search Bar -->
-          <div class="filter-card w-100 mb-4">
-            <div class="d-flex align-items-center gap-2 flex-grow-1">
-              <i class="bi bi-search text-muted"></i>
-              <input type="text" id="search-filter" class="filter-input" placeholder="Search requests by description, address, or phone..." />
-            </div>
-            <div class="btn-filter-group" id="category-filter-group">
-              <button class="btn-filter active" data-category="All">All</button>
-              <button class="btn-filter" data-category="Medical">🏥 Medical</button>
-              <button class="btn-filter" data-category="Food">🍎 Food</button>
-              <button class="btn-filter" data-category="Shelter">🏠 Shelter</button>
-              <button class="btn-filter" data-category="Other">ℹ️ Other</button>
-            </div>
-          </div>
-
-          <!-- Main Kanban grid -->
-          <div class="row g-3" id="kanban-board">
-            <div class="col-12">
-              <div class="row g-3">
-                <!-- OPEN Column -->
-                <div class="col-12 col-lg-4">
-                  <div class="kanban-column-header open">
-                    <i class="bi bi-circle"></i>
-                    Open
-                    <span class="ms-auto badge" style="background:#a64ff1;" id="count-open">0</span>
-                  </div>
-                  <div id="col-open">
-                    <!-- Request cards injected here -->
-                  </div>
-                </div>
-
-                <!-- IN PROGRESS Column -->
-                <div class="col-12 col-lg-4">
-                  <div class="kanban-column-header progress">
-                    <i class="bi bi-arrow-repeat"></i>
-                    In Progress
-                    <span class="ms-auto badge bg-warning text-dark" id="count-progress">0</span>
-                  </div>
-                  <div id="col-progress">
-                    <!-- Request cards injected here -->
-                  </div>
-                </div>
-
-                <!-- RESOLVED Column -->
-                <div class="col-12 col-lg-4">
-                  <div class="kanban-column-header resolved d-flex align-items-center">
-                    <i class="bi bi-check-circle"></i>
-                    <span class="me-2">Resolved</span>
-                    <span class="badge bg-success me-auto" id="count-resolved">0</span>
-                    <button id="clear-resolved-btn" class="btn btn-outline-danger btn-sm py-0 px-2 border-0" style="font-size:0.75rem; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3) !important; color: #fca5a5; display: none;" title="Delete all resolved requests from database">
-                      <i class="bi bi-trash-fill me-1"></i>Clear All
-                    </button>
-                  </div>
-                  <div id="col-resolved">
-                    <!-- Request cards injected here -->
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── MAP VIEW CONTAINER ─────────────────────────────────── -->
-        <div id="map-view-container" class="d-none mb-4">
-          <div class="chart-container-card w-100 p-0 overflow-hidden" style="height:550px;">
-            <div id="map-element" style="height: 100%; width: 100%;"></div>
-          </div>
-        </div>
-
-        <!-- ── L2 EVM BLOCKCHAIN EXPLORER CONTAINER ────────────────── -->
-        <div id="blockchain-view-container" class="d-none mb-4">
-          <!-- Stats Banner -->
-          <div class="row g-3 mb-4">
-            <div class="col-md-3 col-6">
-              <div class="p-3 rounded d-flex align-items-center justify-content-between" style="background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <div>
-                  <span class="d-block text-muted small" style="font-size:0.75rem;">L2 Network Status</span>
-                  <span class="fw-bold text-dark d-flex align-items-center gap-1 mt-1" style="font-size:0.88rem;">
-                    <span class="status-dot available" style="width: 8px; height: 8px;"></span>
-                    <span id="blockchain-net-name">Arbitrum Sepolia</span>
-                  </span>
-                </div>
-                <i class="bi bi-cpu-fill fs-3 text-info"></i>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="p-3 rounded d-flex align-items-center justify-content-between" style="background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <div>
-                  <span class="d-block text-muted small" style="font-size:0.75rem;">Block Height</span>
-                  <span class="fs-5 fw-bold text-dark mt-1 d-block" id="blockchain-block-height">0</span>
-                </div>
-                <i class="bi bi-database-fill fs-3 text-primary"></i>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="p-3 rounded d-flex align-items-center justify-content-between" style="background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <div>
-                  <span class="d-block text-muted small" style="font-size:0.75rem;">Total Minted SBTs</span>
-                  <span class="fs-5 fw-bold text-dark mt-1 d-block" id="blockchain-total-sbts">0</span>
-                </div>
-                <i class="bi bi-award-fill fs-3 text-warning"></i>
-              </div>
-            </div>
-            <div class="col-md-3 col-6">
-              <div class="p-3 rounded d-flex align-items-center justify-content-between" style="background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <div>
-                  <span class="d-block text-muted small" style="font-size:0.75rem;">Smart Contract Address</span>
-                  <span class="fw-bold mt-1 text-dark d-block user-select-all" id="blockchain-contract-addr" style="font-size:0.78rem;">0x7a43f891F891F891F891F891F891F891F891F891</span>
-                </div>
-                <i class="bi bi-file-earmark-code-fill fs-3 text-success"></i>
-              </div>
-            </div>
-          </div>
-
-          <div class="row g-3">
-            <!-- Column 1: L2 Ledger Blocks & Transactions -->
-            <div class="col-12 col-xl-7">
-              <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <h3 class="fs-5 fw-bold mb-3 text-dark"><i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>L2 EVM Ledger Explorer</h3>
-                <div class="logs-table-wrapper" style="max-height: 480px; overflow-y: auto;">
-                  <table class="logs-table mb-0">
-                    <thead>
-                      <tr>
-                        <th>Block #</th>
-                        <th>Method</th>
-                        <th>Tx Hash</th>
-                        <th>Gas</th>
-                        <th>Payload Details</th>
-                      </tr>
-                    </thead>
-                    <tbody id="blockchain-ledger-body">
-                      <!-- Loaded dynamically -->
-                    </tbody>
-                  </table>
-                  <div id="blockchain-ledger-empty" class="text-center py-4 d-none text-muted">
-                    <i class="bi bi-hr fs-2"></i>
-                    <p class="mb-0 mt-2">No transactions recorded on this block height yet.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Column 2: Soulbound Token (SBT) Credentials -->
-            <div class="col-12 col-xl-5">
-              <div class="form-card w-100 m-0 p-4" style="max-width: 100%; background: rgba(240, 253, 244, 0.92); border: 1px solid rgba(45, 154, 78, 0.16);">
-                <h3 class="fs-5 fw-bold mb-3 text-dark"><i class="bi bi-shield-lock-fill text-warning me-2"></i>Verified Soulbound Tokens (SBT)</h3>
-                <div id="blockchain-sbt-list" class="d-flex flex-column gap-3" style="max-height: 480px; overflow-y: auto; padding-right: 4px;">
-                  <!-- SBT credentials rendered here -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <footer class="mt-auto">
-          Built with ❤️ for the Hackathon &nbsp;·&nbsp; SRAS MVP
-        </footer>
-      </main>
-
-    </div><!-- /dashboard-layout-container -->
-
-    <!-- ── Restock Supplies Modal ────────────────────────────── -->
-    <div class="modal fade" id="restock-modal" tabindex="-1" aria-labelledby="restockModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
-          <div class="modal-header border-bottom border-secondary">
-            <h5 class="modal-title fw-bold" id="restockModalLabel"><i class="bi bi-box-seam-fill me-2 text-primary"></i>Restock Supplies</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form id="restock-form">
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="restock-zone" class="form-label fw-semibold" style="font-size: 0.85rem;">Hub / Zone</label>
-                <select class="form-select text-white border-secondary" id="restock-zone" style="background: rgba(15, 23, 42, 0.8);" required>
-                  <option value="" disabled selected>Select zone...</option>
-                  <option value="Vasind">Vasind</option>
-                  <option value="Kalyan">Kalyan</option>
-                  <option value="Thane">Thane</option>
-                  <option value="Mumbai Central">Mumbai Central</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="restock-category" class="form-label fw-semibold" style="font-size: 0.85rem;">Supply Category</label>
-                <select class="form-select text-white border-secondary" id="restock-category" style="background: rgba(15, 23, 42, 0.8);" required>
-                  <option value="" disabled selected>Select category...</option>
-                  <option value="Food Packets">🍎 Food Packets</option>
-                  <option value="Life Jackets">🛟 Life Jackets</option>
-                  <option value="Medical Kits">🏥 Medical Kits</option>
-                  <option value="Shelter Kits">🏠 Shelter Kits</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="restock-qty" class="form-label fw-semibold" style="font-size: 0.85rem;">Quantity to Add</label>
-                <input type="number" class="form-control text-white border-secondary" id="restock-qty" min="1" placeholder="e.g. 25" style="background: rgba(15, 23, 42, 0.8);" required>
-              </div>
-            </div>
-            <div class="modal-footer border-top border-secondary">
-              <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary btn-sm">Confirm Restock</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Add Volunteer Modal ─────────────────────────────────── -->
-    <div class="modal fade" id="add-volunteer-modal" tabindex="-1" aria-labelledby="addVolunteerModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
-          <div class="modal-header border-bottom border-secondary">
-            <h5 class="modal-title fw-bold" id="addVolunteerModalLabel"><i class="bi bi-person-plus-fill me-2 text-primary"></i>Add New Volunteer</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form id="add-volunteer-form">
-            <div class="modal-body">
-              <div class="mb-3">
-                <label for="vol-name" class="form-label fw-semibold" style="font-size: 0.85rem;">Full Name</label>
-                <input type="text" class="form-control text-white border-secondary" id="vol-name" placeholder="e.g. Nikhil Sharma" style="background: rgba(15, 23, 42, 0.8);" required>
-              </div>
-              <div class="mb-3">
-                <label for="vol-phone" class="form-label fw-semibold" style="font-size: 0.85rem;">Phone Number</label>
-                <input type="tel" class="form-control text-white border-secondary" id="vol-phone" placeholder="e.g. +91 99999 88888" style="background: rgba(15, 23, 42, 0.8);" required>
-              </div>
-              <div class="mb-3">
-                <label for="vol-wallet" class="form-label fw-semibold" style="font-size: 0.85rem;">EVM Wallet Address (SBT Destination)</label>
-                <input type="text" class="form-control text-white border-secondary" id="vol-wallet" placeholder="e.g. 0x71C... or leave empty to auto-generate" style="background: rgba(15, 23, 42, 0.8);">
-              </div>
-              <div class="mb-3">
-                <label for="vol-zone" class="form-label fw-semibold" style="font-size: 0.85rem;">Assigned Locality/Zone</label>
-                <select class="form-select text-white border-secondary" id="vol-zone" style="background: rgba(15, 23, 42, 0.8);" required>
-                  <option value="" disabled selected>Select zone...</option>
-                  <option value="Vasind">Vasind</option>
-                  <option value="Kalyan">Kalyan</option>
-                  <option value="Thane">Thane</option>
-                  <option value="Mumbai Central">Mumbai Central</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label fw-semibold d-block" style="font-size: 0.85rem;">Skills / Specialties</label>
-                <div class="d-flex flex-column gap-2 p-3 rounded" style="background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.08);">
-                  <div class="form-check">
-                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Food" id="skill-food">
-                    <label class="form-check-label text-white-50" for="skill-food" style="font-size: 0.85rem; margin-bottom: 0;">
-                      🍎 Food (Logistics / Distribution)
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Medical" id="skill-medical">
-                    <label class="form-check-label text-white-50" for="skill-medical" style="font-size: 0.85rem; margin-bottom: 0;">
-                      🏥 Medical (First Aid / Health Support)
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Shelter" id="skill-shelter">
-                    <label class="form-check-label text-white-50" for="skill-shelter" style="font-size: 0.85rem; margin-bottom: 0;">
-                      🏠 Shelter (Construction / Supply setup)
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input vol-skill-checkbox" type="checkbox" value="Other" id="skill-other">
-                    <label class="form-check-label text-white-50" for="skill-other" style="font-size: 0.85rem; margin-bottom: 0;">
-                      ℹ️ Other (General Support / Coordination)
-                    </label>
-                  </div>
-                </div>
-                <div id="skills-error" class="text-danger d-none mt-1" style="font-size: 0.78rem;">Please select at least one skill.</div>
-              </div>
-            </div>
-            <div class="modal-footer border-top border-secondary">
-              <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary btn-sm">Add Volunteer</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Immutable On-Chain Receipt Modal ──────────────────── -->
-    <div class="modal fade" id="tx-receipt-modal" tabindex="-1" aria-labelledby="txReceiptModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
-          <div class="modal-header border-bottom border-secondary">
-            <h5 class="modal-title fw-bold" id="txReceiptModalLabel"><i class="bi bi-receipt-cutoff me-2 text-warning"></i>Immutable On-Chain Receipt</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="p-3 rounded bg-dark border border-secondary-subtle font-monospace text-start mb-3" style="font-size:0.8rem; background: #070b13 !important;">
-              <p class="mb-2"><span class="text-info">Transaction Hash:</span> <span id="receipt-tx-hash" class="text-warning font-monospace">--</span></p>
-              <p class="mb-2"><span class="text-info">Block Number:</span> <span id="receipt-block-num" class="text-white">--</span></p>
-              <p class="mb-2"><span class="text-info">Timestamp:</span> <span id="receipt-timestamp" class="text-white-50">--</span></p>
-              <p class="mb-2"><span class="text-info">From:</span> <span id="receipt-from" class="text-white-50">--</span></p>
-              <p class="mb-2"><span class="text-info">To:</span> <span id="receipt-to" class="text-white-50">--</span></p>
-              <p class="mb-2"><span class="text-info">Gas Used:</span> <span id="receipt-gas" class="text-success">--</span></p>
-              <hr style="border-top: 1px dashed rgba(255,255,255,0.15)">
-              <p class="mb-1 text-info fw-bold">Decoded Event & State Data:</p>
-              <pre id="receipt-payload" class="text-light m-0" style="white-space: pre-wrap; font-size:0.8rem; line-height: 1.4;"></pre>
-            </div>
-            <div class="alert alert-success d-flex align-items-center gap-2 mb-0 py-2 border-0" style="background: rgba(16, 185, 129, 0.15); color: #6ee7b7; font-size: 0.8rem;">
-              <i class="bi bi-shield-fill-check fs-5"></i>
-              <span>This transaction is cryptographic proof of community service. Block verification completed by L2 network validators.</span>
-            </div>
-          </div>
-          <div class="modal-footer border-top border-secondary">
-            <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Close</button>
+            </form>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ── View Feedbacks Modal ────────────────────────────── -->
-    <div class="modal fade" id="feedbacks-modal" tabindex="-1" aria-labelledby="feedbacksModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content text-white" style="background: #0f172a; border: 1px solid var(--glass-border); border-radius: var(--border-radius);">
-          <div class="modal-header border-bottom border-secondary">
-            <h5 class="modal-title fw-bold" id="feedbacksModalLabel"><i class="bi bi-chat-text-fill me-2 text-warning" style="color: #d97706 !important;"></i>Volunteer Feedbacks</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body" id="feedbacks-modal-body" style="max-height: 400px; overflow-y: auto;">
-            <!-- Populated via JS -->
-          </div>
-          <div class="modal-footer border-top border-secondary">
-            <button type="button" class="btn btn-outline-light btn-sm" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
+    </main>
+
+    <!-- ── MODAL: Action Logs Drawer ────────────────────────── -->
+    <div class="fixed inset-y-0 right-0 z-50 w-full max-w-lg bg-white border-l-4 border-black p-6 flex flex-col shadow-2xl d-none" id="logs-modal-container">
+      <div class="flex justify-between items-center mb-4 pb-3 border-b-4 border-black">
+        <h3 class="font-display font-extrabold text-lg text-on-surface flex items-center gap-2 uppercase">
+          📟 System Action Logs Ledger
+        </h3>
+        <button id="close-logs-btn" class="w-8 h-8 border-2 border-black bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface transition-all rounded-none">
+          ✕
+        </button>
+      </div>
+
+      <div class="flex-grow overflow-y-auto space-y-3 font-mono text-xs pr-2" id="logs-list">
+        <!-- Log lines inserted dynamically by app.js -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t-4 border-black text-center">
+        <button id="load-more-logs-btn" class="px-4 py-2 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+          🔽 Load More Logs
+        </button>
       </div>
     </div>
 
-    <!-- ── History Logs Full-screen Modal / Overlay ───────────── -->
-    <div class="logs-overlay-container d-none" id="logs-modal-container">
-      <div class="logs-modal-content">
-        <div class="logs-modal-header">
-          <h2 class="logs-modal-title"><i class="bi bi-clock-history me-2"></i>Complete History Logs</h2>
-          <button type="button" class="logs-close-btn" id="logs-close-btn">&times;</button>
+    <!-- ── MODAL: Immutable Block Transaction Receipt Modal ──── -->
+    <div id="tx-receipt-modal" class="fixed inset-0 z-50 flex items-center justify-center d-none bg-on-surface/40 backdrop-blur-xs">
+      <div class="bg-white border-4 border-black p-6 w-full max-w-xl shadow-neu-heavy relative mx-4">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b-2 border-black">
+          <h4 class="font-display font-extrabold text-md text-on-surface uppercase">Immutable Transaction Receipt</h4>
+          <button onclick="bootstrap.Modal.getInstance(document.getElementById('tx-receipt-modal')).hide()" class="font-bold text-sm hover:text-error">✕</button>
         </div>
-        
-        <!-- Filter Tabs / Controls -->
-        <div class="logs-filters-bar mb-3">
-          <button class="log-filter-tab active" data-filter="all">All Logs</button>
-          <button class="log-filter-tab" data-filter="resolved">Resolved</button>
-          <button class="log-filter-tab" data-filter="resolved_deleted">Resolved (Deleted)</button>
-          <button class="log-filter-tab" data-filter="open_deleted">Open (Deleted)</button>
-          <button class="log-filter-tab" data-filter="inprogress_deleted">In Progress (Deleted)</button>
-        </div>
-        
-        <!-- Logs Table / Container -->
-        <div class="logs-table-wrapper">
-          <table class="logs-table">
-            <thead>
-              <tr>
-                <th>Issue Details</th>
-                <th>Category</th>
-                <th>Location</th>
-                <th>Volunteer</th>
-                <th>Final Status</th>
-                <th>Archived At</th>
-              </tr>
-            </thead>
-            <tbody id="logs-table-body">
-              <!-- Logs rows will be populated dynamically -->
-            </tbody>
-          </table>
-          <div id="logs-empty-msg" class="text-center py-4 d-none text-muted">
-            <i class="bi bi-folder2-open display-4 mb-2"></i>
-            <p>No history logs found matching this filter.</p>
+        <div class="space-y-2 text-xs font-mono">
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">TX Hash:</span>
+            <span class="col-span-2 text-on-surface-variant break-all" id="receipt-tx-hash">—</span>
+          </div>
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">Block Number:</span>
+            <span class="col-span-2 text-on-surface-variant" id="receipt-block-num">—</span>
+          </div>
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">Timestamp:</span>
+            <span class="col-span-2 text-on-surface-variant" id="receipt-timestamp">—</span>
+          </div>
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">From Address:</span>
+            <span class="col-span-2 text-on-surface-variant" id="receipt-from">—</span>
+          </div>
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">To Address:</span>
+            <span class="col-span-2 text-on-surface-variant" id="receipt-to">—</span>
+          </div>
+          <div class="grid grid-cols-3 border-b border-black border-dashed pb-1">
+            <span class="font-bold">Gas Used:</span>
+            <span class="col-span-2 text-on-surface-variant" id="receipt-gas">—</span>
+          </div>
+          <div class="pt-2">
+            <span class="font-bold block mb-1">Payload Content (Asset Transfers):</span>
+            <pre class="bg-[#1b1b1b] text-primary-container p-3 border-2 border-black overflow-x-auto text-[10px]" id="receipt-payload">—</pre>
           </div>
         </div>
-
-        <!-- Pagination Bar -->
-        <div class="logs-pagination-footer mt-3 text-center">
-          <button id="logs-load-more-btn" class="btn btn-outline-primary btn-sm px-4">
-            <i class="bi bi-arrow-down-circle me-1"></i>Load More
-          </button>
+        <div class="mt-6 text-right">
+          <button onclick="bootstrap.Modal.getInstance(document.getElementById('tx-receipt-modal')).hide()" class="px-4 py-2 border-2 border-black bg-[#f1f1f1] font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">Close Receipt</button>
         </div>
       </div>
     </div>
 
     <!-- Toast Container for Custom Glassmorphic Notifications -->
-    <div id="toast-container" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
 
-    <!-- Bootstrap 5 JS (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Mock Bootstrap bundle compatibility stub for the JS script's modal usage -->
+    <script>
+      window.bootstrap = {
+        Modal: function(element) {
+          return {
+            show: function() {
+              element.classList.remove('d-none');
+              element.classList.add('flex');
+            },
+            hide: function() {
+              element.classList.remove('flex');
+              element.classList.add('d-none');
+            }
+          };
+        }
+      };
+      // Stub getInstance as well
+      window.bootstrap.Modal.getInstance = function(element) {
+        return {
+          hide: function() {
+            element.classList.remove('flex');
+            element.classList.add('d-none');
+          }
+        };
+      };
+    </script>
     <!-- Leaflet.js library for Map View -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <!-- Canvas Confetti CDN -->
@@ -843,10 +608,28 @@
         const btnViewBlockchain = document.getElementById("btn-view-blockchain");
         const btnViewLogs = document.getElementById("view-logs-btn");
 
+        // System Action Logs drawer elements
+        const logsModalContainer = document.getElementById("logs-modal-container");
+        const closeLogsBtn = document.getElementById("close-logs-btn");
+
+        closeLogsBtn.addEventListener("click", () => {
+          logsModalContainer.classList.add("d-none");
+        });
+
         function clearSidebarActive() {
           document.querySelectorAll(".sidebar-item").forEach(item => {
             item.classList.remove("active");
+            item.classList.remove("bg-primary-container");
+            item.classList.remove("text-on-primary-container");
+            item.classList.add("bg-white");
           });
+        }
+
+        function setActiveMenu(item) {
+          clearSidebarActive();
+          item.classList.add("active");
+          item.classList.add("bg-primary-container");
+          item.classList.remove("bg-white");
         }
 
         function hideAllContainers() {
@@ -859,52 +642,48 @@
         }
 
         sbOverview.addEventListener("click", () => {
-          clearSidebarActive();
-          sbOverview.classList.add("active");
+          setActiveMenu(sbOverview);
           hideAllContainers();
           overviewContainer.classList.remove("d-none");
         });
 
         sbRequests.addEventListener("click", () => {
-          clearSidebarActive();
-          sbRequests.classList.add("active");
+          setActiveMenu(sbRequests);
           hideAllContainers();
           btnViewBoard.click();
           kanbanBoardWrapper.classList.remove("d-none");
         });
 
         sbVolunteers.addEventListener("click", () => {
-          clearSidebarActive();
-          sbVolunteers.classList.add("active");
+          setActiveMenu(sbVolunteers);
           hideAllContainers();
           volunteersViewContainer.classList.remove("d-none");
         });
 
         sbSupplies.addEventListener("click", () => {
-          clearSidebarActive();
-          sbSupplies.classList.add("active");
+          setActiveMenu(sbSupplies);
           hideAllContainers();
           suppliesViewContainer.classList.remove("d-none");
           loadStockHistory();
         });
 
         sbMap.addEventListener("click", () => {
-          clearSidebarActive();
-          sbMap.classList.add("active");
+          setActiveMenu(sbMap);
           hideAllContainers();
           btnViewMap.click();
           mapViewContainer.classList.remove("d-none");
         });
 
         sbBlockchain.addEventListener("click", () => {
-          clearSidebarActive();
-          sbBlockchain.classList.add("active");
+          setActiveMenu(sbBlockchain);
           hideAllContainers();
           btnViewBlockchain.click();
           blockchainViewContainer.classList.remove("d-none");
         });
 
         sbLogs.addEventListener("click", () => {
+          // Open logs sidebar drawer
+          logsModalContainer.classList.remove("d-none");
           btnViewLogs.click();
         });
 
@@ -950,29 +729,29 @@
                   let details = "";
                   if (tx.method === "mintSupply") {
                     actionLabel = "Restock / Mint";
-                    badgeClass = "bg-success-subtle text-success border border-success-subtle";
-                    details = `Added <strong class="text-white">${tx.payload.amount}</strong> units of <span class="badge-category">${tx.payload.category}</span>`;
+                    badgeClass = "bg-[#00ff66] text-[#002107]";
+                    details = `Added <strong class="text-black font-extrabold">${tx.payload.amount}</strong> units of <span class="badge-category font-bold">${tx.payload.category}</span>`;
                   } else {
                     actionLabel = "Dispatch / Transfer";
-                    badgeClass = "bg-info-subtle text-info border border-info-subtle";
+                    badgeClass = "bg-[#dae1ff] text-[#001849]";
                     const toLabel = tx.payload.to.startsWith("0x") ? `worker...${tx.payload.to.substring(38)}` : tx.payload.to;
-                    details = `Dispatched <strong class="text-white">${tx.payload.amount}</strong> units of <span class="badge-category">${tx.payload.category}</span> to ${toLabel}`;
+                    details = `Dispatched <strong class="text-black font-extrabold">${tx.payload.amount}</strong> units of <span class="badge-category font-bold">${tx.payload.category}</span> to ${toLabel}`;
                   }
 
                   return `
                     <tr>
-                      <td><span class="text-dark fw-bold">#${tx.blockNumber}</span></td>
-                      <td><span class="badge ${badgeClass}" style="font-size:0.7rem; padding: 0.25rem 0.5rem; font-weight:700;">${actionLabel}</span></td>
-                      <td><span class="text-muted" style="font-size:0.8rem;">${details}</span></td>
-                      <td><span class="text-muted small">${time}</span></td>
-                      <td>
-                        <a href="#" class="font-monospace text-info verify-tx-hash" data-hash="${tx.hash}" style="font-size:0.75rem;">${shortHash}</a>
+                      <td class="font-bold border-4 border-black p-2 font-mono">#${tx.blockNumber}</td>
+                      <td class="border-4 border-black p-2"><span class="px-2.5 py-1 border-2 border-black font-bold uppercase text-[10px] ${badgeClass}">${actionLabel}</span></td>
+                      <td class="border-4 border-black p-2 font-bold text-xs">${details}</td>
+                      <td class="border-4 border-black p-2 font-bold text-xs">${time}</td>
+                      <td class="border-4 border-black p-2 font-bold text-xs">
+                        <a href="#" class="font-mono text-secondary underline verify-tx-hash" data-hash="${tx.hash}">${shortHash}</a>
                       </td>
                     </tr>
                   `;
                 }).join("");
 
-                // Click listener to verify tx details via the immutable receipt modal popup
+                // Click listener to verify tx details
                 historyBody.querySelectorAll(".verify-tx-hash").forEach(link => {
                   link.addEventListener("click", (e) => {
                     e.preventDefault();
@@ -986,8 +765,10 @@
                       document.getElementById("receipt-to").textContent = txObj.to || "0x7a43f891F891F891F891F891F891F891F891F891";
                       document.getElementById("receipt-gas").textContent = `${txObj.gasUsed || 21542} gas`;
                       document.getElementById("receipt-payload").textContent = JSON.stringify(txObj.payload, null, 2);
-                      const modal = new bootstrap.Modal(document.getElementById("tx-receipt-modal"));
-                      modal.show();
+                      
+                      // Show modal manually
+                      document.getElementById("tx-receipt-modal").classList.remove('d-none');
+                      document.getElementById("tx-receipt-modal").classList.add('flex');
                     }
                   });
                 });
@@ -1013,16 +794,13 @@
           const isBlockchainActive = btnViewBlockchain.classList.contains("active");
 
           if (isBoardActive && !sbRequests.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
-            clearSidebarActive();
-            sbRequests.classList.add("active");
+            setActiveMenu(sbRequests);
             kanbanBoardWrapper.classList.remove("d-none");
           } else if (isMapActive && !sbMap.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
-            clearSidebarActive();
-            sbMap.classList.add("active");
+            setActiveMenu(sbMap);
             kanbanBoardWrapper.classList.add("d-none");
           } else if (isBlockchainActive && !sbBlockchain.classList.contains("active") && overviewContainer.classList.contains("d-none") && volunteersViewContainer.classList.contains("d-none") && suppliesViewContainer.classList.contains("d-none")) {
-            clearSidebarActive();
-            sbBlockchain.classList.add("active");
+            setActiveMenu(sbBlockchain);
             kanbanBoardWrapper.classList.add("d-none");
           }
         }, 300);
@@ -1038,13 +816,13 @@
             datasets: [{
               data: [0, 0, 0, 0],
               backgroundColor: [
-                'rgba(14, 165, 233, 0.8)',   // Sky Blue — Medical
-                'rgba(22, 163, 74, 0.8)',    // Forest Green — Food
-                'rgba(245, 158, 11, 0.8)',   // Amber — Shelter
-                'rgba(148, 163, 184, 0.8)'   // Slate — Other
+                '#b3c5ff',   // Medical
+                '#00ff66',   // Food
+                '#ffdb47',   // Shelter
+                '#dadada'    // Other
               ],
-              borderColor: 'rgba(255, 255, 255, 0.5)',
-              borderWidth: 2
+              borderColor: '#000000',
+              borderWidth: 3
             }]
           },
           options: {
@@ -1053,7 +831,7 @@
             plugins: {
               legend: {
                 position: 'bottom',
-                labels: { color: '#1b4332', font: { family: 'Plus Jakarta Sans', size: 10 }, padding: 12 }
+                labels: { color: '#1b1b1b', font: { family: 'Space Grotesk', size: 10, weight: 'bold' }, padding: 12 }
               }
             }
           }
@@ -1067,13 +845,12 @@
               label: 'Active Requests',
               data: [0, 0, 0],
               backgroundColor: [
-                'rgba(220, 38, 38, 0.75)',   // Red — Open
-                'rgba(245, 158, 11, 0.75)',  // Amber — In Progress
-                'rgba(22, 163, 74, 0.75)'    // Green — Resolved
+                '#ffdad6',   // Red — Open
+                '#ffdb47',  // Amber — In Progress
+                '#00ff66'    // Green — Resolved
               ],
-              borderRadius: 6,
-              borderColor: 'rgba(255, 255, 255, 0)',
-              borderWidth: 0
+              borderColor: '#000000',
+              borderWidth: 3
             }]
           },
           options: {
@@ -1084,12 +861,12 @@
             },
             scales: {
               y: {
-                grid: { color: 'rgba(45, 154, 78, 0.08)' },
-                ticks: { color: '#4b7a5c', font: { family: 'Plus Jakarta Sans', size: 10 }, stepSize: 1 }
+                grid: { color: 'rgba(0, 0, 0, 0.08)' },
+                ticks: { color: '#1b1b1b', font: { family: 'Space Grotesk', size: 10, weight: 'bold' }, stepSize: 1 }
               },
               x: {
                 grid: { display: false },
-                ticks: { color: '#1b4332', font: { family: 'Plus Jakarta Sans', size: 10 } }
+                ticks: { color: '#1b1b1b', font: { family: 'Space Grotesk', size: 10, weight: 'bold' } }
               }
             }
           }
@@ -1122,10 +899,9 @@
             }
           });
 
-          // Check if total matches, otherwise fall back to simple seed counts to maintain visual appeal on empty boards
+          // Check if total matches
           const totalNeeds = medicalCount + foodCount + shelterCount + otherCount;
           if (totalNeeds === 0 && (openVal + progressVal) > 0) {
-            // board hasn't loaded nodes yet, wait for skeletons to dissolve
             categoryChart.data.datasets[0].data = [0, 0, 0, 0];
           } else {
             categoryChart.data.datasets[0].data = [medicalCount, foodCount, shelterCount, otherCount];
@@ -1183,76 +959,90 @@
         setTimeout(syncOverviewWidgets, 2000);
         setInterval(syncOverviewWidgets, 3000);
 
-        // ── Active Volunteers Live Sync ──────────────────────────
-        async function syncVolunteersFieldList() {
+        // ── Active Volunteers Live Sync (DOM-based, no network fetches) ──
+        function syncVolunteersFieldList() {
           const container = document.getElementById("volunteers-active-list");
           if (!container) return;
 
           try {
-            const res = await fetch("/api/volunteers");
-            if (!res.ok) throw new Error("Failed to fetch volunteers");
-            const data = await res.json();
-            
-            if (data.success && data.volunteers) {
-              if (data.volunteers.length === 0) {
-                container.innerHTML = `<div class="text-center text-muted py-4" style="font-size:0.8rem;">No volunteers registered yet.</div>`;
-                return;
-              }
+            const volList = document.getElementById("volunteers-list");
+            if (!volList) return;
 
-              // Sort: busy (on mission) first, then available (standby)
-              const sorted = [...data.volunteers].sort((a, b) => {
-                if (a.available === b.available) return a.name.localeCompare(b.name);
-                return a.available ? 1 : -1; // false (busy) comes first
+            const cards = volList.querySelectorAll(".roster-card");
+            if (cards.length === 0) {
+              container.innerHTML = `<div class="text-center text-on-surface-variant py-4 font-bold text-xs">No volunteers registered yet.</div>`;
+              return;
+            }
+
+            const items = [];
+            cards.forEach(card => {
+              const name = card.querySelector(".roster-name")?.textContent || "Unknown";
+              // Read location icon next sibling
+              const zone = card.querySelector(".bi-geo-alt-fill")?.nextSibling?.textContent?.trim() || "Thane";
+              const statusBadge = card.querySelector(".roster-status-badge");
+              const isAvailable = statusBadge ? statusBadge.textContent.trim().toLowerCase() === "available" : true;
+              
+              const skills = [];
+              card.querySelectorAll(".roster-skill-badge").forEach(badge => {
+                skills.push(badge.textContent.trim());
               });
 
-              container.innerHTML = sorted.map(v => {
-                const initialLetter = v.name ? v.name.charAt(0).toUpperCase() : "?";
-                const statusClass = v.available 
-                  ? "badge bg-success-subtle text-success border border-success-subtle" 
-                  : "badge bg-warning-subtle text-warning border border-warning-subtle";
-                const statusText = v.available ? "Ready" : "On Mission";
-                const skillsHtml = v.skills.slice(0, 2).map(skill => 
-                  `<span class="badge bg-light text-secondary border me-1" style="font-size:0.6rem; font-weight:500;">${skill}</span>`
-                ).join('');
+              items.push({ name, zone, available: isAvailable, skills });
+            });
 
-                // Pick a color theme for the avatar based on name hash
-                const colors = ["#2d9a4e", "#0d9488", "#0284c7", "#4f46e5", "#7c3aed"];
-                const colorIdx = (v.name.charCodeAt(0) || 0) % colors.length;
-                const avatarBg = colors[colorIdx];
+            // Sort: busy (on mission) first, then available (standby)
+            const sorted = items.sort((a, b) => {
+              if (a.available === b.available) return a.name.localeCompare(b.name);
+              return a.available ? 1 : -1;
+            });
 
-                return `
-                  <div class="d-flex align-items-center gap-2 py-2" style="border-bottom:1px solid rgba(45, 154, 78, 0.06); transition: background-color 0.2s;">
-                    <div class="rounded-circle d-flex align-items-center justify-content-center font-bold text-white shadow-sm" 
-                         style="width: 34px; height: 34px; font-size: 0.85rem; flex-shrink: 0; background-color: ${avatarBg}; font-weight: 700;">
-                      ${initialLetter}
+            container.innerHTML = sorted.map(v => {
+              const initialLetter = v.name ? v.name.charAt(0).toUpperCase() : "?";
+              const statusClass = v.available 
+                ? "bg-[#00ff66] text-[#002107]" 
+                : "bg-[#ffdb47] text-[#736000]";
+              const statusText = v.available ? "Ready" : "On Mission";
+              const skillsHtml = v.skills.slice(0, 1).map(skill => 
+                `<span class="px-1.5 py-0.5 border border-black bg-white text-[9px] font-bold uppercase">${skill}</span>`
+              ).join('');
+
+              // Pick a color theme for the avatar based on name hash
+              const colors = ["#2d9a4e", "#0d9488", "#0284c7", "#4f46e5", "#7c3aed"];
+              const colorIdx = (v.name.charCodeAt(0) || 0) % colors.length;
+              const avatarBg = colors[colorIdx];
+
+              return `
+                <div class="flex items-center gap-2 py-2 border-b-2 border-black border-dashed">
+                  <div class="border-2 border-black flex items-center justify-center font-bold text-white shadow-neu-sm" 
+                       style="width: 32px; height: 32px; font-size: 0.8rem; flex-shrink: 0; background-color: ${avatarBg}; font-weight: 700;">
+                    ${initialLetter}
+                  </div>
+                  <div class="flex-grow min-w-0">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-on-surface overflow-hidden text-overflow-ellipsis white-space-nowrap">${v.name}</span>
+                      <span class="px-1.5 py-0.5 border border-black text-[9px] font-bold uppercase ${statusClass}">${statusText}</span>
                     </div>
-                    <div class="flex-grow-1" style="min-width: 0;">
-                      <div class="d-flex align-items-center justify-content-between">
-                        <span style="font-size:0.8rem; font-weight: 600; color: #1e293b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${v.name}</span>
-                        <span class="${statusClass}" style="font-size:0.6rem; padding: 0.15rem 0.35rem; border-radius: 4px; font-weight: 600;">${statusText}</span>
-                      </div>
-                      <div class="d-flex align-items-center justify-content-between mt-1">
-                        <span class="text-muted" style="font-size:0.68rem; display: flex; align-items: center; gap: 3px; font-weight:555;">
-                          <i class="bi bi-geo-alt-fill text-danger" style="font-size:0.7rem;"></i> ${v.zone}
-                        </span>
-                        <div class="d-flex align-items-center">
-                          ${skillsHtml}
-                        </div>
+                    <div class="flex items-center justify-between mt-1">
+                      <span class="text-on-surface-variant text-[9px] font-bold flex items-center gap-0.5">
+                        📍 ${v.zone}
+                      </span>
+                      <div class="flex items-center gap-1">
+                        ${skillsHtml}
                       </div>
                     </div>
                   </div>
-                `;
-              }).join('');
-            }
+                </div>
+              `;
+            }).join('');
           } catch (err) {
             console.error("⚠️ Error syncing volunteers list:", err);
-            container.innerHTML = `<div class="text-center text-danger py-4" style="font-size:0.8rem;">Failed to load volunteers feed.</div>`;
+            container.innerHTML = `<div class="text-center text-error py-4 font-bold text-xs">Failed to load volunteers feed.</div>`;
           }
         }
 
-        // Run sync initially and then every 4 seconds
-        syncVolunteersFieldList();
-        setInterval(syncVolunteersFieldList, 4000);
+        // Run sync initially and then every 3 seconds
+        setTimeout(syncVolunteersFieldList, 1500);
+        setInterval(syncVolunteersFieldList, 3000);
       });
     </script>
   </body>

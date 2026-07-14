@@ -7,48 +7,54 @@ export default {
   theme: {
     extend: {
       colors: {
-        nature: {
-          bg: '#FAF9F5',       // Warm linen cream background
-          card: '#FFFFFF',     // Crisp white for card elements
-          border: '#E2E8F0',   // Clean border slate
-          borderSage: '#D1DDD4', // Soft sage/green-gray border
-          text: '#1B3B2B',     // Rich deep forest green for primary typography
-          textMuted: '#5C6E64', // Slate-sage muted green for body descriptions
-          primary: '#2D5A27',  // Primary organic forest green (buttons, bold badges)
-          primaryHover: '#1D3B19',
-          leaf: '#3F7A48',     // Vibrant leaf green
-          sage: '#84A98C',     // Calm sage green for accents
-          sageLight: '#EAF0EB', // Pastel sage background fill
-          gold: '#CDA03F',     // Muted organic amber/gold for warnings/criticals
-          goldLight: '#FCF7EA', // Light amber background fill
-          terracotta: '#B07D62', // Warm sandy terracotta clay color
-          earth: '#7F5539',    // Natural bark brown
-        }
+        primary: "#006e28",
+        "on-primary": "#ffffff",
+        "primary-container": "#45fd73",
+        "on-primary-container": "#007129",
+        secondary: "#006686",
+        "secondary-container": "#00c4fe",
+        "on-secondary-container": "#004d66",
+        tertiary: "#705d00",
+        "tertiary-container": "#ffdb47",
+        "on-tertiary-container": "#736000",
+        background: "#f9f9f9",
+        surface: "#f9f9f9",
+        "surface-container": "#eeeeee",
+        "surface-container-high": "#e8e8e8",
+        "surface-container-highest": "#e2e2e2",
+        "on-surface": "#1b1b1b",
+        "on-surface-variant": "#3b4b3a",
+        outline: "#6b7c68",
+        "outline-variant": "#b9ccb5",
+        error: "#ba1a1a",
+        "error-container": "#ffdad6",
+        "on-error": "#ffffff",
+        "on-error-container": "#93000a",
+      },
+      borderRadius: {
+        none: '0px',
+        sm: '0px',
+        DEFAULT: '0px',
+        md: '0px',
+        lg: '0px',
+        xl: '0px',
+        '2xl': '0px',
+        '3xl': '0px',
+        full: '9999px',
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-        display: ['Outfit', 'sans-serif'],
+        sans: ['"Space Grotesk"', 'sans-serif'],
+        display: ['"Space Grotesk"', 'sans-serif'],
+        body: ['"Space Grotesk"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'monospace'],
       },
       boxShadow: {
-        'nature': '0 8px 30px rgba(45, 90, 39, 0.04)',
-        'nature-lg': '0 10px 40px rgba(45, 90, 39, 0.08)',
-        'nature-sm': '0 4px 15px rgba(45, 90, 39, 0.02)',
+        'neu': '4px 4px 0px 0px #000000',
+        'neu-heavy': '8px 8px 0px 0px #000000',
+        'neu-sm': '2px 2px 0px 0px #000000',
       },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-8px)' },
-        },
-        pulseGlow: {
-          '0%, 100%': { opacity: '0.2', transform: 'scale(1)' },
-          '50%': { opacity: '0.4', transform: 'scale(1.08)' },
-        }
-      },
-      animation: {
-        float: 'float 6s ease-in-out infinite',
-        pulseGlow: 'pulseGlow 8s ease-in-out infinite',
-      }
     },
   },
   plugins: [],
 }
+

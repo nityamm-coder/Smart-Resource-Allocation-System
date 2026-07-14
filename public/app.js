@@ -2114,7 +2114,7 @@ if (isDashboardPage) {
   // Expose loadRequests globally so SMS gateway can trigger refresh
   window.loadRequests = loadRequests;
 
-  // Periodic rendering loop (every 10 seconds) to update timers and SLA checks in real-time,
+  // Periodic rendering loop (every 30 seconds) to update timers and SLA checks in real-time,
   // and poll via REST API if Firestore listener is not active
   setInterval(() => {
     if (allRequests.length > 0) {
@@ -2125,7 +2125,7 @@ if (isDashboardPage) {
     }
     // Always load blockchain stats to keep dashboard Overview metrics updated
     loadBlockchainStats();
-  }, 10000);
+  }, 30000);
 }
 
 // ── Global: SMS Gateway Simulator Logic ──────────────────────

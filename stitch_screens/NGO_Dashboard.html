@@ -1,0 +1,367 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>NGO Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary": "#0050cc",
+                      "on-surface": "#1b1b1b",
+                      "surface-container-high": "#e8e8e8",
+                      "error": "#ba1a1a",
+                      "outline-variant": "#b9ccb5",
+                      "tertiary": "#705d00",
+                      "tertiary-fixed": "#ffe170",
+                      "inverse-on-surface": "#f1f1f1",
+                      "on-secondary-fixed-variant": "#003fa4",
+                      "surface-dim": "#dadada",
+                      "surface-container": "#eeeeee",
+                      "primary-fixed-dim": "#00e55b",
+                      "secondary-fixed-dim": "#b3c5ff",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "secondary-fixed": "#dae1ff",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#3b4b3a",
+                      "surface-bright": "#f9f9f9",
+                      "primary-fixed": "#6bff83",
+                      "tertiary-container": "#ffdb47",
+                      "on-background": "#1b1b1b",
+                      "on-secondary-fixed": "#001849",
+                      "on-secondary": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-container": "#0266ff",
+                      "primary-container": "#00ff66",
+                      "on-primary-container": "#007128",
+                      "surface": "#f9f9f9",
+                      "error-container": "#ffdad6",
+                      "outline": "#6b7c68",
+                      "on-tertiary-fixed": "#221b00",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#544600",
+                      "on-secondary-container": "#f9f7ff",
+                      "on-primary-fixed": "#002107",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "surface-container-highest": "#e2e2e2",
+                      "surface-container-low": "#f3f3f3",
+                      "background": "#f9f9f9",
+                      "on-tertiary-container": "#736000",
+                      "on-primary-fixed-variant": "#00531b",
+                      "surface-tint": "#006e27",
+                      "inverse-primary": "#00e55b",
+                      "primary": "#006e27",
+                      "surface-variant": "#e2e2e2",
+                      "inverse-surface": "#303030"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "xl": "32px",
+                      "margin-mobile": "16px",
+                      "xs": "4px",
+                      "md": "16px",
+                      "sm": "8px",
+                      "lg": "24px",
+                      "gutter": "24px",
+                      "margin-desktop": "48px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Space Grotesk"
+                      ],
+                      "label-sm": [
+                              "Space Grotesk"
+                      ],
+                      "label-bold": [
+                              "Space Grotesk"
+                      ],
+                      "headline-lg-mobile": [
+                              "Space Grotesk"
+                      ],
+                      "body-md": [
+                              "Space Grotesk"
+                      ],
+                      "body-lg": [
+                              "Space Grotesk"
+                      ],
+                      "display": [
+                              "Space Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Space Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "display": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        body { font-family: 'Space Grotesk', sans-serif; }
+        .neubrutalist-border { border: 4px solid black; }
+        .neubrutalist-shadow { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
+        .neubrutalist-shadow-lg { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); }
+        .neubrutalist-active:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px 0px rgba(0,0,0,1); }
+        .neubrutalist-button:hover { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); transform: translate(-2px, -2px); }
+        .neubrutalist-button:active { box-shadow: 0px 0px 0px 0px rgba(0,0,0,1); transform: translate(4px, 4px); }
+        
+        /* Material Icons */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+<!-- SideNavBar (Desktop) -->
+<nav class="hidden md:flex bg-surface text-primary font-label-bold font-label-bold h-screen sticky left-0 w-64 border-r-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex-col p-md gap-sm z-50">
+<div class="flex items-center gap-sm mb-lg">
+<img class="w-12 h-12 neubrutalist-border object-cover rounded-full" data-alt="A stark, high-contrast, minimalist unit logo featuring geometric shapes in black and white, suitable for a professional NGO command center. The logo exudes authority and precision, with no gradients or soft edges. Light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmJkiL9JBZV-Ffg7vrKIn5YaACjwtvvwxZL1oh3A0Syn801YHUBvF3PBTIjUdvVPL800126ZXakhF-_c3w3bS_ZGeBoa3oLBlcgRMYHc9iDkZccT5MIwu58ReH50fKshfg_vwy_oVSPSrwr2IJt87hE1OiMBi_MPK_6z0jp_3KPLc5O_HoPq4s6qBv4rPtEIZ8orqwY4exuEFUzFHQkhiaqSL69_UK5TuN-ZojVg4H3O7HkJ4LbO1BEttOF10hQc4hNNcIKVq2YQ">
+<div>
+<h1 class="font-display text-headline-md text-primary">ALPHA_TEAM</h1>
+<p class="font-label-sm text-on-surface-variant">Sector 7 Status: Active</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-sm">
+<a class="flex items-center gap-md p-sm bg-primary-container text-on-primary-container border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[2px] translate-y-[2px] transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">grid_view</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md p-sm text-on-surface hover:bg-surface-container-high hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all neubrutalist-border bg-white" href="#">
+<span class="material-symbols-outlined">map</span>
+                Live Map
+            </a>
+<a class="flex items-center gap-md p-sm text-on-surface hover:bg-surface-container-high hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all neubrutalist-border bg-white" href="#">
+<span class="material-symbols-outlined">package_2</span>
+                Resources
+            </a>
+<a class="flex items-center gap-md p-sm text-on-surface hover:bg-surface-container-high hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all neubrutalist-border bg-white" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+                Logistics
+            </a>
+<a class="flex items-center gap-md p-sm text-on-surface hover:bg-surface-container-high hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:-translate-x-1 hover:-translate-y-1 transition-all neubrutalist-border bg-white" href="#">
+<span class="material-symbols-outlined">assessment</span>
+                Reports
+            </a>
+</div>
+<button class="bg-primary-container text-on-primary-container p-sm neubrutalist-border neubrutalist-shadow neubrutalist-button font-label-bold transition-all text-center w-full uppercase mt-auto">
+            DEPLOY UNIT
+        </button>
+<a class="flex items-center justify-center gap-sm p-sm mt-sm text-error neubrutalist-border bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+            Sign Out
+        </a>
+</nav>
+<!-- TopNavBar (Mobile) -->
+<header class="md:hidden bg-background text-on-background font-headline-md text-headline-md font-label-bold text-label-bold w-full sticky top-0 border-b-4 border-black flex justify-between items-center px-lg py-md z-50 flat no shadows">
+<div class="font-headline-md text-headline-md font-bold text-on-background uppercase tracking-tighter">
+            RESPOND_OS
+        </div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary font-bold hover:bg-secondary-container hover:text-on-secondary-container transition-colors p-xs cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant font-medium hover:bg-secondary-container hover:text-on-secondary-container transition-colors p-xs cursor-pointer">settings</span>
+<span class="material-symbols-outlined text-on-surface-variant font-medium hover:bg-secondary-container hover:text-on-secondary-container transition-colors p-xs cursor-pointer">help</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-margin-mobile md:p-margin-desktop flex flex-col gap-lg overflow-y-auto w-full max-w-[1600px] mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-md border-b-4 border-black pb-md">
+<div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-bold">COMMAND DASHBOARD</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">Real-time NGO deployment tracking and resource ledger.</p>
+</div>
+<div class="flex gap-sm">
+<div class="px-md py-sm bg-tertiary-container text-on-tertiary-container neubrutalist-border neubrutalist-shadow font-label-bold flex items-center gap-xs">
+<span class="w-3 h-3 bg-error rounded-full animate-pulse neubrutalist-border block"></span>
+                    DEFCON 3
+                </div>
+</div>
+</div>
+<!-- Request Metrics Row -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg">
+<div class="bg-white neubrutalist-border neubrutalist-shadow p-sm flex flex-col gap-xs">
+<div class="text-on-surface-variant font-label-bold uppercase text-xs">Total Requests</div>
+<div class="text-headline-lg font-bold">1,402</div>
+</div>
+<div class="bg-primary-container neubrutalist-border neubrutalist-shadow p-sm flex flex-col gap-xs">
+<div class="text-on-primary-container font-label-bold uppercase text-xs">Open</div>
+<div class="text-headline-lg font-bold">345</div>
+</div>
+<div class="bg-tertiary-container neubrutalist-border neubrutalist-shadow p-sm flex flex-col gap-xs">
+<div class="text-on-tertiary-container font-label-bold uppercase text-xs">In Progress</div>
+<div class="text-headline-lg font-bold">890</div>
+</div>
+<div class="bg-white neubrutalist-border neubrutalist-shadow p-sm flex flex-col gap-xs">
+<div class="text-on-surface-variant font-label-bold uppercase text-xs">Resolved</div>
+<div class="text-headline-lg font-bold">167</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-lg h-full"><div class="md:col-span-8 flex flex-col gap-lg"><div class="bg-surface neubrutalist-border neubrutalist-shadow flex flex-col"><div class="border-b-4 border-black p-sm bg-white flex justify-between items-center"><h3 class="font-headline-md text-headline-md flex items-center gap-sm"><span class="material-symbols-outlined">timer</span> Response Time by Zone</h3></div><div class="p-md flex flex-col gap-sm"><div class="flex flex-col gap-xs"><div class="flex items-center gap-sm"><div class="w-24 font-label-bold text-xs">Kalyan</div><div class="flex-1 h-6 bg-tertiary-container neubrutalist-border" style="width: 85%"></div><div class="w-8 text-xs font-bold">12m</div></div><div class="flex items-center gap-sm"><div class="w-24 font-label-bold text-xs">Thane</div><div class="flex-1 h-6 bg-tertiary-container neubrutalist-border" style="width: 60%"></div><div class="w-8 text-xs font-bold">8m</div></div><div class="flex items-center gap-sm"><div class="w-24 font-label-bold text-xs">Vasind</div><div class="flex-1 h-6 bg-tertiary-container neubrutalist-border" style="width: 45%"></div><div class="w-8 text-xs font-bold">6m</div></div><div class="flex items-center gap-sm"><div class="w-24 font-label-bold text-xs">Bhiwandi</div><div class="flex-1 h-6 bg-tertiary-container neubrutalist-border" style="width: 95%"></div><div class="w-8 text-xs font-bold">15m</div></div></div></div></div><div class="bg-white neubrutalist-border neubrutalist-shadow flex flex-col"><div class="border-b-4 border-black p-sm bg-surface-container flex justify-between items-center"><h3 class="font-label-bold text-label-bold flex items-center gap-sm"><span class="material-symbols-outlined">pie_chart</span> Active Needs by Category</h3></div><div class="p-sm flex items-center gap-md"><div class="w-24 h-24 rounded-full neubrutalist-border shrink-0" style="background: conic-gradient(#00ff66 0% 45%, #ffdb47 45% 75%, #dae1ff 75% 90%, #e2e2e2 90% 100%);"></div><div class="flex flex-col gap-xs font-label-sm w-full"><div class="flex justify-between items-center"><div class="flex items-center gap-xs"><span class="w-3 h-3 bg-[#00ff66] neubrutalist-border block"></span> Medical</div> <span class="font-bold">45%</span></div><div class="flex justify-between items-center"><div class="flex items-center gap-xs"><span class="w-3 h-3 bg-[#ffdb47] neubrutalist-border block"></span> Food</div> <span class="font-bold">30%</span></div><div class="flex justify-between items-center"><div class="flex items-center gap-xs"><span class="w-3 h-3 bg-[#dae1ff] neubrutalist-border block"></span> Shelter</div> <span class="font-bold">15%</span></div><div class="flex justify-between items-center"><div class="flex items-center gap-xs"><span class="w-3 h-3 bg-[#e2e2e2] neubrutalist-border block"></span> Other</div> <span class="font-bold">10%</span></div></div></div></div></div>
+<!-- NGO Deployment Map (Main Feature) -->
+<!-- Side Panel Container -->
+<div class="md:col-span-4 flex flex-col gap-lg">
+<!-- Active Needs Chart Panel -->
+<!-- Volunteer Overview Panel -->
+<div class="bg-white neubrutalist-border neubrutalist-shadow flex flex-col">
+<div class="border-b-4 border-black p-sm bg-surface-container flex justify-between items-center">
+<h3 class="font-label-bold text-label-bold flex items-center gap-sm">
+<span class="material-symbols-outlined">groups</span>
+                Active Volunteers
+            </h3>
+<span class="text-xs bg-primary-container px-2 py-1 neubrutalist-border font-label-bold">24 ONLINE</span>
+</div>
+<div class="p-sm flex flex-col gap-xs">
+<div class="flex justify-between items-center p-xs border-b-2 border-black border-dashed">
+<span class="font-label-bold text-sm">Med-Team Alpha</span>
+<span class="text-xs bg-primary-container px-2 py-1 neubrutalist-border font-bold">ON MISSION</span>
+</div>
+<div class="flex justify-between items-center p-xs border-b-2 border-black border-dashed">
+<span class="font-label-bold text-sm">Logistics Unit 4</span>
+<span class="text-xs bg-tertiary-container px-2 py-1 neubrutalist-border font-bold">IN TRANSIT</span>
+</div>
+<div class="flex justify-between items-center p-xs border-b-2 border-black border-dashed">
+<span class="font-label-bold text-sm">Base Support</span>
+<span class="text-xs bg-surface-container px-2 py-1 neubrutalist-border font-bold">READY</span>
+</div>
+<div class="flex justify-between items-center p-xs">
+<span class="font-label-bold text-sm">Recon Squad B</span>
+<span class="text-xs bg-primary-container px-2 py-1 neubrutalist-border font-bold">ON MISSION</span>
+</div>
+</div>
+</div>
+<!-- ERC1155 Inventory Panel -->
+<div class="bg-white neubrutalist-border neubrutalist-shadow flex flex-col flex-1">
+<div class="border-b-4 border-black p-sm bg-surface-container flex justify-between items-center">
+<h3 class="font-label-bold text-label-bold flex items-center gap-sm">
+<span class="material-symbols-outlined">inventory_2</span>
+                            Supply Inventory
+                        </h3>
+<span class="text-xs bg-primary-container px-2 py-1 neubrutalist-border font-label-bold">LIVE</span>
+</div>
+<div class="p-sm flex flex-col gap-sm overflow-y-auto flex-1">
+<!-- Inventory Item -->
+<div class="flex justify-between items-center p-xs neubrutalist-border hover:bg-secondary-fixed-dim transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 bg-surface-variant neubrutalist-border flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">medical_services</span>
+</div>
+<div class="font-label-bold text-xs">MedKits</div>
+</div>
+<div class="text-right">
+<div class="font-label-bold text-sm">1,250</div>
+</div>
+</div>
+<!-- Inventory Item -->
+<div class="flex justify-between items-center p-xs neubrutalist-border hover:bg-secondary-fixed-dim transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 bg-error-container neubrutalist-border flex items-center justify-center">
+<span class="material-symbols-outlined text-sm text-error">water_drop</span>
+</div>
+<div class="font-label-bold text-xs">Purifiers</div>
+</div>
+<div class="text-right">
+<div class="font-label-bold text-sm text-error">45</div>
+</div>
+</div>
+<!-- Inventory Item -->
+<div class="flex justify-between items-center p-xs neubrutalist-border hover:bg-secondary-fixed-dim transition-colors group">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 bg-surface-variant neubrutalist-border flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">satellite_alt</span>
+</div>
+<div class="font-label-bold text-xs">Relays</div>
+</div>
+<div class="text-right">
+<div class="font-label-bold text-sm">300</div>
+</div>
+</div>
+</div>
+<div class="p-xs border-t-4 border-black">
+<button class="w-full bg-surface neubrutalist-border py-1 text-xs font-label-bold hover:bg-surface-container-high transition-colors">RESUPPLY</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

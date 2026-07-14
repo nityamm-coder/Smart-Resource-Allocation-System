@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Request Details - RESPOND_OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#ffdb47",
+                      "secondary-container": "#00c4fe",
+                      "primary-container": "#45fd73",
+                      "outline": "#6b7c68",
+                      "surface-variant": "#e2e2e2",
+                      "on-secondary-container": "#004d66",
+                      "on-tertiary-fixed-variant": "#544600",
+                      "secondary-fixed": "#c0e8ff",
+                      "on-primary-fixed-variant": "#00531c",
+                      "tertiary-fixed": "#ffe170",
+                      "on-secondary-fixed-variant": "#004d66",
+                      "surface-container-low": "#f3f3f3",
+                      "on-surface": "#1b1b1b",
+                      "on-surface-variant": "#3b4b3a",
+                      "on-primary-container": "#007129",
+                      "surface-bright": "#f9f9f9",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#006e28",
+                      "primary-fixed": "#6bff84",
+                      "outline-variant": "#b9ccb5",
+                      "on-tertiary-container": "#736000",
+                      "secondary-fixed-dim": "#6fd2ff",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "secondary": "#006686",
+                      "on-primary-fixed": "#002107",
+                      "on-secondary": "#ffffff",
+                      "background": "#f9f9f9",
+                      "surface-container-highest": "#e2e2e2",
+                      "on-background": "#1b1b1b",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-surface": "#303030",
+                      "inverse-on-surface": "#f1f1f1",
+                      "primary-fixed-dim": "#1ae45e",
+                      "primary": "#006e28",
+                      "on-tertiary-fixed": "#221b00",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9f9",
+                      "inverse-primary": "#1ae45e",
+                      "surface-container-high": "#e8e8e8",
+                      "surface-container": "#eeeeee",
+                      "on-error-container": "#93000a",
+                      "on-error": "#ffffff",
+                      "tertiary": "#705d00",
+                      "on-secondary-fixed": "#001f2b",
+                      "surface-dim": "#dadada"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin-mobile": "16px",
+                      "xl": "32px",
+                      "sm": "8px",
+                      "xs": "4px",
+                      "unit": "4px",
+                      "gutter": "24px",
+                      "md": "16px",
+                      "margin-desktop": "48px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Space Grotesk"
+                      ],
+                      "label-bold": [
+                              "Space Grotesk"
+                      ],
+                      "display": [
+                              "Space Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Space Grotesk"
+                      ],
+                      "body-md": [
+                              "Space Grotesk"
+                      ],
+                      "label-sm": [
+                              "Space Grotesk"
+                      ],
+                      "headline-md": [
+                              "Space Grotesk"
+                      ],
+                      "headline-lg-mobile": [
+                              "Space Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-bold": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display": [
+                              "64px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .neo-brutal {
+            border: 4px solid #000;
+        }
+        .neo-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+        .neo-shadow-interactive {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+            transition: all 0.2s ease-in-out;
+        }
+        .neo-shadow-interactive:hover {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+            transform: translate(-4px, -4px);
+        }
+        .neo-shadow-interactive:active {
+            box-shadow: 0px 0px 0px 0px rgba(0,0,0,1);
+            transform: translate(4px, 4px);
+        }
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body class="bg-background dark:bg-background h-full font-body-md text-body-md text-on-background flex flex-col antialiased">
+<!-- Top Navigation Area -->
+<nav class="bg-background dark:bg-background text-on-background dark:text-on-background font-headline-md text-headline-md for headings, font-label-bold text-label-bold for UI labels w-full sticky top-0 border-b-4 border-black flex justify-between items-center px-lg py-md w-full z-50">
+<div class="flex items-center gap-md">
+<span class="font-headline-md text-headline-md font-bold text-on-background uppercase tracking-tighter">RESPOND_OS</span>
+</div>
+<!-- Search omitted based on styling logic if it doesn't fit, but json specifies on_left. Placing near brand for now -->
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 neo-brutal bg-surface-container-lowest flex items-center justify-center neo-shadow-interactive hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 neo-brutal bg-surface-container-lowest flex items-center justify-center neo-shadow-interactive hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="w-10 h-10 neo-brutal bg-surface-container-lowest flex items-center justify-center neo-shadow-interactive hover:bg-secondary-container hover:text-on-secondary-container transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-10 h-10 neo-brutal rounded-full overflow-hidden neo-shadow ml-sm bg-tertiary-container">
+<!-- Avatar Placeholder -->
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- Side Navigation Area - Hiding because this is a focused task/modal view -->
+<!-- The user is looking at an expanded view of a request card, implying a temporary departure or deep dive into a specific item. -->
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto p-margin-mobile md:p-margin-desktop bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4xKSIvPjwvc3ZnPg==')]">
+<div class="max-w-4xl mx-auto">
+<!-- Back Button -->
+<button class="mb-md flex items-center gap-sm font-label-bold text-label-bold text-on-background hover:text-primary transition-colors uppercase tracking-tight">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                    Back to Board
+                </button>
+<!-- Resolved Request Card -->
+<article class="neo-brutal bg-surface-container-lowest neo-shadow p-lg md:p-xl flex flex-col gap-lg relative">
+<!-- Reference Image included per instructions -->
+<div class="absolute right-xl top-xl w-32 h-32 hidden lg:block neo-brutal overflow-hidden">
+<img alt="Visual context for the request" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwvLp1ngdoWNaii3PO-gmU-hf2NdtytxkeGYOCv-ItMnYT4guoZj4BmZed0kH6CXL2mvSL4c_zwWGD-yjgLyMG-r0Nb2iDvXQbfCdp7D4Xvc6gQwqWADuL9zO8BhR2ZGLbCpn8HoM-Z0AmTU2wnksLRfVSL44HlWj1n6gpDu5uzwJTHXKf9bd8KdMnTM8aFvmUNN05tRJMXOhjDsomFayI9Qh68ixisUxim59UbKyN05x86o2Fh2mxIvi8tzBoHJIZE-y-r4GJfg"/>
+</div>
+<!-- Header Section -->
+<header class="flex flex-col gap-sm border-b-4 border-black pb-md pr-0 lg:pr-40">
+<div class="flex items-center gap-md flex-wrap">
+<div class="neo-brutal bg-primary-container px-sm py-xs flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-label-bold text-label-bold text-on-primary-container tracking-wide">RESOLVED [7]</span>
+</div>
+<div class="neo-brutal bg-error text-on-error px-sm py-xs flex items-center gap-sm">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-bold text-label-bold tracking-wide">CRITICAL</span>
+</div>
+<span class="font-label-bold text-label-bold text-on-surface-variant flex items-center gap-xs ml-auto">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                Jul 12, 08:31 PM
+                            </span>
+</div>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mt-sm">
+                            need food packets in kandivali urgently
+                        </h1>
+<div class="flex gap-sm mt-xs">
+<span class="neo-brutal bg-tertiary-container px-sm py-xs font-label-bold text-label-bold text-on-tertiary-container">FOOD</span>
+<span class="neo-brutal bg-secondary-container px-sm py-xs font-label-bold text-label-bold text-on-secondary-container">WEB</span>
+</div>
+</header>
+<!-- Details Section Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg border-b-4 border-black pb-lg">
+<!-- Left Column: Location & Contact -->
+<div class="flex flex-col gap-md">
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface-variant mb-xs uppercase tracking-widest">Location Details</h3>
+<div class="neo-brutal bg-surface p-sm flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary mt-xs" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<div>
+<p class="font-body-md text-body-md text-on-surface">Address block content pending details</p>
+<p class="font-label-bold text-label-bold text-secondary mt-xs">Hub: Mumbai Central</p>
+</div>
+</div>
+</div>
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface-variant mb-xs uppercase tracking-widest">Requester Contact</h3>
+<div class="neo-brutal bg-surface p-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">phone_in_talk</span>
+<span class="font-body-md text-body-md text-on-surface">Contact info hidden/resolved</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Resolution Details -->
+<div class="flex flex-col gap-md">
+<div>
+<h3 class="font-label-bold text-label-bold text-on-surface-variant mb-xs uppercase tracking-widest">Resolution Info</h3>
+<div class="neo-brutal bg-surface p-sm flex flex-col gap-sm">
+<div class="flex items-center gap-sm border-b-4 border-black pb-xs">
+<span class="material-symbols-outlined text-primary-container" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<span class="font-body-md text-body-md font-bold">Allocated Supplies:</span>
+<span class="font-body-md text-body-md bg-primary-container px-xs neo-brutal border-2">Food Packets x1</span>
+</div>
+<div class="flex items-center gap-sm pt-xs">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<span class="font-body-md text-body-md font-bold">Matched Volunteer:</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md">Rohan Mehta</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">+91 98765 43210</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Actions -->
+<footer class="flex flex-col sm:flex-row justify-between items-center gap-md pt-xs">
+<button class="font-label-bold text-label-bold text-secondary underline hover:text-on-secondary-container flex items-center gap-xs">
+<span class="material-symbols-outlined text-sm">history</span>
+                            View Action Log (4)
+                        </button>
+<div class="flex items-center gap-sm w-full sm:w-auto">
+<label class="font-label-bold text-label-bold text-on-surface-variant uppercase tracking-widest hidden sm:block" for="status-update">Update Status:</label>
+<div class="relative w-full sm:w-48">
+<select class="w-full neo-brutal bg-surface-container-lowest font-body-md text-body-md p-sm appearance-none cursor-pointer hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-0" id="status-update">
+<option selected="" value="resolved">Resolved</option>
+<option value="reopen">Reopen Request</option>
+<option value="archive">Archive</option>
+</select>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+</footer>
+</article>
+</div>
+</main>
+</div>
+</body></html>

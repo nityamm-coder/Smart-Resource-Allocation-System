@@ -1,0 +1,333 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>SRA-TP | Smart Resource Allocation System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#544600",
+                        "error": "#ba1a1a",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary-container": "#007129",
+                        "secondary-fixed": "#c0e8ff",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#e8e8e8",
+                        "on-primary-fixed-variant": "#00531c",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-dim": "#dadada",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-highest": "#e2e2e2",
+                        "secondary-container": "#00c4fe",
+                        "primary-fixed-dim": "#1ae45e",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "background": "#f9f9f9",
+                        "on-surface-variant": "#3b4b3a",
+                        "on-background": "#1b1b1b",
+                        "inverse-surface": "#303030",
+                        "surface": "#f9f9f9",
+                        "tertiary-fixed": "#ffe170",
+                        "secondary": "#006686",
+                        "outline-variant": "#b9ccb5",
+                        "on-secondary-container": "#004d66",
+                        "primary-container": "#45fd73",
+                        "outline": "#6b7c68",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#6bff84",
+                        "on-tertiary-fixed": "#221b00",
+                        "surface-bright": "#f9f9f9",
+                        "inverse-on-surface": "#f1f1f1",
+                        "surface-container": "#eeeeee",
+                        "tertiary": "#705d00",
+                        "secondary-fixed-dim": "#6fd2ff",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#ffdb47",
+                        "inverse-primary": "#1ae45e",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001f2b",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#006e28",
+                        "on-surface": "#1b1b1b",
+                        "primary": "#006e28",
+                        "on-tertiary-container": "#736000",
+                        "surface-variant": "#e2e2e2",
+                        "on-primary-fixed": "#002107"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "unit": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "48px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "label-bold": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-lg": ["Space Grotesk"],
+                        "display": ["Space Grotesk"],
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "label-sm": ["Space Grotesk"],
+                        "body-md": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-bold": ["14px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "display": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .neu-border {
+            border: 4px solid #000000;
+        }
+        .neu-shadow {
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        }
+        .neu-shadow-heavy {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+        }
+        .neu-shadow-active:active {
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+            transform: translate(2px, 2px);
+        }
+        .neu-button-hover:hover {
+            box-shadow: 8px 8px 0px 0px rgba(0,0,0,1);
+            transform: translate(-2px, -2px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="w-full top-0 sticky z-50 flex justify-between items-center px-margin-desktop py-4 bg-surface border-b-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+<div class="flex items-center gap-sm">
+<span class="text-headline-md font-headline-md text-on-surface uppercase tracking-tighter">SRAS</span>
+</div>
+<div class="hidden md:flex items-center gap-lg font-label-bold text-label-bold">
+<a class="text-on-surface hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" href="#">NGO Dashboard</a>
+<a class="text-primary underline decoration-4 underline-offset-8" href="#">Victim Portal</a>
+<a class="text-on-surface hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" href="#">Volunteers</a>
+<a class="text-on-surface hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" href="#">Impact</a>
+</div>
+<button class="neu-border neu-shadow neu-button-hover neu-shadow-active bg-tertiary-container text-on-tertiary-container px-lg py-sm font-label-bold text-label-bold uppercase transition-all flex items-center gap-sm"><span class="material-symbols-outlined text-lg" data-icon="cell_tower">cell_tower</span>SMS Portal</button><button class="neu-border neu-shadow neu-button-hover neu-shadow-active bg-primary-container text-on-primary-container px-lg py-sm font-label-bold text-label-bold uppercase transition-all flex items-center gap-sm"><span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>NGO Dashboard</button>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-margin-mobile md:px-margin-desktop py-xl flex flex-col gap-xl">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center gap-lg py-xl mt-lg" style="position: relative; background-image: url('https://lh3.googleusercontent.com/aida/AP1WRLsk3e4s6CH5h-89VFQmNA6qF8E3UuqS7b5us0nwcZSuyisjRyz5U3mQ538OpAAEfWdogTkMbrYpSCD5Sh6bbv_UgwnYnVt-Q-gyMYXke83IxmxgXJj128omcyakHqvvP0Nt8mEtm9Nic8E2k4G3uY169Y4uOVDnXfdrdkox97eJLy-8k3VyCrtXNVa8aCW1Osao0ve2QKRbTI3_qUQxIWxqKt0fNCzUjLKk-FnTJLCFVpmbqtveWtvZuA'); background-size: cover; background-position: center;"><div class="absolute inset-0 bg-surface/40 backdrop-blur-[2px] pointer-events-none z-0"></div>
+<div class="inline-flex items-center gap-xs bg-tertiary-container text-on-tertiary-container px-sm py-xs neu-border neu-shadow font-label-bold text-label-bold uppercase z-10">
+<span class="material-symbols-outlined text-sm" data-icon="smart_toy">smart_toy</span>
+                AI Community-Driven Relief
+            </div>
+<h1 class="font-display text-display md:text-[80px] uppercase max-w-4xl leading-none z-10">
+                Rapid Response.<br>
+<span class="text-primary underline decoration-8 underline-offset-8">Immutable Trust.</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl z-10">
+                The AI-driven protocol connecting disaster survivors with nearby volunteers and NGOs through on-chain verification.
+            </p>
+<div class="flex flex-col sm:flex-row gap-lg mt-sm w-full sm:w-auto z-10">
+<button class="neu-border neu-shadow-heavy neu-button-hover neu-shadow-active bg-primary-container text-on-primary-container px-xl py-md font-label-bold text-label-bold uppercase transition-all w-full sm:w-auto flex items-center justify-center gap-sm text-lg">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+                    Report an Emergency
+                </button>
+<button class="neu-border neu-shadow neu-button-hover neu-shadow-active bg-surface-container-highest text-on-surface px-xl py-md font-label-bold text-label-bold uppercase transition-all w-full sm:w-auto flex items-center justify-center gap-sm text-lg">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+                    Volunteer Now
+                </button>
+</div>
+</section>
+<!-- Stats Bar -->
+<section class="w-full bg-inverse-surface text-inverse-on-surface neu-border neu-shadow flex flex-col md:flex-row justify-between items-center p-lg gap-lg">
+<div class="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-md md:pb-0 md:pr-lg">
+<span class="font-display text-display text-primary-container">3,402</span>
+<span class="font-label-bold text-label-bold uppercase tracking-widest text-surface-variant">Rescues Completed</span>
+</div>
+<div class="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-md md:pb-0 md:pr-lg pl-0 md:pl-lg">
+<span class="font-display text-display text-tertiary-container">890</span>
+<span class="font-label-bold text-label-bold uppercase tracking-widest text-surface-variant">Active Volunteers</span>
+</div>
+<div class="flex flex-col items-center md:items-start w-full md:w-1/3 pl-0 md:pl-lg">
+<span class="font-display text-display text-secondary-container">14.2k</span>
+<span class="font-label-bold text-label-bold uppercase tracking-widest text-surface-variant">Supplies Deployed</span>
+</div>
+</section>
+<!-- Form / Dispatch Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-xl mt-xl">
+<!-- Submit Form Card -->
+<div class="bg-surface-container-lowest neu-border neu-shadow p-lg flex flex-col gap-lg h-full">
+<div class="flex items-center gap-sm border-b-4 border-black pb-sm">
+<span class="material-symbols-outlined text-headline-md text-error" data-icon="crisis_alert" data-weight="fill">crisis_alert</span>
+<h2 class="font-headline-md text-headline-md uppercase">Submit a Help Request</h2>
+</div>
+<div class="flex flex-col gap-sm">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant">Describe the Need</label>
+<textarea class="w-full neu-border p-sm min-h-[120px] focus:outline-none focus:border-secondary-container focus:border-[6px] transition-all resize-none bg-surface" placeholder="e.g., An elderly man in our building has run out of insulin and cannot reach a hospital..."></textarea>
+<span class="font-label-sm text-label-sm text-outline">Be as descriptive as possible — Gemini AI uses this to analyze category and grade urgency.</span>
+</div>
+<div class="flex flex-col gap-sm">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant">Your Contact Number</label>
+<input class="w-full neu-border p-sm focus:outline-none focus:border-secondary-container focus:border-[6px] transition-all bg-surface" placeholder="e.g., +91 98765 43210" type="tel">
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-bold text-label-bold uppercase text-on-surface-variant">Exact Address / Landmark</label>
+<button class="text-secondary font-label-bold text-label-bold uppercase flex items-center gap-xs hover:underline decoration-2">
+<span class="material-symbols-outlined text-sm" data-icon="my_location">my_location</span> Share GPS
+                        </button>
+</div>
+<textarea class="w-full neu-border p-sm min-h-[80px] focus:outline-none focus:border-secondary-container focus:border-[6px] transition-all resize-none bg-surface" placeholder="e.g., Flat 202, Building B, Tarmale Nagar..."></textarea>
+</div><div class="flex flex-col gap-sm">
+    <label class="font-label-bold text-label-bold uppercase text-on-surface-variant">Select Nearest Locality/Hub</label>
+    <div class="relative">
+        <select class="w-full neu-border p-sm focus:outline-none focus:border-secondary-container focus:border-[6px] transition-all bg-surface appearance-none font-body-md">
+            <option value="" disabled="" selected="">Select a locality...</option>
+            <option value="thane">Thane</option>
+            <option value="kalyan">Kalyan</option>
+            <option value="mumbai-central">Mumbai Central</option>
+            <option value="vasind">Vasind</option>
+        </select>
+        <div class="absolute inset-y-0 right-0 flex items-center px-sm pointer-events-none">
+            <span class="material-symbols-outlined">expand_more</span>
+        </div>
+    </div>
+</div>
+<button class="mt-auto neu-border neu-shadow-heavy neu-button-hover neu-shadow-active bg-primary-container text-on-primary-container px-lg py-md font-label-bold text-label-bold uppercase transition-all flex justify-center items-center gap-sm">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+                    Submit Help Request
+                </button>
+</div>
+<!-- Dispatch Monitor Side -->
+<div class="flex flex-col gap-lg h-full">
+<!-- Track Form -->
+<div class="bg-surface-container-high neu-border neu-shadow p-md flex flex-col gap-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary" data-icon="search">search</span>
+<h3 class="font-label-bold text-label-bold uppercase">Track Existing Request</h3>
+</div>
+<div class="flex gap-sm">
+<input class="flex-grow neu-border p-sm focus:outline-none focus:border-secondary-container focus:border-[6px] transition-all bg-surface" placeholder="Enter Request ID..." type="text">
+<button class="neu-border neu-shadow neu-button-hover neu-shadow-active bg-secondary-container text-on-secondary-container px-md py-sm font-label-bold text-label-bold uppercase transition-all">
+                            Track
+                        </button>
+</div>
+</div>
+<!-- Matchmaking Visualization Card -->
+<div class="bg-surface-container-lowest neu-border neu-shadow p-lg flex-grow flex flex-col items-center justify-center gap-lg relative overflow-hidden">
+<!-- Abstract Background Pattern -->
+<div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, black 1px, transparent 0); background-size: 16px 16px;"></div>
+<div class="z-10 flex flex-col items-center text-center gap-md">
+<div class="bg-tertiary-container text-on-tertiary-container p-sm neu-border">
+<span class="material-symbols-outlined text-[40px]" data-icon="hub">hub</span>
+</div>
+<h3 class="font-headline-md text-headline-md uppercase">AI Matchmaking Dispatch</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-sm">
+                            Our AI analyzes the request context in real-time, grades emergency status, and routes it to nearby volunteers.
+                        </p>
+</div>
+<!-- Faux Terminal -->
+<div class="w-full bg-inverse-surface text-primary-fixed-dim neu-border p-sm font-mono text-label-sm w-full mt-md z-10 shadow-inner">
+<div class="flex items-center gap-sm border-b-2 border-surface-variant/30 pb-xs mb-sm">
+<span class="material-symbols-outlined text-sm" data-icon="terminal">terminal</span>
+<span class="uppercase tracking-widest text-surface-variant">System Log Console</span>
+</div>
+<div class="space-y-1">
+<p class="">&gt; Connecting to geographic grid...</p>
+<p class="">&gt; Analyzing local volunteer hubs...</p>
+<p class="">&gt; Ready. Standby for user input...</p>
+<p class="animate-pulse">&gt; _</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Protocol Pipeline -->
+<section class="flex flex-col items-center gap-lg mt-xl pt-xl border-t-4 border-black">
+<div class="inline-flex items-center gap-xs bg-secondary-container text-on-secondary-container px-sm py-xs neu-border neu-shadow font-label-bold text-label-bold uppercase">
+<span class="material-symbols-outlined text-sm" data-icon="schema">schema</span>
+                Process Pipeline
+            </div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase text-center max-w-3xl">
+                How the Dispatch System Works
+            </h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-2xl mb-lg">
+                Our automated system links emergency reports directly to community volunteer networks.
+            </p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg w-full">
+<!-- Step 1 -->
+<div class="bg-surface-container-lowest neu-border neu-shadow p-lg flex flex-col items-center text-center gap-md hover:bg-secondary-fixed transition-colors group">
+<div class="bg-surface text-on-surface p-sm neu-border group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="edit_note">edit_note</span>
+</div>
+<h3 class="font-label-bold text-label-bold uppercase">1. Describe the Need</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Provide details in english or regional languages (Hindi, Marathi, Hinglish) via our Web form or raw SMS gateway.</p>
+</div>
+<!-- Step 2 -->
+<div class="bg-surface-container-lowest neu-border neu-shadow p-lg flex flex-col items-center text-center gap-md hover:bg-tertiary-fixed transition-colors group">
+<div class="bg-surface text-on-surface p-sm neu-border group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="psychology">psychology</span>
+</div>
+<h3 class="font-label-bold text-label-bold uppercase">2. AI Processes Urgency</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Gemini AI parses raw text, translates, categorizes (Food, Medical, Shelter), and scores urgency from 1 to 5.</p>
+</div>
+<!-- Step 3 -->
+<div class="bg-surface-container-lowest neu-border neu-shadow p-lg flex flex-col items-center text-center gap-md hover:bg-primary-fixed transition-colors group">
+<div class="bg-surface text-on-surface p-sm neu-border group-hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="handshake">handshake</span>
+</div>
+<h3 class="font-label-bold text-label-bold uppercase">3. Volunteer Matched</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">The algorithm automatically finds the best nearby available volunteer based on skills, locality, and workload.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-auto bg-surface-container-highest flex flex-col md:flex-row justify-between items-center px-margin-desktop py-xl gap-lg border-t-4 border-black">
+<div class="flex flex-col items-center md:items-start gap-sm">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-headline-md text-primary" data-icon="forest" data-weight="fill">forest</span>
+<span class="text-headline-md font-headline-md text-on-surface uppercase tracking-tighter">SRAS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">© 2024 SRAS System. Blockchain Verified Trust Layer.</p>
+<div class="inline-flex items-center gap-xs bg-surface-container-lowest text-primary px-sm py-xs neu-border mt-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-bold text-label-bold uppercase text-xs">L2 EVM Synced</span>
+</div>
+</div>
+<div class="flex flex-wrap justify-center gap-lg font-body-md text-body-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:underline decoration-2 underline-offset-4" href="#">Security Audit</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:underline decoration-2 underline-offset-4" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:underline decoration-2 underline-offset-4" href="#">Whitepaper</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:underline decoration-2 underline-offset-4" href="#">Support</a>
+</div>
+</footer>
+
+
+</body></html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="en" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "primary": "#00ff66",
+                            "on-primary": "#000000",
+                            "secondary": "#006686",
+                            "background": "#f9f9f9",
+                            "surface": "#ffffff",
+                            "surface-container": "#eeeeee",
+                            "surface-container-low": "#f3f3f3",
+                            "on-surface": "#000000",
+                            "on-surface-variant": "#333333",
+                            "outline": "#000000",
+                            "primary-container": "#00ff66",
+                            "on-primary-container": "#000000",
+                            "tertiary-fixed": "#ffdb47",
+                            "on-tertiary-fixed": "#000000"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0px",
+                            "lg": "0px",
+                            "xl": "0px",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "unit": "4px",
+                            "margin-mobile": "16px",
+                            "gutter": "24px",
+                            "xl": "32px",
+                            "lg": "24px",
+                            "sm": "8px",
+                            "xs": "4px",
+                            "md": "16px",
+                            "margin-desktop": "48px"
+                        },
+                        "fontFamily": {
+                            "label-bold": ["Space Grotesk"],
+                            "headline-lg-mobile": ["Space Grotesk"],
+                            "label-sm": ["Space Grotesk"],
+                            "body-md": ["Space Grotesk"],
+                            "headline-lg": ["Space Grotesk"],
+                            "display": ["Space Grotesk"],
+                            "headline-md": ["Space Grotesk"],
+                            "body-lg": ["Space Grotesk"]
+                        },
+                        "fontSize": {
+                            "label-bold": ["14px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                            "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                            "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                            "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                            "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                            "display": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                            "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }]
+                        },
+                        "boxShadow": {
+                            "neo": "4px 4px 0px 0px rgba(0,0,0,1)",
+                            "neo-lg": "8px 8px 0px 0px rgba(0,0,0,1)",
+                            "neo-sm": "2px 2px 0px 0px rgba(0,0,0,1)"
+                        }
+                    }
+                }
+            }
+        } catch (_e) {}
+    }catch(_e){}</script></head><body class="flex h-screen overflow-hidden font-body-md text-on-background bg-background">
+    <!-- SideNavBar -->
+    <nav class="hidden md:flex flex-col h-screen sticky left-0 w-64 bg-surface border-r-4 border-black p-md gap-sm z-50">
+        <!-- Brand/Header -->
+        <div class="mb-lg px-sm">
+            <h1 class="font-display text-headline-md text-on-surface font-bold tracking-tighter">SRAS</h1>
+            <p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">Smart Resource Allocation</p>
+        </div>
+        <!-- Navigation Links -->
+        <div class="flex-1 flex flex-col gap-sm overflow-y-auto no-scrollbar">
+            <!-- Nav Item: Overview -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+                Overview
+            </a>
+            <!-- Nav Item: Requests Board -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+                Requests Board
+            </a>
+            <!-- Nav Item: Interactive Map -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="map">map</span>
+                Interactive Map
+            </a>
+            <!-- Nav Item: L2 Trust Layer (Active) -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold bg-primary text-on-primary border-4 border-black shadow-neo">
+                <span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+                L2 Trust Layer
+            </a>
+            <!-- Nav Item: Volunteers -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="groups">groups</span>
+                Volunteers
+            </a>
+            <!-- Nav Item: Supplies Inventory -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Supplies Inventory
+            </a>
+            <!-- Nav Item: History Logs -->
+            <a href="#" class="flex items-center gap-md px-md py-sm font-label-bold text-label-bold text-on-surface hover:bg-primary-container/20 border-2 border-transparent hover:border-black hover:shadow-neo-sm transition-all">
+                <span class="material-symbols-outlined" data-icon="history">history</span>
+                History Logs
+            </a>
+        </div>
+        <!-- Footer Profile -->
+        <div class="mt-auto pt-md border-t-4 border-black border-dashed flex items-center gap-sm">
+            <div class="w-10 h-10 border-2 border-black bg-tertiary-fixed flex items-center justify-center overflow-hidden">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFYqvyfGYBRS4WULh8Fu6t5AXr1nFO98Sw02Iq7MKSyY-fRy-7y7zawwUlYUtOWNC1CnPSjBW_zTdzyY_5PY-_66vKi9YUi1sP1-pYgygVB1sp7JSdwi6_NM92yNhqKg_9PRGIByKqKGpAsZFcT45QmFuqR4dgkxkulWzZkyZFJGdFMcsV9x5PoKLEN3CC_rrXov98FIn9rVLD5BjXJDJJxfFzXKyqKLAVv-B3oUDwHoOzyHs-mk2ao8wIjTiI6PzbKK57wwhMgA">
+            </div>
+            <div class="flex-1 overflow-hidden">
+                <p class="font-label-bold text-label-bold truncate">Nityam Mishra</p>
+                <p class="font-label-sm text-label-sm text-on-surface-variant truncate">NGO Coordinator</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto p-gutter lg:p-margin-desktop gap-gutter">
+        <!-- Top Metrics Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            <!-- Metric 1: Network Status -->
+            <div class="neubrutalist-card p-md flex flex-col justify-between h-24 bg-error-container">
+                <div class="flex justify-between items-start">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">L2 Network Status</span>
+                    <span class="material-symbols-outlined text-primary text-xl" data-icon="memory">memory</span>
+                </div>
+                <div class="flex items-center gap-sm">
+                    <div class="w-3 h-3 bg-primary border border-black animate-pulse"></div>
+                    <span class="font-label-bold text-label-bold">Arbitrum Sepolia (Simulated L2)</span>
+                </div>
+            </div>
+            <!-- Metric 2: Block Height -->
+            <div class="neubrutalist-card p-md flex flex-col justify-between h-24 bg-secondary-fixed">
+                <div class="flex justify-between items-start">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Block Height</span>
+                    <span class="material-symbols-outlined text-on-surface text-xl" data-icon="layers">layers</span>
+                </div>
+                <div>
+                    <span class="font-display text-4xl leading-none">13</span>
+                </div>
+            </div>
+            <!-- Metric 3: Total Minted SBTs -->
+            <div class="neubrutalist-card p-md flex flex-col justify-between h-24 bg-tertiary-fixed">
+                <div class="flex justify-between items-start">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Total Minted SBTs</span>
+                    <span class="material-symbols-outlined text-tertiary-fixed text-xl" data-icon="military_tech">military_tech</span>
+                </div>
+                <div>
+                    <span class="font-display text-4xl leading-none">4</span>
+                </div>
+            </div>
+            <!-- Metric 4: Smart Contract Address -->
+            <div class="neubrutalist-card p-md flex flex-col justify-between h-24 bg-primary-container">
+                <div class="flex justify-between items-start">
+                    <span class="font-label-sm text-label-sm uppercase tracking-wider font-bold">Smart Contract Address</span>
+                    <button class="hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-xl" data-icon="content_copy">content_copy</span>
+                    </button>
+                </div>
+                <div class="overflow-hidden text-ellipsis whitespace-nowrap">
+                    <span class="font-label-bold text-xs font-mono">0x7a43f891F891F891F891F891F891F891</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Split Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter flex-1">
+            <!-- Left Column: Ledger Explorer -->
+            <div class="lg:col-span-8 flex flex-col neubrutalist-card bg-white">
+                <div class="p-md border-b-4 border-black bg-surface-container flex items-center gap-sm">
+                    <span class="material-symbols-outlined" data-icon="view_list">view_list</span>
+                    <h2 class="font-display text-headline-md uppercase">L2 EVM Ledger Explorer</h2>
+                </div>
+                <div class="flex-1 overflow-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="sticky top-0 bg-white border-b-4 border-black z-10">
+                            <tr>
+                                <th class="p-md font-label-bold border-r-4 border-black">BLOCK #</th>
+                                <th class="p-md font-label-bold border-r-4 border-black">METHOD</th>
+                                <th class="p-md font-label-bold border-r-4 border-black">TX HASH</th>
+                                <th class="p-md font-label-bold border-r-4 border-black">GAS</th>
+                                <th class="p-md font-label-bold">PAYLOAD DETAILS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y-4 divide-black">
+                            <tr class="hover:bg-primary/5">
+                                <td class="p-md font-label-bold border-r-4 border-black">#13</td>
+                                <td class="p-md border-r-4 border-black">
+                                    <span class="px-sm py-1 border-2 border-black bg-primary text-xs font-bold uppercase">TransferSupply</span>
+                                </td>
+                                <td class="p-md font-mono text-xs border-r-4 border-black">0xaf118c0a...63705a3878</td>
+                                <td class="p-md border-r-4 border-black">42103</td>
+                                <td class="p-md text-xs truncate max-w-[200px]">Transfer 1 Other from Vol...leaet...</td>
+                            </tr>
+                            <tr class="hover:bg-primary/5">
+                                <td class="p-md font-label-bold border-r-4 border-black">#12</td>
+                                <td class="p-md border-r-4 border-black">
+                                    <span class="px-sm py-1 border-2 border-black bg-tertiary-fixed text-xs font-bold uppercase">MintSBT</span>
+                                </td>
+                                <td class="p-md font-mono text-xs border-r-4 border-black">0x3dd619d3...a4f7aefa19</td>
+                                <td class="p-md border-r-4 border-black">89403</td>
+                                <td class="p-md text-xs truncate max-w-[200px]">Mint SBT #4 to Kunal Verma</td>
+                            </tr>
+                            <tr class="hover:bg-primary/5">
+                                <td class="p-md font-label-bold border-r-4 border-black">#11</td>
+                                <td class="p-md border-r-4 border-black">
+                                    <span class="px-sm py-1 border-2 border-black bg-surface-container text-xs font-bold uppercase">RecordRescue</span>
+                                </td>
+                                <td class="p-md font-mono text-xs border-r-4 border-black">0x3244b786...9bb86b8f56</td>
+                                <td class="p-md border-r-4 border-black">47291</td>
+                                <td class="p-md text-xs truncate max-w-[200px]">Resolve Request: L1ZpNMKV...</td>
+                            </tr>
+                            <tr class="hover:bg-primary/5">
+                                <td class="p-md font-label-bold border-r-4 border-black">#10</td>
+                                <td class="p-md border-r-4 border-black">
+                                    <span class="px-sm py-1 border-2 border-black bg-primary text-xs font-bold uppercase">TransferSupply</span>
+                                </td>
+                                <td class="p-md font-mono text-xs border-r-4 border-black">0xc9e36e5a...0d20eb10c2</td>
+                                <td class="p-md border-r-4 border-black">42103</td>
+                                <td class="p-md text-xs truncate max-w-[200px]">Transfer 1 Other from NGO Admi...</td>
+                            </tr>
+                            <tr class="hover:bg-primary/5">
+                                <td class="p-md font-label-bold border-r-4 border-black">#9</td>
+                                <td class="p-md border-r-4 border-black">
+                                    <span class="px-sm py-1 border-2 border-black bg-primary text-xs font-bold uppercase">TransferSupply</span>
+                                </td>
+                                <td class="p-md font-mono text-xs border-r-4 border-black">0x2fefa048...0d9832f370</td>
+                                <td class="p-md border-r-4 border-black">42103</td>
+                                <td class="p-md text-xs truncate max-w-[200px]">Transfer 1 Food from NGO Admi...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Right Column: Verified SBTs -->
+            <div class="lg:col-span-4 flex flex-col gap-md">
+                <div class="flex items-center gap-sm px-xs">
+                    <span class="material-symbols-outlined text-tertiary-fixed" data-icon="local_police" data-weight="fill">local_police</span>
+                    <h2 class="font-display text-headline-md uppercase">Verified SBTs</h2>
+                </div>
+                <div class="flex-1 overflow-y-auto flex flex-col gap-gutter no-scrollbar">
+                    <!-- SBT Card 1 -->
+                    <div class="neubrutalist-card p-md flex flex-col gap-sm">
+                        <div class="flex justify-between items-start border-b-2 border-black pb-sm">
+                            <div class="flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-primary" data-icon="check_circle" data-weight="fill">check_circle</span>
+                                <span class="font-label-bold text-lg">TOKEN ID #1</span>
+                            </div>
+                            <span class="px-sm py-1 border-2 border-black bg-primary text-[10px] font-bold uppercase">Verified SBT</span>
+                        </div>
+                        <div class="space-y-1 mt-xs">
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Volunteer:</span>
+                                <span class="font-bold">Priya Sharma</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Wallet:</span>
+                                <span class="font-mono text-[10px] truncate">0xbc432d47...51ab2e88</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Skills/Cat:</span>
+                                <span class="flex items-center gap-1 font-bold"><span class="material-symbols-outlined text-[14px]" data-icon="medical_services">medical_services</span> Medical</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Hours Logged:</span>
+                                <span class="font-bold">3 hrs</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs items-center">
+                                <span class="font-bold uppercase opacity-60">Rating:</span>
+                                <div class="flex text-tertiary-fixed">
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-surface-container-low border-2 border-black p-sm italic text-xs">
+                            "Priya arrived extremely fast and performed first-aid flawlessly."
+                        </div>
+                        <button class="neubrutalist-button py-sm bg-primary text-on-primary font-bold uppercase text-xs flex justify-center items-center gap-xs">
+                            <span class="material-symbols-outlined text-[18px]" data-icon="shield">shield</span>
+                            Verify On-Chain
+                        </button>
+                    </div>
+
+                    <!-- SBT Card 2 -->
+                    <div class="neubrutalist-card p-md flex flex-col gap-sm">
+                        <div class="flex justify-between items-start border-b-2 border-black pb-sm">
+                            <div class="flex items-center gap-xs">
+                                <span class="material-symbols-outlined text-primary" data-icon="check_circle" data-weight="fill">check_circle</span>
+                                <span class="font-label-bold text-lg">TOKEN ID #2</span>
+                            </div>
+                            <span class="px-sm py-1 border-2 border-black bg-primary text-[10px] font-bold uppercase">Verified SBT</span>
+                        </div>
+                        <div class="space-y-1 mt-xs">
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Volunteer:</span>
+                                <span class="font-bold">Rohan Mehta</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Wallet:</span>
+                                <span class="font-mono text-[10px] truncate">0x947d2295...067415b2</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Skills/Cat:</span>
+                                <span class="flex items-center gap-1 font-bold"><span class="material-symbols-outlined text-[14px]" data-icon="restaurant">restaurant</span> Food</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs">
+                                <span class="font-bold uppercase opacity-60">Hours Logged:</span>
+                                <span class="font-bold">1 hr</span>
+                            </div>
+                            <div class="grid grid-cols-2 text-xs items-center">
+                                <span class="font-bold uppercase opacity-60">Rating:</span>
+                                <div class="flex text-tertiary-fixed">
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    <span class="material-symbols-outlined text-[14px]" data-icon="star" data-weight="fill">star</span>
+                                    </div></div></div></div></div></div></div></main></body></html>

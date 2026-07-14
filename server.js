@@ -46,7 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
  */
 const generalApiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15-minute sliding window
-  max: 100,                  // Max 100 requests per window per IP
+  max: 1000,                 // Max 1000 requests per window per IP (prevents 429 on dashboard polling)
   standardHeaders: true,     // Send RateLimit-* headers so clients know their limits
   legacyHeaders: false,
   message: {

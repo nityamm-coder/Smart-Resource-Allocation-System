@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRAS - Resource Inventory</title>
+    
+    <!-- Google Fonts: Space Grotesk & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#004d66",
+                        "tertiary-fixed": "#ffe170",
+                        "on-primary-fixed-variant": "#00531c",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#006e28",
+                        "surface": "#f9f9f9",
+                        "secondary": "#006686",
+                        "secondary-fixed-dim": "#6fd2ff",
+                        "surface-bright": "#f9f9f9",
+                        "on-tertiary-container": "#736000",
+                        "primary-fixed": "#6bff84",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#eeeeee",
+                        "error": "#ba1a1a",
+                        "on-surface": "#1b1b1b",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "on-surface-variant": "#3b4b3a",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "on-background": "#1b1b1b",
+                        "primary-fixed-dim": "#1ae45e",
+                        "surface-container-highest": "#e2e2e2",
+                        "primary": "#006e28",
+                        "background": "#f9f9f9",
+                        "secondary-fixed": "#c0e8ff",
+                        "outline-variant": "#b9ccb5",
+                        "on-secondary-fixed-variant": "#004d66",
+                        "tertiary": "#705d00",
+                        "surface-dim": "#dadada",
+                        "secondary-container": "#00c4fe",
+                        "on-tertiary-fixed": "#221b00",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary-fixed": "#002107",
+                        "inverse-surface": "#303030",
+                        "outline": "#6b7c68",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-variant": "#e2e2e2",
+                        "primary-container": "#45fd73",
+                        "on-secondary-fixed": "#001f2b",
+                        "tertiary-container": "#ffdb47",
+                        "inverse-primary": "#1ae45e",
+                        "on-primary-container": "#007129",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "32px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "unit": "4px",
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "48px",
+                        "lg": "24px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Space Grotesk"],
+                        "label-bold": ["Space Grotesk"],
+                        "label-sm": ["Space Grotesk"],
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "display": ["Space Grotesk"],
+                        "body-lg": ["Space Grotesk"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "500" }],
+                        "label-bold": ["14px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "label-sm": ["12px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "700" }],
+                        "display": ["64px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .neubrutalist-border { border: 4px solid black; }
+        .neubrutalist-shadow { box-shadow: 4px 4px 0px 0px rgba(0,0,0,1); }
+        .neubrutalist-shadow-hover:hover { box-shadow: 8px 8px 0px 0px rgba(0,0,0,1); transform: translate(-2px, -2px); }
+        .neubrutalist-shadow-active:active { box-shadow: 2px 2px 0px 0px rgba(0,0,0,1); transform: translate(2px, 2px); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md flex h-screen overflow-hidden">
+<!-- SideNavBar (From Shared Components) -->
+<nav class="hidden md:flex flex-col h-screen sticky left-0 w-64 bg-surface dark:bg-surface border-r-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-md gap-sm z-50">
+<div class="mb-lg">
+<h1 class="font-display text-headline-md text-primary tracking-tighter">ALPHA_TEAM</h1>
+<p class="font-label-sm text-on-surface-variant">Sector 7 Status: Active</p>
+</div>
+<div class="flex-1 flex flex-col gap-sm">
+<!-- Dashboard (Inactive) -->
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">grid_view</span>
+                Dashboard
+            </a>
+<!-- Live Map (Inactive) -->
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">map</span>
+                Live Map
+            </a>
+<!-- Resources (Active) -->
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold bg-primary-container text-on-primary-container border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] translate-x-[2px] translate-y-[2px]">
+<span class="material-symbols-outlined">package_2</span>
+                Resources
+            </a>
+<!-- Logistics (Inactive) -->
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">local_shipping</span>
+                Logistics
+            </a>
+<!-- Reports (Inactive) -->
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">assessment</span>
+                Reports
+            </a>
+</div>
+<button class="w-full py-sm bg-primary-container text-on-primary-container font-label-bold border-4 border-black neubrutalist-shadow neubrutalist-shadow-hover transition-all mt-auto mb-lg">
+            DEPLOY UNIT
+        </button>
+<a href="#" class="flex items-center gap-md px-sm py-xs font-label-bold text-label-bold text-on-surface hover:bg-surface-container-high transition-colors mt-auto">
+<span class="material-symbols-outlined">logout</span>
+            Sign Out
+        </a>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-surface-container-low">
+<!-- Top Header -->
+<header class="w-full flex items-center justify-between px-margin-desktop py-lg border-b-4 border-black bg-surface sticky top-0 z-40">
+<h2 class="font-headline-lg text-headline-lg tracking-tighter uppercase">Resource Inventory</h2>
+<div class="flex gap-md">
+<button class="flex items-center gap-xs px-md py-sm bg-surface border-4 border-black font-label-bold neubrutalist-shadow neubrutalist-shadow-hover transition-all">
+<span class="material-symbols-outlined">refresh</span> Refresh
+                </button>
+</div>
+</header>
+<div class="p-margin-desktop flex flex-col gap-xl max-w-7xl mx-auto w-full">
+<!-- Relief Supply Inventory Table -->
+<section class="bg-surface border-4 border-black neubrutalist-shadow p-lg flex flex-col gap-md">
+<div class="flex justify-between items-end mb-sm">
+<div>
+<h3 class="font-headline-md text-headline-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">inventory_2</span>
+                            Relief Supply Inventory (All Zones)
+                        </h3>
+<p class="text-on-surface-variant font-label-sm mt-xs">Current community emergency relief stockpiles by zone.</p>
+</div>
+<button class="flex items-center gap-xs px-md py-sm bg-secondary text-on-secondary border-4 border-black font-label-bold neubrutalist-shadow neubrutalist-shadow-hover transition-all">
+<span class="material-symbols-outlined">add_circle</span> Restock Supplies
+                    </button>
+</div>
+<div class="w-full overflow-x-auto border-4 border-black">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high border-b-4 border-black">
+<tr>
+<th class="p-sm font-label-bold border-r-4 border-black">Hub / Zone</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Food Packets</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Life Jackets</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Medical Kits</th>
+<th class="p-sm font-label-bold">Shelter Kits</th>
+</tr>
+</thead>
+<tbody class="font-body-md">
+<tr class="border-b-4 border-black hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">Kalyan</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">40</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">25</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">30</td>
+<td class="p-sm text-error font-bold">15</td>
+</tr>
+<tr class="border-b-4 border-black hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">Mumbai Central</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">79</td>
+<td class="p-sm border-r-4 border-black text-error font-bold">10</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">60</td>
+<td class="p-sm text-primary font-bold">20</td>
+</tr>
+<tr class="border-b-4 border-black hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">Thane</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">100</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">50</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">45</td>
+<td class="p-sm text-primary font-bold">30</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">Vasind</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">50</td>
+<td class="p-sm border-r-4 border-black text-primary font-bold">20</td>
+<td class="p-sm border-r-4 border-black text-error font-bold">15</td>
+<td class="p-sm text-error font-bold">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- AI Logistics Advisor -->
+<section class="bg-surface border-4 border-black neubrutalist-shadow p-lg flex flex-col items-center justify-center py-xl text-center gap-md">
+<div class="flex items-center gap-sm mb-xs w-full justify-start">
+<span class="material-symbols-outlined text-secondary text-headline-lg">smart_toy</span>
+<h3 class="font-headline-md text-headline-md">AI Logistics Advisor</h3>
+</div>
+<p class="text-on-surface-variant max-w-2xl text-left w-full">Get real-time predictions, shortage alerts, and recommendations based on current inventory and active requests.</p>
+<div class="border-4 border-black bg-surface-container-low p-xl w-full flex flex-col items-center justify-center mt-sm border-dashed">
+<span class="material-symbols-outlined text-headline-lg text-on-surface-variant mb-md">analytics</span>
+<p class="font-label-sm text-on-surface-variant mb-md">Click below to compile data and generate optimization suggestions.</p>
+<button class="flex items-center gap-xs px-lg py-sm bg-secondary-container text-on-secondary-container border-4 border-black font-label-bold neubrutalist-shadow neubrutalist-shadow-hover transition-all">
+<span class="material-symbols-outlined">auto_awesome</span> Generate AI Logistics Report
+                    </button>
+</div>
+</section>
+<!-- Supply Chain Audit Logs -->
+<section class="bg-surface border-4 border-black neubrutalist-shadow p-lg flex flex-col gap-md">
+<div class="flex justify-between items-end mb-sm">
+<h3 class="font-headline-md text-headline-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface">history</span>
+                        Supply Chain Audit Logs (Stock History)
+                    </h3>
+</div>
+<div class="w-full overflow-x-auto border-4 border-black">
+<table class="w-full text-left border-collapse">
+<thead class="bg-primary-container text-on-primary-container border-b-4 border-black">
+<tr>
+<th class="p-sm font-label-bold border-r-4 border-black">ID</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Action</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Details</th>
+<th class="p-sm font-label-bold border-r-4 border-black">Timestamp</th>
+<th class="p-sm font-label-bold">Proof / Tx Hash</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-label-sm">
+<tr class="border-b-4 border-black hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">#13</td>
+<td class="p-sm border-r-4 border-black">
+<span class="inline-block bg-secondary-container border-2 border-black px-xs py-[2px] font-label-bold">Dispatch / Transfer</span>
+</td>
+<td class="p-sm border-r-4 border-black">Dispatched 1 units of <span class="bg-surface-container-high border-2 border-black px-xs font-label-bold">OTHER</span></td>
+<td class="p-sm border-r-4 border-black">6/27/2026, 5:47:49 PM</td>
+<td class="p-sm text-secondary hover:underline cursor-pointer font-mono">0xaf118c0a...</td>
+</tr>
+<tr class="border-b-4 border-black hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">#10</td>
+<td class="p-sm border-r-4 border-black">
+<span class="inline-block bg-secondary-container border-2 border-black px-xs py-[2px] font-label-bold">Dispatch / Transfer</span>
+</td>
+<td class="p-sm border-r-4 border-black">Dispatched 1 units of <span class="bg-surface-container-high border-2 border-black px-xs font-label-bold">OTHER</span></td>
+<td class="p-sm border-r-4 border-black">6/27/2026, 5:47:18 PM</td>
+<td class="p-sm text-secondary hover:underline cursor-pointer font-mono">0xc9e36e5a...</td>
+</tr>
+<tr class="hover:bg-surface-container transition-colors">
+<td class="p-sm border-r-4 border-black font-label-bold">#9</td>
+<td class="p-sm border-r-4 border-black">
+<span class="inline-block bg-secondary-container border-2 border-black px-xs py-[2px] font-label-bold">Dispatch / Transfer</span>
+</td>
+<td class="p-sm border-r-4 border-black">Dispatched 1 units of <span class="bg-primary-container border-2 border-black px-xs font-label-bold">FOOD</span></td>
+<td class="p-sm border-r-4 border-black">6/27/2026, 12:01:33 PM</td>
+<td class="p-sm text-secondary hover:underline cursor-pointer font-mono">0x2fefa048...</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</body></html>

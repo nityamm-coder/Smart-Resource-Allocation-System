@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -7,162 +7,82 @@
   <title>Live Tracking Portal — SRAS</title>
   <meta name="description" content="Track your emergency request, view volunteer progress, access AI safety instructions, and rate your rescue volunteer." />
 
-  <!-- Bootstrap 5 CSS (CDN) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary": "#0050cc",
+            "on-surface": "#1b1b1b",
+            "surface-container-high": "#e8e8e8",
+            "error": "#ba1a1a",
+            "outline-variant": "#b9ccb5",
+            "tertiary": "#705d00",
+            "tertiary-fixed": "#ffe170",
+            "inverse-on-surface": "#f1f1f1",
+            "on-secondary-fixed-variant": "#003fa4",
+            "surface-dim": "#dadada",
+            "surface-container": "#eeeeee",
+            "primary-fixed-dim": "#00e55b",
+            "secondary-fixed-dim": "#b3c5ff",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#dae1ff",
+            "on-error-container": "#93000a",
+            "on-surface-variant": "#3b4b3a",
+            "surface-bright": "#f9f9f9",
+            "primary-fixed": "#6bff83",
+            "tertiary-container": "#ffdb47",
+            "on-background": "#1b1b1b",
+            "on-secondary-fixed": "#001849",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#0266ff",
+            "primary-container": "#00ff66",
+            "on-primary-container": "#007128",
+            "surface": "#f9f9f9",
+            "error-container": "#ffdad6",
+            "outline": "#6b7c68",
+            "on-tertiary-fixed": "#221b00",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed-variant": "#544600",
+            "on-secondary-container": "#f9f7ff",
+            "on-primary-fixed": "#002107",
+            "tertiary-fixed-dim": "#e9c400",
+            "surface-container-highest": "#e2e2e2",
+            "surface-container-low": "#f3f3f3",
+            "background": "#f9f9f9",
+            "on-tertiary-container": "#736000",
+            "on-primary-fixed-variant": "#00531b",
+            "surface-tint": "#006e27",
+            "inverse-primary": "#00e55b",
+            "primary": "#006e27",
+            "surface-variant": "#e2e2e2",
+            "inverse-surface": "#303030"
+          },
+          borderRadius: {
+            "none": "0px"
+          },
+          boxShadow: {
+            "neu": "4px 4px 0px 0px rgba(0,0,0,1)",
+            "neu-heavy": "8px 8px 0px 0px rgba(0,0,0,1)",
+            "neu-sm": "2px 2px 0px 0px rgba(0,0,0,1)"
+          }
+        }
+      }
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-  <!-- Custom design tokens and styles -->
+  <!-- Custom styles -->
   <link rel="stylesheet" href="style.css" />
 
   <style>
-    /* Custom style overrides for tracking page */
-    body {
-      background: linear-gradient(135deg, #effaf0 0%, #ddf3e0 50%, #c7eed1 100%);
-    }
-
-    .tracking-navbar {
-      background: rgba(237, 253, 245, 0.98) !important;
-      backdrop-filter: blur(18px);
-      border-bottom: 1px solid rgba(45, 154, 78, 0.24);
-      box-shadow: 0 14px 36px rgba(45, 154, 78, 0.08);
-      color: var(--text-dark);
-    }
-    .tracking-navbar .navbar-brand,
-    .tracking-navbar .navbar-text,
-    .tracking-navbar .nav-link,
-    .tracking-navbar .btn {
-      color: #14532d !important;
-    }
-    .tracking-navbar .navbar-brand {
-      font-weight: 800;
-      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
-      background: none !important;
-      -webkit-background-clip: unset !important;
-      background-clip: unset !important;
-      -webkit-text-fill-color: #14532d !important;
-      color: #14532d !important;
-    }
-    .tracking-navbar .navbar-brand i {
-      color: #2d9a4e !important;
-    }
-    .tracking-navbar .navbar-brand:hover,
-    .tracking-navbar .nav-link:hover,
-    .tracking-navbar .btn-outline-success:hover {
-      color: var(--brand-primary) !important;
-    }
-    .tracking-navbar .btn-outline-success {
-      color: #14532d !important;
-      border-color: rgba(45, 154, 78, 0.55) !important;
-      background: rgba(255, 255, 255, 0.9) !important;
-      box-shadow: 0 8px 20px rgba(45, 154, 78, 0.08);
-    }
-    .tracking-navbar .btn-outline-success:hover {
-      background: rgba(45, 154, 78, 0.2) !important;
-      border-color: var(--brand-primary) !important;
-    }
-
-    .tracking-container {
-      margin-top: 40px;
-    }
-    .tracking-container .form-card {
-      color: var(--text-dark);
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(45, 154, 78, 0.14);
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
-    }
-    .tracking-container .form-card h2,
-    .tracking-container .form-card h3,
-    .tracking-container .form-card h4,
-    .tracking-container .form-card h5 {
-      color: var(--text-dark);
-    }
-    .tracking-container .form-card p,
-    .tracking-container .form-card label,
-    .tracking-container .form-card span,
-    .tracking-container .form-card a,
-    .tracking-container .form-card .badge {
-      color: inherit;
-    }
-    .tracking-container .form-card .text-muted {
-      color: #4b7a5c !important;
-    }
-    .tracking-container .form-card .text-info,
-    .tracking-container .form-card a.text-info {
-      color: #2563eb !important;
-    }
-    .tracking-container .form-card .bg-success.bg-opacity-10 {
-      background-color: rgba(52, 211, 153, 0.12) !important;
-    }
-    .tracking-container .status-stepper .step {
-      color: #4b7a5c;
-    }
-    .tracking-container .status-stepper .step.active,
-    .tracking-container .status-stepper .step.completed {
-      color: var(--brand-primary);
-    }
-    .tracking-container .safety-tip-item {
-      transition: all 0.3s ease;
-      background: rgba(247, 255, 245, 0.95);
-      border: 1px solid rgba(45, 154, 78, 0.16);
-      border-radius: 8px;
-      color: var(--text-dark);
-    }
-    .tracking-container .safety-tip-item:hover {
-      background: rgba(240, 253, 244, 0.98);
-      border-color: rgba(45, 154, 78, 0.25);
-      transform: translateX(4px);
-    }
-    .tracking-container .safety-tip-item span {
-      color: var(--text-dark) !important;
-    }
-    .tracking-container .timeline-event {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-      padding: 1rem 1rem 1rem 1.1rem;
-      margin-bottom: 1rem;
-      border-radius: 14px;
-      background: rgba(246, 253, 244, 0.95);
-      border: 1px solid rgba(45, 154, 78, 0.14);
-      color: var(--text-dark);
-    }
-    .tracking-container .timeline-event-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--brand-primary);
-      box-shadow: 0 0 0 6px rgba(45, 154, 78, 0.08);
-      margin-bottom: 0.2rem;
-    }
-    .tracking-container .timeline-event-time {
-      font-size: 0.78rem;
-      color: #4b7a5c;
-    }
-    .tracking-container .timeline-event-note {
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      line-height: 1.5;
-    }
-
-    /* Star Rating Widget */
-    .star-rating {
-      font-size: 2.2rem;
-      color: var(--text-muted);
-      cursor: pointer;
-      display: inline-flex;
-      gap: 0.35rem;
-    }
-    .star-rating .star-icon {
-      transition: all 0.2s ease;
-    }
-    .star-rating .star-icon:hover {
-      transform: scale(1.2);
-    }
-    .star-rating .star-icon.active {
-      color: var(--warning);
-      text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
-    }
-    /* Stepper Styling */
+    /* Stepper Custom Alignment styles */
     .status-stepper {
       display: flex;
       justify-content: space-between;
@@ -172,19 +92,20 @@
     .status-stepper::before {
       content: "";
       position: absolute;
-      top: 25px;
+      top: 22px;
       left: 12.5%;
       right: 12.5%;
       height: 4px;
-      background: rgba(45, 154, 78, 0.12);
+      background: #000000;
       z-index: 1;
     }
-    .status-stepper .step-progress {
+    .step-progress {
       position: absolute;
-      top: 25px;
+      top: 22px;
       left: 12.5%;
       height: 4px;
-      background: var(--brand-primary);
+      background: #00ff66;
+      border: 1px solid black;
       z-index: 1;
       width: 0%;
       transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -194,283 +115,325 @@
       position: relative;
       z-index: 2;
       flex: 1;
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      font-weight: 600;
+      color: #555555;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
     .status-stepper .step-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.96);
-      border: 3px solid rgba(45, 154, 78, 0.18);
-      color: var(--text-muted);
+      width: 44px;
+      height: 44px;
+      border: 4px solid black;
+      background: white;
+      color: black;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 0.5rem auto;
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       transition: all 0.4s ease;
-      box-shadow: var(--glass-glow);
+      box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
     }
     .status-stepper .step.active .step-icon {
-      border-color: var(--brand-primary);
-      color: var(--text-light);
-      background: var(--brand-primary);
-      box-shadow: 0 0 16px var(--brand-glow);
-      animation: pulse-indigo 2s infinite;
+      background: #ffe170;
+      box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
     }
     .status-stepper .step.completed .step-icon {
-      border-color: var(--success);
-      color: var(--text-light);
-      background: var(--success);
-      box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+      background: #00ff66;
+      box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
     }
     .status-stepper .step.completed {
-      color: var(--text-light);
+      color: #007128;
     }
     .status-stepper .step.active {
-      color: var(--brand-primary);
+      color: #544600;
     }
 
-    @keyframes pulse-indigo {
-      0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
-      70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+    /* Star Rating Widget */
+    .star-rating {
+      font-size: 2.2rem;
+      color: #94a3b8;
+      cursor: pointer;
+      display: inline-flex;
+      gap: 0.35rem;
+    }
+    .star-rating .star-icon {
+      transition: all 0.2s ease;
+    }
+    .star-rating .star-icon:hover {
+      transform: scale(1.15);
+    }
+    .star-rating .star-icon.active {
+      color: #ffdb47;
     }
   </style>
 </head>
 
-<body>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
   <!-- Notification Overlay -->
-  <div id="resolved-notification" class="d-none position-fixed start-50 translate-middle-x shadow" style="z-index: 9999; top: 100px; width: 90%; max-width: 500px; transition: all 0.5s ease;">
-    <div class="alert alert-success alert-dismissible fade show border-2 border-success d-flex align-items-center gap-3" role="alert" style="background: rgba(6, 78, 59, 0.95); backdrop-filter: blur(10px); color: white;">
-      <i class="bi bi-bell-fill fs-3 text-warning" style="animation: pulse-indigo 2s infinite;"></i>
+  <div id="resolved-notification" class="d-none fixed start-50 translate-x-[-50%] z-[9999] top-[80px] w-[90%] max-w-[500px] transition-all duration-500">
+    <div class="border-4 border-black p-4 flex align-items-center gap-3 bg-primary-container text-on-primary-container shadow-neu">
+      <i class="bi bi-bell-fill text-2xl text-[#736000] animate-bounce"></i>
       <div>
         <strong>Issue Resolved!</strong><br>
-        <span class="small">Your volunteer marked this as resolved. Please scroll down to rate them and provide feedback!</span>
+        <span class="small font-bold text-xs">Your volunteer marked this as resolved. Please scroll down to rate them and provide feedback!</span>
       </div>
-      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   </div>
 
   <!-- Navbar -->
-  <nav style="position: sticky; top: 0; z-index: 1050; padding: 1rem 0; background-color: #1d573b; border-bottom: 1px solid #16432d; box-shadow: 0 2px 20px rgba(45,90,39,0.08); transition: all 0.3s;">
-    <div style="max-width: 80rem; margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: center;">
-      <a href="index.html" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-        <div style="width: 3.5rem; height: 3.5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 1.875rem; box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: #ffffff; border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-          <span>🌱</span>
-        </div>
-        <div style="display: flex; flex-direction: column;">
-          <span style="font-weight: 800; font-size: 2.25rem; line-height: 1; letter-spacing: -0.025em; color: #ffffff; text-shadow: 0 2px 4px rgba(0,0,0,0.1); font-family: system-ui, -apple-system, sans-serif;">
-            SRAS
-          </span>
-          <span style="font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1; margin-top: 0.375rem; display: flex; align-items: center; gap: 0.25rem; color: #a7f3d0;">
-            <span style="width: 8px; height: 8px; border-radius: 50%; background-color: #34d399; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></span>
-            Smart Resource Allocation System
-          </span>
-        </div>
-      </a>
-
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <a
-          href="index.html"
-          class="d-none d-sm-flex"
-          style="align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); background-color: rgba(255,255,255,0.1); color: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none; transition: all 0.3s;"
-          onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.5)';"
-          onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.3)';"
-        >
-          <i class="bi bi-arrow-left" style="color: #6ee7b7;"></i> Submit New Request
-        </a>
-        <a
-          href="dashboard.html"
-          style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); background-color: rgba(255,255,255,0.1); color: #ffffff; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none; transition: all 0.3s;"
-          onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'; this.style.borderColor='rgba(255,255,255,0.5)';"
-          onmouseout="this.style.backgroundColor='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.3)';"
-        >
-          <i class="bi bi-grid-3x3-gap" style="color: #6ee7b7;"></i> <span class="d-none d-sm-inline">NGO Dashboard</span>
-        </a>
+  <nav class="sticky top-0 z-50 flex justify-between items-center px-6 md:px-12 py-4 bg-white border-b-4 border-black shadow-neu">
+    <a href="index.html" class="flex items-center gap-2">
+      <span class="text-3xl">🌱</span>
+      <div class="flex flex-col">
+        <span class="font-display font-extrabold text-2xl leading-none text-primary uppercase tracking-tighter">
+          SRAS
+        </span>
+        <span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest leading-none mt-1 flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#00ff66] animate-pulse"></span>
+          Live Dispatch & Tracking
+        </span>
       </div>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <a href="index.html" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border-2 border-black bg-white text-on-surface font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        ← Submit New Need
+      </a>
+      <a href="dashboard.html" class="flex items-center gap-1.5 px-3 py-1.5 border-2 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all">
+        📂 NGO Dashboard
+      </a>
     </div>
   </nav>
 
   <!-- Live Tracking Panel -->
-  <main class="container tracking-container mb-5">
+  <main class="max-w-6xl mx-auto px-6 py-10 w-full flex-grow relative z-10 tracking-container">
+    
     <!-- Header Summary Card -->
-    <div class="form-card mb-4" style="max-width: 100%;">
-      <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div class="bg-white border-4 border-black p-6 shadow-neu-heavy mb-8 rounded-none">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <span class="badge bg-success text-white mb-2" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Live Tracker</span>
-          <h2 class="fs-4 fw-700 m-0" id="tracking-header">Loading Request Status...</h2>
-          <div class="mt-2 d-flex align-items-center gap-2">
-            <p class="text-muted small mb-0" style="font-size: 0.9rem;">Tracking ID: <strong id="request-id-display" class="text-success user-select-all px-2 py-1 bg-white rounded border border-success">--</strong></p>
-            <button id="copy-id-btn" class="btn btn-sm btn-outline-warning" title="Copy Tracking ID"><i class="bi bi-clipboard"></i></button>
-          </div>
+          <h2 class="text-2xl font-extrabold text-on-surface uppercase mb-1" id="tracking-header">
+            Loading Request Status...
+          </h2>
+          <p class="text-xs text-on-surface-variant font-bold flex items-center gap-2">
+            Tracking ID: 
+            <strong id="request-id-display" class="px-2 py-0.5 border-2 border-black bg-[#f1f1f1] font-mono select-all">--</strong>
+            <button id="copy-id-btn" class="p-1 border border-black bg-white shadow-neu-sm hover:shadow-none active:translate-x-[1px]" title="Copy Tracking ID">
+              📋
+            </button>
+          </p>
         </div>
         <div id="status-badge-container">
-          <span class="badge bg-success text-white py-2 px-4 fs-5">Syncing...</span>
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Stepper Block -->
+      <div class="mt-8 border-t-4 border-black border-dashed pt-8">
+        <div class="status-stepper" id="stepper">
+          <div class="step-progress" id="step-progress"></div>
+          <div class="step" id="step-submitted">
+            <div class="step-icon">📤</div>
+            Submitted
+          </div>
+          <div class="step" id="step-assigned">
+            <div class="step-icon">🤝</div>
+            Assigned
+          </div>
+          <div class="step" id="step-inprogress">
+            <div class="step-icon">🛵</div>
+            In Transit
+          </div>
+          <div class="step" id="step-resolved">
+            <div class="step-icon">✓</div>
+            Resolved
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Stepper Status indicator -->
-    <div class="form-card mb-4 py-4" style="max-width: 100%;">
-      <div class="status-stepper" id="stepper">
-        <div class="step-progress" id="step-progress"></div>
-        <div class="step" id="step-submitted">
-          <div class="step-icon"><i class="bi bi-send-fill"></i></div>
-          Submitted
-        </div>
-        <div class="step" id="step-assigned">
-          <div class="step-icon"><i class="bi bi-person-badge"></i></div>
-          Assigned
-        </div>
-        <div class="step" id="step-inprogress">
-          <div class="step-icon"><i class="bi bi-truck"></i></div>
-          In Progress
-        </div>
-        <div class="step" id="step-resolved">
-          <div class="step-icon"><i class="bi bi-check2-circle"></i></div>
-          Resolved
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-4">
-      <!-- Left Column: Volunteer Details & Interactive Rating -->
-      <div class="col-12 col-md-6">
-        <!-- Request Summary Info -->
-        <div class="form-card mb-4" style="max-width: 100%;">
-          <h3 class="fs-5 fw-700 mb-3"><i class="bi bi-info-circle text-success me-2"></i>Request Details</h3>
-          <div class="p-3 rounded" style="font-size: 0.88rem; background: rgba(245, 251, 239, 0.95); border: 1px solid rgba(45, 154, 78, 0.16); color: var(--text-dark);">
-            <p class="mb-2"><strong style="color: var(--text-dark);">Category:</strong> <span id="info-category">--</span></p>
-            <p class="mb-2"><strong style="color: var(--text-dark);">Urgency Level:</strong> <span id="info-urgency">--</span></p>
-            <p class="mb-2"><strong style="color: var(--text-dark);">Zone/Locality:</strong> <span id="info-zone">--</span></p>
-            <p class="mb-2"><strong style="color: var(--text-dark);">Address:</strong> <span id="info-address">--</span></p>
-            <p class="mb-0"><strong style="color: var(--text-dark);">Your Description:</strong> <span id="info-description">--</span></p>
+    <!-- Details columns -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: Details & Feedback Forms -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <!-- Request Details card -->
+        <div class="bg-white border-4 border-black p-6 shadow-neu rounded-none">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+            📄 Need Description
+          </h3>
+          <div class="space-y-3 text-sm font-bold text-on-surface-variant">
+            <p><strong class="text-on-surface uppercase text-xs">Category:</strong> <span id="info-category" class="px-2 py-0.5 border border-black bg-[#dae1ff] text-[#001849] font-bold text-xs uppercase">--</span></p>
+            <p><strong class="text-on-surface uppercase text-xs">Urgency:</strong> <span id="info-urgency" class="px-2 py-0.5 border border-black bg-[#ffdad6] text-[#ba1a1a] font-bold text-xs">--</span></p>
+            <p><strong class="text-on-surface uppercase text-xs">Locality/Hub:</strong> <span id="info-zone">--</span></p>
+            <p><strong class="text-on-surface uppercase text-xs">Address:</strong> <span id="info-address">--</span></p>
+            <p class="pt-3 border-t border-black border-dashed text-on-surface text-base font-bold">
+              <strong class="block text-xs uppercase text-on-surface-variant mb-1">Your Reported Message:</strong>
+              "<span id="info-description">--</span>"
+            </p>
           </div>
-          
-          <!-- Dynamic Translation Row -->
-          <div id="info-translation-container" class="mt-3 d-none">
-            <div class="p-2 rounded text-start" style="font-size: 0.82rem; background: rgba(45, 154, 78, 0.08); border: 1px solid rgba(45, 154, 78, 0.2); border-left: 4px solid var(--brand-primary); color: var(--text-dark);">
-              <i class="bi bi-translate me-1 text-success"></i> <strong>AI Translated (<span id="info-lang">--</span> ➔ English):</strong> "<span id="info-translation">--</span>"
-            </div>
+
+          <!-- Translation container -->
+          <div id="info-translation-container" class="mt-4 p-3 border-2 border-black bg-primary-container text-on-primary-container text-xs font-bold d-none">
+            📝 AI Translated (<span id="info-lang">--</span> ➔ English): "<span id="info-translation">--</span>"
           </div>
         </div>
 
-        <!-- Matched Volunteer Info -->
-        <div class="form-card mb-4 d-none" id="volunteer-card" style="max-width: 100%;">
-          <h3 class="fs-5 fw-700 mb-3"><i class="bi bi-person-heart text-success me-2"></i>Matched Volunteer</h3>
-          <div class="p-3 rounded text-start mb-3" style="font-size: 0.88rem; background: rgba(245, 251, 239, 0.95); border: 1px solid rgba(45,154,78,0.12);">
-            <div class="d-flex align-items-center gap-3 mb-2">
-              <div class="bg-success p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 42px; height: 42px;">
-                <i class="bi bi-person-fill text-white fs-5"></i>
-              </div>
-              <div>
-                <h5 class="m-0 fs-6 fw-bold text-dark" id="vol-name">--</h5>
-                <p class="text-muted small m-0" id="vol-skills">Specialty: --</p>
-              </div>
+        <!-- Assigned Volunteer card -->
+        <div class="bg-white border-4 border-black p-6 shadow-neu rounded-none d-none" id="volunteer-card">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+            🛵 Assigned Volunteer
+          </h3>
+          <div class="flex items-center gap-4 mb-4">
+            <div class="w-14 h-14 border-4 border-black bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xl shadow-neu-sm">
+              👨‍🚒
             </div>
-            <p class="mb-2 mt-3"><i class="bi bi-telephone-fill text-success me-2"></i>Contact: <a href="" id="vol-phone-link" class="text-info fw-bold">--</a></p>
-            <p class="mb-3 text-muted small"><i class="bi bi-shield-fill text-success me-1"></i> Certified Smart Allocation Rescue Volunteer</p>
-            
-            <a href="" id="vol-wa-link" target="_blank" class="btn w-100 py-2 d-flex align-items-center justify-content-center gap-2" style="background: #25d366; color: white; font-weight: 600; border-radius: 8px; border: none; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);">
-              <i class="bi bi-whatsapp fs-5"></i> Message on WhatsApp
+            <div>
+              <h5 class="text-base font-extrabold text-on-surface" id="vol-name">--</h5>
+              <p class="text-xs text-on-surface-variant font-bold" id="vol-skills">Specialty: --</p>
+            </div>
+          </div>
+          <div class="pt-3 border-t border-black border-dashed space-y-3">
+            <p class="text-xs font-bold">
+              📞 Phone Contact: <a href="" id="vol-phone-link" class="underline text-secondary">--</a>
+            </p>
+            <a href="" id="vol-wa-link" target="_blank" class="w-full py-3 border-4 border-black bg-[#25d366] text-white font-bold uppercase text-center block shadow-neu hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
+              💬 Message on WhatsApp
             </a>
           </div>
         </div>
 
-        <!-- Star Rating Input (Shown only when resolved & not rated) -->
-        <div class="form-card d-none mb-4" id="rating-card" style="max-width: 100%;">
-          <div id="rating-form-container">
-            <h3 class="fs-5 fw-700 mb-2 text-warning"><i class="bi bi-star-fill me-2"></i>Rate Your Volunteer</h3>
-            <p class="text-muted small mb-3">Your feedback helps us recognize outstanding volunteers and improve resource deployment reliability.</p>
-            
-            <div class="text-center my-3">
+        <!-- Rate Volunteer card -->
+        <div class="bg-white border-4 border-black p-6 shadow-neu rounded-none d-none" id="rating-card">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+            🏆 Rate Rescue Service
+          </h3>
+          
+          <div id="rating-form-container" class="space-y-4">
+            <p class="text-xs font-bold text-on-surface-variant leading-relaxed">
+              Your coordinator or volunteer marked the need as resolved. Please grade the delivery of aid.
+            </p>
+            <div class="text-center py-2">
               <div class="star-rating" id="rating-stars">
-                <i class="bi bi-star star-icon" data-value="1"></i>
-                <i class="bi bi-star star-icon" data-value="2"></i>
-                <i class="bi bi-star star-icon" data-value="3"></i>
-                <i class="bi bi-star star-icon" data-value="4"></i>
-                <i class="bi bi-star star-icon" data-value="5"></i>
+                <i class="bi bi-star star-icon cursor-pointer text-slate-400" data-value="1"></i>
+                <i class="bi bi-star star-icon cursor-pointer text-slate-400" data-value="2"></i>
+                <i class="bi bi-star star-icon cursor-pointer text-slate-400" data-value="3"></i>
+                <i class="bi bi-star star-icon cursor-pointer text-slate-400" data-value="4"></i>
+                <i class="bi bi-star star-icon cursor-pointer text-slate-400" data-value="5"></i>
               </div>
-              <p class="mt-2 text-muted small" id="rating-value-label">Click a star to select a rating</p>
+              <p class="mt-2 text-xs font-bold text-on-surface-variant" id="rating-value-label">Click a star to select a rating</p>
             </div>
 
-            <div class="mb-3">
-              <label for="feedback-text" class="form-label text-muted small fw-bold">Feedback / Comments (Optional)</label>
-              <textarea id="feedback-text" class="form-control form-control-sm text-dark" style="background: rgba(255,255,255,0.96); border: 1px solid rgba(45,154,78,0.14); color: var(--text-dark);" rows="3" placeholder="Tell us how the volunteer helped you..."></textarea>
+            <div class="space-y-2">
+              <label for="feedback-text" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Describe aid delivery (Optional)</label>
+              <textarea id="feedback-text" class="w-full border-4 border-black p-2 bg-surface font-medium text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" rows="3" placeholder="Tell us how the volunteer helped you..."></textarea>
             </div>
 
-            <div class="mb-3 form-check text-start">
-              <input type="checkbox" class="form-check-input" id="confirm-supplies-checkbox" checked>
-              <label class="form-check-label text-muted small fw-bold ms-1" for="confirm-supplies-checkbox" style="cursor:pointer;">
-                📦 I confirm I received the requested relief supplies
+            <div class="flex items-start gap-2 pt-2">
+              <input type="checkbox" class="border-2 border-black text-primary focus:ring-primary-container" id="confirm-supplies-checkbox" checked />
+              <label for="confirm-supplies-checkbox" class="text-xs font-bold text-on-surface-variant leading-tight">
+                I confirm the designated relief items were delivered successfully.
               </label>
             </div>
 
-            <button type="button" class="btn btn-warning w-100 py-2 text-dark font-title" id="submit-rating-btn" disabled>
-              <i class="bi bi-chat-heart-fill me-2"></i>Submit Feedback
+            <button type="button" class="w-full py-3.5 border-4 border-black bg-[#ffdb47] text-on-tertiary-container font-bold uppercase shadow-neu hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all disabled:opacity-50 disabled:pointer-events-none" id="submit-rating-btn" disabled>
+              Submit Feedback & Log receipt
             </button>
           </div>
 
-          <div id="rating-success-container" class="d-none text-center py-4">
-            <i class="bi bi-shield-fill-check text-success fs-1 d-block mb-3" style="animation: pulse-indigo 2s infinite;"></i>
-            <h4 class="fw-bold text-dark mb-2">Thank You! Rating Secured On-Chain</h4>
-            <p class="text-muted small mb-3">Your feedback was successfully written to the L2 EVM trust layer.</p>
-            <div class="p-3 rounded text-start mb-2 font-monospace" style="font-size:0.75rem; background: rgba(255,255,255,0.96); border: 1px solid rgba(45,154,78,0.14); color: #1f2937;">
-              <div class="mb-1 text-muted">SBT Minted: <strong class="text-warning" id="success-sbt-id">#0</strong></div>
-              <div class="mb-1 text-muted text-truncate">L2 Tx: <a href="" id="success-tx-link" target="_blank" class="text-info text-break font-monospace">0x00...</a></div>
-              <div class="text-muted">Block: <span id="success-block-num">--</span></div>
+          <!-- Success block sbt verification details -->
+          <div id="rating-success-container" class="d-none text-center py-4 space-y-4">
+            <span class="text-5xl block">🥇</span>
+            <h4 class="font-display font-extrabold text-lg text-primary uppercase">Trust Badge Minted!</h4>
+            <p class="text-xs font-bold text-on-surface-variant max-w-sm mx-auto leading-relaxed">
+              Your feedback was securely archived on the immutable L2 ledger, and a Soulbound Token (SBT) was minted to the volunteer's decentralized identity.
+            </p>
+            
+            <div class="p-3 border-4 border-black bg-surface font-mono text-[11px] text-left space-y-1 text-on-surface-variant">
+              <div>SBT ID: <strong class="text-primary" id="success-sbt-id">#0</strong></div>
+              <div class="truncate">L2 Tx: <a href="" id="success-tx-link" target="_blank" class="text-secondary underline">0x00...</a></div>
+              <div>Block Number: <span id="success-block-num" class="font-bold">--</span></div>
             </div>
-            <!-- Supply token audit trail verification box -->
-            <div id="success-supply-info" class="p-3 rounded text-start mb-3 font-monospace d-none" style="font-size:0.75rem; background: rgba(240, 253, 244, 0.9); border: 1px solid rgba(16, 185, 129, 0.25); color: #1f2937;">
-              <div class="mb-1 text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i>Supply Receipt Verified!</div>
-              <div class="mb-1 text-muted text-truncate">Supply L2 Tx: <a href="" id="success-supply-tx-link" target="_blank" class="text-info text-break font-monospace">0x00...</a></div>
-              <div class="text-muted">Block: <span id="success-supply-block-num">--</span></div>
+
+            <div id="success-supply-info" class="p-3 border-4 border-black bg-primary-container font-mono text-[11px] text-left space-y-1 text-on-primary-container d-none">
+              <strong class="block uppercase text-[10px] text-primary mb-1">📦 Supply Distribution Authenticated</strong>
+              <div class="truncate">Supply L2 Tx: <a href="" id="success-supply-tx-link" target="_blank" class="text-[#002107] underline">0x00...</a></div>
+              <div>Block Number: <span id="success-supply-block-num" class="font-bold">--</span></div>
             </div>
-            <p class="text-muted small mb-0">This verified record has been minted as a Soulbound Token (SBT) for your volunteer.</p>
           </div>
         </div>
+
       </div>
 
-      <!-- Right Column: AI Safety Instructions & Timeline Log -->
-      <div class="col-12 col-md-6">
-        <!-- AI Life Saving Tips Card -->
-        <div class="form-card mb-4" style="max-width: 100%;">
-          <h3 class="fs-5 fw-700 mb-3 text-success">
-            <i class="bi bi-shield-fill-exclamation me-2 animate-pulse"></i>AI Life-Saving Instructions
+      <!-- Right Column: Safety tips & Action Log -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Safety Tips card -->
+        <div class="bg-white border-4 border-black p-6 shadow-neu rounded-none">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+            🌱 AI Survival Instructions
           </h3>
-          <p class="text-muted small mb-3">
-            While you wait, follow these custom emergency precautions generated specifically for your situation by Google Gemini AI:
-          </p>
-          <div id="safety-tips-list" class="d-flex flex-column gap-2">
-            <div class="p-3 rounded text-center" style="background: rgba(241, 253, 244, 0.95); border: 1px solid rgba(45, 154, 78, 0.16); color: var(--text-dark);">
-              <i class="bi bi-hourglass-split d-block fs-3 mb-2 animate-spin"></i>Generating safety instructions...
-            </div>
+          <div id="safety-tips-list" class="space-y-3">
+            <!-- Populated dynamically -->
           </div>
         </div>
 
-        <!-- Action Log Timeline -->
-        <div class="form-card mb-4" style="max-width: 100%;">
-          <h3 class="fs-5 fw-700 mb-3"><i class="bi bi-clock-history text-muted me-2"></i>Live Activity Log</h3>
-          <div class="timeline-container" id="timeline-container" style="max-height: 350px; overflow-y: auto;">
-            <!-- Timeline entries populated dynamically -->
+        <!-- Live Action Log Timeline -->
+        <div class="bg-white border-4 border-black p-6 shadow-neu rounded-none">
+          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+            🕰️ Live Action Log
+          </h3>
+          <div class="space-y-4 max-h-[350px] overflow-y-auto pr-1" id="timeline-container">
+            <!-- Hydrated dynamically -->
           </div>
         </div>
+
       </div>
+
     </div>
   </main>
 
-  <footer>
-    Built with ❤️ for the Hackathon &nbsp;·&nbsp; SRAS Live Tracking Portal
+  <footer class="border-t-4 border-black bg-white py-8 px-6 text-center text-xs font-bold text-on-surface mt-auto">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>© 2026 Smart Community Resource Allocation. Developed for relief coordination.</p>
+      <div class="flex gap-4">
+        <a href="index.html" class="underline decoration-2 hover:text-primary transition-colors">Submit Portal</a>
+        <span>·</span>
+        <a href="dashboard.html" class="underline decoration-2 hover:text-primary transition-colors">NGO Dashboard</a>
+      </div>
+    </div>
   </footer>
 
   <!-- Firebase SDK Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Mock Bootstrap stub for JavaScript modal references -->
+  <script>
+    window.bootstrap = {
+      Modal: function(element) {
+        return {
+          show: function() {
+            element.classList.remove('d-none');
+            element.classList.add('flex');
+          },
+          hide: function() {
+            element.classList.remove('flex');
+            element.classList.add('d-none');
+          }
+        };
+      }
+    };
+    window.bootstrap.Modal.getInstance = function(element) {
+      return {
+        hide: function() {
+          element.classList.remove('flex');
+          element.classList.add('d-none');
+        }
+      };
+    };
+  </script>
   <!-- Canvas Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -539,11 +502,9 @@
       copyIdBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(requestId).then(() => {
           const origHtml = copyIdBtn.innerHTML;
-          copyIdBtn.innerHTML = '<i class="bi bi-check2"></i>';
-          copyIdBtn.classList.replace("btn-outline-warning", "btn-success");
+          copyIdBtn.innerHTML = '✓';
           setTimeout(() => {
             copyIdBtn.innerHTML = origHtml;
-            copyIdBtn.classList.replace("btn-success", "btn-outline-warning");
           }, 2000);
         });
       });
@@ -595,7 +556,7 @@
     submitRatingBtn.addEventListener("click", async () => {
       if (selectedRating < 1 || selectedRating > 5) return;
       submitRatingBtn.disabled = true;
-      submitRatingBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status"></span>Submitting feedback...`;
+      submitRatingBtn.innerHTML = `Submitting feedback...`;
 
       const confirmSupplies = document.getElementById("confirm-supplies-checkbox").checked;
 
@@ -660,21 +621,20 @@
       } catch (err) {
         alert(err.message);
         submitRatingBtn.disabled = false;
-        submitRatingBtn.innerHTML = `<i class="bi bi-chat-heart-fill me-2"></i>Submit Feedback`;
+        submitRatingBtn.innerHTML = `Submit Feedback`;
       }
     });
 
     // Error view display
     function showErrorView(message) {
       trackingHeader.textContent = "Error Loading Request";
-      statusBadgeContainer.innerHTML = `<span class="badge bg-danger py-2 px-3 fs-6">Failed</span>`;
+      statusBadgeContainer.innerHTML = `<span class="px-3 py-1 border-2 border-black bg-error text-on-error font-bold text-xs uppercase">Failed</span>`;
       timelineContainer.innerHTML = `
-        <div class="text-danger p-3 text-center">
-          <i class="bi bi-exclamation-triangle-fill fs-2 d-block mb-2"></i>
-          <strong>${message}</strong>
+        <div class="text-error p-3 text-center font-bold text-xs">
+          🚨 ${message}
         </div>`;
       safetyTipsList.innerHTML = `
-        <div class="p-3 text-center rounded" style="background: rgba(241, 253, 244, 0.95); border: 1px solid rgba(45, 154, 78, 0.16); color: var(--text-dark);">
+        <div class="p-3 text-center border-4 border-dashed border-black bg-surface text-on-surface-variant font-bold text-xs">
           No tips available for invalid tracking sessions.
         </div>`;
     }
@@ -683,22 +643,20 @@
     function showNoRequestView() {
       const container = document.querySelector(".tracking-container");
       container.innerHTML = `
-        <div class="row justify-content-center">
-          <div class="col-12 col-md-8 col-lg-6">
-            <div class="form-card text-center py-5 px-4 mt-5" style="max-width: 100%;">
-              <i class="bi bi-clipboard-x text-warning mb-4 d-inline-block" style="font-size: 4rem; text-shadow: 0 0 20px rgba(245, 158, 11, 0.35);"></i>
-              <h2 class="fs-3 fw-800 text-dark mb-3">No Active Request</h2>
-              <p class="text-muted mb-4 mx-auto" style="font-size: 1rem; max-width: 420px; line-height: 1.6;">
-                You don't have an active tracking session right now. Please submit a resource request first to get a live tracking ID.
-              </p>
-              <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-                <a href="index.html" class="btn btn-success px-4 py-2 rounded-pill font-label">
-                  <i class="bi bi-pencil-square me-2"></i>Make a Request First
-                </a>
-                <a href="index.html#track-search-form" class="btn btn-outline-success px-4 py-2 rounded-pill font-label">
-                  <i class="bi bi-search me-2"></i>Search Request ID
-                </a>
-              </div>
+        <div class="flex justify-center mt-12">
+          <div class="w-full max-w-lg bg-white border-4 border-black p-8 shadow-neu text-center space-y-6">
+            <span class="text-6xl block">📋</span>
+            <h2 class="text-2xl font-extrabold text-on-surface uppercase">No Active Request</h2>
+            <p class="text-xs text-on-surface-variant font-bold leading-relaxed max-w-sm mx-auto">
+              You don't have an active tracking session right now. Please submit a resource request first to get a live tracking ID.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+              <a href="index.html" class="px-4 py-2 border-4 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+                Make a Request First
+              </a>
+              <a href="index.html#track-search-form" class="px-4 py-2 border-2 border-black bg-white text-on-surface font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+                Search Request ID
+              </a>
             </div>
           </div>
         </div>
@@ -763,10 +721,8 @@
         const notif = document.getElementById("resolved-notification");
         if (notif) {
           notif.classList.remove("d-none");
-          notif.style.transform = "translate(-50%, 0)";
           setTimeout(() => {
-            notif.style.transform = "translate(-50%, -150%)";
-            setTimeout(() => notif.classList.add("d-none"), 500);
+            notif.classList.add("d-none");
           }, 15000);
         }
       }
@@ -776,12 +732,12 @@
       trackingHeader.textContent = `Request status: ${data.status}`;
       
       const badgeColors = {
-        "Open": "bg-primary",
-        "In Progress": "bg-warning text-dark animate-pulse",
-        "Resolved": "bg-success"
+        "Open": "bg-primary-container text-on-primary-container",
+        "In Progress": "bg-tertiary-container text-on-tertiary-container animate-pulse",
+        "Resolved": "bg-secondary-container text-on-secondary-container"
       };
-      const badgeClass = badgeColors[data.status] || "bg-secondary";
-      statusBadgeContainer.innerHTML = `<span class="badge ${badgeClass} py-2 px-4 fs-5">${data.status}</span>`;
+      const badgeClass = badgeColors[data.status] || "bg-white text-on-surface";
+      statusBadgeContainer.innerHTML = `<span class="px-4 py-1.5 border-4 border-black font-extrabold uppercase text-sm ${badgeClass} shadow-neu-sm">${data.status}</span>`;
 
       // Visual stepper percentage & classes
       stepSubmitted.className = "step";
@@ -878,7 +834,6 @@
           
           ratingSuccessContainer.classList.remove("d-none");
         } else {
-          // Reset form container if previously hidden (e.g. status toggled resolved back and forth during tests)
           ratingFormContainer.classList.remove("d-none");
           ratingSuccessContainer.classList.add("d-none");
         }
@@ -889,11 +844,9 @@
       // Render AI Safety Instructions
       if (data.safetyTips && data.safetyTips.length > 0) {
         safetyTipsList.innerHTML = data.safetyTips.map(tip => `
-          <div class="p-3 safety-tip-item text-start d-flex align-items-start gap-2">
-            <i class="bi bi-patch-exclamation-fill text-warning fs-5 mt-0.5"></i>
-            <div>
-              <span class="d-block" style="font-size: 0.88rem; color: var(--text-dark); line-height: 1.4;">${tip}</span>
-            </div>
+          <div class="p-3 border-2 border-black bg-surface text-on-surface-variant font-bold text-xs flex gap-2">
+            <span>⚠️</span>
+            <span>${tip}</span>
           </div>
         `).join("");
       } else {
@@ -912,14 +865,16 @@
             }
           } catch(e) {}
           return `
-            <div class="timeline-event">
-              <div class="timeline-event-dot"></div>
-              <span class="timeline-event-time">${timeStr}</span>
-              <span class="timeline-event-note">${event.note}</span>
+            <div class="p-3 border-2 border-black bg-surface text-on-surface-variant font-bold text-xs flex flex-col gap-1 shadow-neu-sm">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 bg-[#00ff66] border border-black rounded-full block"></span>
+                <span class="text-[10px] text-on-surface-variant font-extrabold uppercase">${timeStr}</span>
+              </div>
+              <p class="m-0 text-on-surface font-bold text-xs">${event.note}</p>
             </div>`;
         }).join("");
       } else {
-        timelineContainer.innerHTML = `<div class="text-muted small text-center py-3">No activity logs recorded.</div>`;
+        timelineContainer.innerHTML = `<div class="text-center font-bold text-on-surface-variant py-4 text-xs">No activity logs recorded.</div>`;
       }
     }
 
@@ -963,11 +918,9 @@
 
       const tips = defaultTips[category] || defaultTips["Other"];
       safetyTipsList.innerHTML = tips.map(tip => `
-        <div class="p-3 safety-tip-item text-start d-flex align-items-start gap-2">
-          <i class="bi bi-patch-exclamation-fill text-warning fs-5 mt-0.5"></i>
-          <div>
-            <span class="d-block" style="font-size: 0.88rem; color: var(--text-dark); line-height: 1.4;">${tip}</span>
-          </div>
+        <div class="p-3 border-2 border-black bg-surface text-on-surface-variant font-bold text-xs flex gap-2">
+          <span>⚠️</span>
+          <span>${tip}</span>
         </div>
       `).join("");
     }

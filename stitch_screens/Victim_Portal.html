@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="en" style=""><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-container": "#007129",
+                    "secondary": "#006686",
+                    "on-surface": "#1b1b1b",
+                    "surface-tint": "#006e28",
+                    "tertiary-container": "#ffdb47",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-bright": "#f9f9f9",
+                    "surface-container-low": "#f3f3f3",
+                    "primary-fixed-dim": "#1ae45e",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#004d66",
+                    "primary": "#006e28",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e8e8e8",
+                    "tertiary-fixed": "#ffe170",
+                    "outline-variant": "#b9ccb5",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-primary-fixed": "#002107",
+                    "surface-container": "#eeeeee",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary-fixed": "#001f2b",
+                    "surface-dim": "#dadada",
+                    "on-background": "#1b1b1b",
+                    "inverse-surface": "#303030",
+                    "error": "#ba1a1a",
+                    "primary-container": "#45fd73",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#6bff84",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-surface-variant": "#3b4b3a",
+                    "on-primary-fixed-variant": "#00531c",
+                    "tertiary": "#705d00",
+                    "background": "#f9f9f9",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "inverse-on-surface": "#f1f1f1",
+                    "secondary-container": "#00c4fe",
+                    "outline": "#6b7c68",
+                    "inverse-primary": "#1ae45e",
+                    "surface": "#f9f9f9",
+                    "on-tertiary-container": "#736000",
+                    "on-secondary": "#ffffff",
+                    "secondary-fixed": "#c0e8ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#004d66",
+                    "secondary-fixed-dim": "#6fd2ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "24px",
+                    "gutter": "24px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xs": "4px",
+                    "unit": "4px",
+                    "xl": "32px",
+                    "margin-desktop": "48px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": [
+                            "Space Grotesk"
+                    ],
+                    "display": [
+                            "Space Grotesk"
+                    ],
+                    "label-sm": [
+                            "Space Grotesk"
+                    ],
+                    "headline-lg": [
+                            "Space Grotesk"
+                    ],
+                    "body-md": [
+                            "Space Grotesk"
+                    ],
+                    "label-bold": [
+                            "Space Grotesk"
+                    ],
+                    "headline-lg-mobile": [
+                            "Space Grotesk"
+                    ],
+                    "body-lg": [
+                            "Space Grotesk"
+                    ]
+            },
+            "fontSize": {
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display": [
+                            "64px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "40px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-bold": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "500"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    }catch(_e){}</script></head><body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col">
+
+    <!-- TopNavBar -->
+    <nav class="bg-on-primary-fixed-variant dark:bg-on-primary-fixed-variant text-on-primary dark:text-on-primary docked full-width top border-b-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center w-full px-margin-desktop py-md max-w-full z-50 sticky top-0 hidden md:flex">
+        <div class="text-headline-md font-headline-md font-black text-primary-fixed uppercase tracking-tighter">
+            SRAS
+        </div>
+        <div class="flex gap-md">
+            
+                <a href="#" class="text-label-bold font-label-bold text-primary-fixed-dim border-b-4 border-primary-fixed-dim pb-1 hover:bg-primary/10 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all px-2 py-1">Live Tracking</a>
+            
+                
+            
+                
+            
+        </div>
+        <div class="flex gap-sm">
+            <button class="bg-primary text-on-primary border-2 border-black px-4 py-2 font-label-bold text-label-bold neo-shadow neo-shadow-interactive transition-all">
+                Submit New Request
+            </button>
+            <button class="bg-surface-variant text-on-surface-variant border-2 border-black px-4 py-2 font-label-bold text-label-bold neo-shadow neo-shadow-interactive transition-all">
+                NGO Dashboard
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow p-margin-mobile md:p-margin-desktop max-w-7xl mx-auto w-full space-y-xl">
+        
+        <!-- Status Header -->
+        <section class="bg-surface-container-lowest border-4 border-black neo-shadow p-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+            <div>
+                <span class="inline-block bg-primary-fixed text-on-primary-fixed font-label-bold text-label-bold px-3 py-1 border-2 border-black mb-2 uppercase tracking-wide">Live Tracker</span>
+                <h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Request Status: <span class="text-primary">In Progress</span></h1>
+            </div>
+            <div class="flex items-center gap-2 border-2 border-black p-2 bg-tertiary-container">
+                <span class="font-label-bold text-label-bold text-on-surface-variant bg-tertiary-container px-2 py-1">Tracking ID: #SRAS-982-XYZ</span>
+                <button class="bg-white border-2 border-black p-1 hover:bg-primary-container transition-colors" title="Copy ID">
+                    <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Progress Tracker -->
+        <section class="bg-surface-container-lowest border-4 border-black neo-shadow p-lg overflow-x-auto">
+            <div class="min-w-[600px] flex justify-between items-center relative">
+                <!-- Line -->
+                <div class="absolute top-1/2 left-0 w-full h-1 bg-black -z-10 transform -translate-y-1/2"></div>
+                
+                <!-- Steps -->
+                <div class="flex flex-col items-center gap-2 bg-surface-container-lowest px-2">
+                    <div class="w-8 h-8 rounded-full border-4 border-black bg-primary flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </div>
+                    <span class="font-label-bold text-label-bold">Submitted</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-2 bg-surface-container-lowest px-2">
+                    <div class="w-8 h-8 rounded-full border-4 border-black bg-primary flex items-center justify-center text-on-primary">
+                        <span class="material-symbols-outlined text-[16px]">check</span>
+                    </div>
+                    <span class="font-label-bold text-label-bold">Assigned</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-2 bg-surface-container-lowest px-2">
+                    <div class="w-10 h-10 rounded-full border-4 border-black bg-primary-fixed flex items-center justify-center text-on-primary-fixed neo-shadow animate-pulse">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                    </div>
+                    <span class="font-label-bold text-label-bold text-primary-fixed-variant">In Transit</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-2 bg-surface-container-lowest px-2 opacity-50">
+                    <div class="w-8 h-8 rounded-full border-4 border-black bg-surface-container-high flex items-center justify-center">
+                        <span class="material-symbols-outlined text-[16px]">done_all</span>
+                    </div>
+                    <span class="font-label-bold text-label-bold">Resolved</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Split Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl">
+            
+            <!-- Left Column -->
+            <div class="space-y-xl">
+                <!-- Request Details -->
+                <section class="bg-surface-container-lowest border-4 border-black neo-shadow p-lg" style="background-color: rgb(224, 242, 254);">
+                    <h2 class="font-headline-md text-headline-md border-b-4 border-black pb-2 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">info</span>
+                        Request Details
+                    </h2>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between border-b-2 border-black/10 pb-2">
+                            <span class="font-label-bold text-label-bold text-on-surface-variant">Category:</span>
+                            <span class="font-body-md font-bold">Food</span>
+                        </li>
+                        <li class="flex justify-between border-b-2 border-black/10 pb-2">
+                            <span class="font-label-bold text-label-bold text-on-surface-variant">Urgency Level:</span>
+                            <span class="font-body-md font-bold text-error">5 / 5</span>
+                        </li>
+                        <li class="flex justify-between border-b-2 border-black/10 pb-2">
+                            <span class="font-label-bold text-label-bold text-on-surface-variant">Zone/Locality:</span>
+                            <span class="font-body-md font-bold">Kalyan</span>
+                        </li>
+                        <li class="flex flex-col gap-1 pt-2">
+                            <span class="font-label-bold text-label-bold text-on-surface-variant">Your Description:</span>
+                            <p class="font-body-md bg-surface-container-low p-3 border-2 border-black">Family trapped on second floor, urgent food requirement.</p>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Matched Volunteer -->
+                <section class="bg-surface-container-lowest border-4 border-black neo-shadow p-lg">
+                    <h2 class="font-headline-md text-headline-md border-b-4 border-black pb-2 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">handshake</span>
+                        Matched Volunteer
+                    </h2>
+                    <div class="flex items-center gap-4 mb-6 bg-surface-container-low p-4 border-2 border-black">
+                        <div class="w-16 h-16 rounded-full border-4 border-black overflow-hidden bg-primary-container flex items-center justify-center">
+                             <span class="material-symbols-outlined text-[32px] text-on-primary-container">person</span>
+                        </div>
+                        <div>
+                            <h3 class="font-headline-md text-headline-md m-0">Rohan Mehta</h3>
+                            <p class="font-label-sm text-label-sm text-on-surface-variant">Specialty: Food, Logistics</p>
+                            <div class="flex items-center gap-1 mt-1 text-tertiary-container">
+                                <span class="material-symbols-outlined text-[16px] font-variation-settings-'FILL'-1">star</span>
+                                <span class="material-symbols-outlined text-[16px] font-variation-settings-'FILL'-1">star</span>
+                                <span class="material-symbols-outlined text-[16px] font-variation-settings-'FILL'-1">star</span>
+                                <span class="material-symbols-outlined text-[16px] font-variation-settings-'FILL'-1">star</span>
+                                <span class="material-symbols-outlined text-[16px] font-variation-settings-'FILL'-1">star_half</span>
+                                <span class="text-on-surface font-label-bold text-label-sm ml-1">4.8</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full bg-[#25D366] text-white border-4 border-black py-4 font-headline-md text-headline-md neo-shadow neo-shadow-interactive transition-all flex justify-center items-center gap-2">
+                        <span class="material-symbols-outlined">chat</span>
+                        Message on WhatsApp
+                    </button>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-xl">
+                <!-- AI Instructions -->
+                <section class="bg-surface-container-lowest border-4 border-black neo-shadow p-lg">
+                    <div class="flex items-center gap-2 mb-4 bg-tertiary-container border-4 border-black p-3">
+                        <span class="material-symbols-outlined text-on-tertiary-container">smart_toy</span>
+                        <h2 class="font-headline-md text-headline-md text-on-tertiary-container m-0">AI Life-Saving Instructions</h2>
+                    </div>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant mb-4">While you wait, follow these custom emergency precautions generated specifically for your situation.</p>
+                    
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 bg-surface border-2 border-black p-3 hover:bg-tertiary-container transition-colors">
+                            <span class="material-symbols-outlined text-tertiary">warning</span>
+                            <span class="font-body-md">Stay on high ground and avoid attempting to cross floodwaters.</span>
+                        </li>
+                        <li class="flex items-start gap-3 bg-surface border-2 border-black p-3 hover:bg-tertiary-container transition-colors">
+                            <span class="material-symbols-outlined text-tertiary">battery_charging_20</span>
+                            <span class="font-body-md">Conserve mobile battery; lower screen brightness and close unused apps.</span>
+                        </li>
+                        <li class="flex items-start gap-3 bg-surface border-2 border-black p-3 hover:bg-tertiary-container transition-colors">
+                            <span class="material-symbols-outlined text-tertiary">water_drop</span>
+                            <span class="font-body-md">Conserve any available clean drinking water.</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Rating -->
+                <section class="border-4 border-black neo-shadow p-lg opacity-60 grayscale pointer-events-none relative bg-error-container">
+                     <div class="absolute inset-0 bg-surface/50 z-10 flex items-center justify-center">
+                        <span class="bg-black text-white px-4 py-2 font-label-bold border-2 border-white">Available after resolution</span>
+                    </div>
+                    <h2 class="font-headline-md text-headline-md border-b-4 border-black pb-2 mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined">rate_review</span>
+                        Rate Your Experience
+                    </h2>
+                    <div class="flex gap-2 mb-4 justify-center">
+                        <span class="material-symbols-outlined text-[32px] text-surface-dim">star</span>
+                        <span class="material-symbols-outlined text-[32px] text-surface-dim">star</span>
+                        <span class="material-symbols-outlined text-[32px] text-surface-dim">star</span>
+                        <span class="material-symbols-outlined text-[32px] text-surface-dim">star</span>
+                        <span class="material-symbols-outlined text-[32px] text-surface-dim">star</span>
+                    </div>
+                    <textarea class="w-full bg-surface-container-low border-2 border-black p-3 font-body-md" rows="3" placeholder="Leave feedback... (Disabled)"></textarea>
+                    <button class="w-full mt-4 bg-surface-dim text-on-surface-variant border-4 border-black py-3 font-label-bold text-label-bold">
+                        Submit Rating
+                    </button>
+                </section>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-surface-dim dark:bg-inverse-surface text-on-surface dark:text-on-background full-width border-t-4 border-black flat no shadows w-full py-lg px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-md mt-auto">
+        <div class="text-label-sm font-label-sm text-on-surface-variant">
+            SRAS Live Tracking Portal • Secured on Layer 2
+        </div>
+        <div class="flex gap-md font-bold text-primary">
+            
+                <a href="#" class="text-label-sm font-label-sm text-on-surface-variant hover:underline">Emergency Contacts</a>
+            
+                <a href="#" class="text-label-sm font-label-sm text-on-surface-variant hover:underline">Terms of Service</a>
+            
+                </div></footer></body></html>

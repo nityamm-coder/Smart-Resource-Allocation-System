@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en" style=""><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ffdb47",
+                    "secondary-container": "#00c4fe",
+                    "primary-container": "#45fd73",
+                    "outline": "#6b7c68",
+                    "surface-variant": "#e2e2e2",
+                    "on-secondary-container": "#004d66",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "secondary-fixed": "#c0e8ff",
+                    "on-primary-fixed-variant": "#00531c",
+                    "tertiary-fixed": "#ffe170",
+                    "on-secondary-fixed-variant": "#004d66",
+                    "surface-container-low": "#f3f3f3",
+                    "on-surface": "#1b1b1b",
+                    "on-surface-variant": "#3b4b3a",
+                    "on-primary-container": "#007129",
+                    "surface-bright": "#f9f9f9",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#006e28",
+                    "primary-fixed": "#6bff84",
+                    "outline-variant": "#b9ccb5",
+                    "on-tertiary-container": "#736000",
+                    "secondary-fixed-dim": "#6fd2ff",
+                    "error-container": "#ffdad6",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#e9c400",
+                    "secondary": "#006686",
+                    "on-primary-fixed": "#002107",
+                    "on-secondary": "#ffffff",
+                    "background": "#f9f9f9",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-background": "#1b1b1b",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#303030",
+                    "inverse-on-surface": "#f1f1f1",
+                    "primary-fixed-dim": "#1ae45e",
+                    "primary": "#006e28",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-primary": "#ffffff",
+                    "surface": "#f9f9f9",
+                    "inverse-primary": "#1ae45e",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container": "#eeeeee",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "tertiary": "#705d00",
+                    "on-secondary-fixed": "#001f2b",
+                    "surface-dim": "#dadada"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "xl": "32px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "unit": "4px",
+                    "gutter": "24px",
+                    "md": "16px",
+                    "margin-desktop": "48px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "body-lg": [
+                            "Space Grotesk"
+                    ],
+                    "label-bold": [
+                            "Space Grotesk"
+                    ],
+                    "display": [
+                            "Space Grotesk"
+                    ],
+                    "headline-lg": [
+                            "Space Grotesk"
+                    ],
+                    "body-md": [
+                            "Space Grotesk"
+                    ],
+                    "label-sm": [
+                            "Space Grotesk"
+                    ],
+                    "headline-md": [
+                            "Space Grotesk"
+                    ],
+                    "headline-lg-mobile": [
+                            "Space Grotesk"
+                    ]
+            },
+            "fontSize": {
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-bold": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "display": [
+                            "64px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg": [
+                            "40px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "label-sm": [
+                            "12px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "700"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    }catch(_e){}</script><meta charset="utf-8"/></head><body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full p-md gap-sm bg-surface text-primary font-label-bold border-r-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] w-64 flex-shrink-0 z-20 sticky left-0">
+<div class="mb-lg flex flex-col items-center">
+<div class="w-16 h-16 rounded-full border-4 border-black bg-surface-container-highest overflow-hidden mb-sm neubrutalist-shadow">
+<img alt="Unit Logo" class="w-full h-full object-cover" data-alt="A bold, graphic unit logo for ALPHA_TEAM featuring a stylized eagle head in stark black and white with vibrant green accents. The design is flat, high-contrast, and utilitarian, fitting a neubrutalist tactical interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuNb7dvNBK2fjlvPUrczVZEGtKfEC6BtOZgYXm8EKYlcPqKn1KpySTzOD_dpwTkgCvd4YM5KhyV1v3s33MzYoDx71L72vmTdMR3ZPv7_cVzBnS0FTV8lkn9YKcQZ9JCQcwedt82mQguklQxdECw0yTWOAOVbio_7OlPtUutNsNJtuC-WayP4uIG5LjCiOMJmMVpMd9c1fUOu0UL0w-oYKeTmZXX2Hi1jSA6EbdOvZqL2PdUPZ5RmOYEw8PnAHUDekA_N4P2O13ow"/>
+</div>
+<h1 class="font-display text-headline-md text-primary font-bold text-center">ALPHA_TEAM</h1>
+<p class="font-label-sm text-on-surface-variant text-center mt-xs">Sector 7 Status: Active</p>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container neubrutalist-border neubrutalist-shadow neubrutalist-shadow-hover neubrutalist-shadow-active transition-all py-sm px-md flex items-center justify-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span class="font-label-bold uppercase">DEPLOY UNIT</span>
+</button>
+<ul class="flex flex-col gap-sm flex-grow overflow-y-auto">
+<li class="">
+<a class="flex items-center gap-md px-md py-sm text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">grid_view</span>
+<span class="">Dashboard</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">map</span>
+<span class="">Live Map</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">package_2</span>
+<span class="">Resources</span>
+</a>
+</li>
+<li class="">
+<!-- Active Navigation Item -->
+<a class="flex items-center gap-md px-md py-sm bg-primary-container text-on-primary-container border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all" href="#">
+<span class="material-symbols-outlined text-[24px]">local_shipping</span>
+<span class="">Logistics</span>
+</a>
+</li>
+<li class="">
+<a class="flex items-center gap-md px-md py-sm text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">assessment</span>
+<span class="">Reports</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto pt-sm border-t-[4px] border-black border-opacity-20">
+<a class="flex items-center gap-md px-md py-sm text-error hover:bg-error-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">logout</span>
+<span class="font-label-bold">Sign Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow h-full flex flex-col bg-surface-container-low overflow-hidden relative">
+<!-- Background Image Reference as requested -->
+<div class="absolute inset-0 opacity-10 pointer-events-none z-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhY3-_wiO323hTTRzgF4tCze8UImCd_Zx4-SijV70ZTe6v8dL5NhY-rxrAu4wSI2BhCRnoJs607PIcWoCNzWZHF1airEFpl9TGOx-os1PiIAFP54d7XQqkYQzJYKcrvSLkNCtEANyw96joEVsTaLzHGeZ2DwPH9qQactWGGzQGZGRUU9H1zY4swMx32f8N5yp8t14srcBZPIXjX3EPOktT4PxGapEv2wOZcGFg-LLTQlLBeCboPNl8cmQSVEA97tqAWX3vsbTR8Q'); background-size: cover; background-position: center; mix-blend-mode: multiply;"></div>
+<!-- Top Search/Filter Bar -->
+<header class="bg-surface neubrutalist-border neubrutalist-shadow m-md p-md flex flex-col md:flex-row items-center justify-between gap-md z-10 relative bg-opacity-95">
+<div class="flex items-center gap-md w-full md:w-1/2">
+<h2 class="font-headline-md text-headline-md font-bold whitespace-nowrap">Requests Board</h2>
+<div class="relative w-full flex-grow">
+<span class="material-symbols-outlined absolute left-sm top-1/2 transform -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-xl pr-sm py-sm bg-surface-container-highest neubrutalist-border focus:outline-none focus:border-secondary-container transition-colors font-body-md text-body-md placeholder-on-surface-variant" placeholder="Search requests..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-sm w-full md:w-auto">
+<button class="bg-tertiary-container text-on-tertiary-container neubrutalist-border neubrutalist-shadow neubrutalist-shadow-hover neubrutalist-shadow-active px-md py-sm font-label-bold flex items-center gap-xs transition-all">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                    FILTERS
+                </button>
+<button class="bg-surface-variant text-on-surface neubrutalist-border neubrutalist-shadow px-md py-sm font-label-bold flex items-center gap-xs">
+<span class="material-symbols-outlined text-[20px]">sort</span>
+                    SORT
+                </button>
+</div>
+</header>
+<!-- Board Columns -->
+<div class="flex-grow p-md overflow-x-auto flex gap-lg pb-xl z-10 relative">
+<!-- OPEN Column -->
+<section class="flex-shrink-0 w-80 flex flex-col gap-sm">
+<div class="flex items-center justify-between border-b-4 border-black pb-xs mb-sm text-error border-[2px]" style="background-color: rgb(254, 226, 226);">
+<h3 class="font-headline-md text-headline-md font-bold uppercase text-center w-full">OPEN</h3>
+<span class="bg-surface-variant neubrutalist-border px-xs py-unit font-label-bold text-label-bold">0</span>
+</div>
+<div class="flex-grow flex flex-col items-center justify-center bg-surface-container border-4 border-dashed border-black border-opacity-20 p-md text-center">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant opacity-50 mb-sm">inbox</span>
+<p class="font-body-md text-on-surface-variant">No open requests currently.</p>
+</div>
+</section>
+<!-- IN PROGRESS Column -->
+<section class="flex-shrink-0 w-80 flex flex-col gap-sm">
+<div class="flex items-center justify-between border-b-4 border-black pb-xs mb-sm text-secondary border-[2px]" style="background-color: rgb(219, 234, 254);">
+<h3 class="font-headline-md text-headline-md font-bold uppercase text-center w-full">IN PROGRESS</h3>
+<span class="bg-tertiary-fixed-dim text-on-tertiary-fixed neubrutalist-border px-xs py-unit font-label-bold text-label-bold">1</span>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto pr-sm pb-xl">
+<!-- Request Card 1 (Critical) -->
+<div class="bg-surface border-2 border-black p-sm flex flex-col gap-xs neubrutalist-shadow-hover transition-all cursor-pointer"><div class="flex justify-between items-center mb-xs"><div class="flex gap-xs"><span class="bg-[#e8f5e9] text-[#2e7d32] border border-[#c8e6c9] rounded-full px-sm py-unit text-label-sm flex items-center gap-xs"><span class="material-symbols-outlined text-[16px] bg-secondary-container text-on-secondary-container rounded-sm">info</span>OTHER</span></div><span class="bg-error text-on-error rounded-full px-md py-unit text-label-sm font-bold flex items-center gap-xs"><span class="material-symbols-outlined text-[16px]">bolt</span>Critical</span></div><h4 class="font-bold text-body-md text-on-surface leading-tight line-clamp-2">electricity issue due to earthquake...</h4><div class="flex items-center gap-xs text-on-surface-variant text-label-sm"><span class="material-symbols-outlined text-[18px]">map</span><p class="">Hub: Thane</p></div><div class="mt-sm pt-xs border-t border-black border-opacity-10 flex items-center justify-between"><div class="flex items-center gap-xs"><span class="text-on-surface-variant text-label-sm">Status:</span><span class="font-label-bold text-label-sm">In Progress</span></div><div class="flex items-center gap-xs text-on-surface-variant text-[10px]"><span class="material-symbols-outlined text-[14px]">schedule</span>23175m</div></div></div>
+</div>
+</section>
+<!-- RESOLVED Column -->
+<section class="flex-shrink-0 w-80 flex flex-col gap-sm">
+<div class="flex items-center justify-between border-b-4 border-black pb-xs mb-sm text-primary border-[2px]" style="background-color: rgb(220, 252, 231);">
+<h3 class="font-headline-md text-headline-md font-bold uppercase text-primary text-center w-full">RESOLVED</h3>
+<span class="bg-primary text-on-primary neubrutalist-border px-xs py-unit font-label-bold text-label-bold">7</span>
+</div>
+<div class="flex flex-col gap-md overflow-y-auto pr-sm pb-xl opacity-75">
+<!-- Request Card 2 (Resolved) -->
+<div class="bg-surface-container-low border-2 border-black p-xs flex flex-col gap-xs neubrutalist-shadow-hover transition-all">
+<p class="font-label-bold text-label-sm leading-tight">Water Supply Contamination</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">water_drop</span>
+<span class="font-label-sm text-[10px] uppercase font-bold">Water Issue</span>
+</div>
+</div>
+<!-- Request Card 3 (Resolved) -->
+<div class="bg-surface-container-low border-2 border-black p-xs flex flex-col gap-xs neubrutalist-shadow-hover transition-all">
+<p class="font-label-bold text-label-sm leading-tight">Comms Relay Offline</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">sensors</span>
+<span class="font-label-sm text-[10px] uppercase font-bold">Comms Issue</span>
+</div>
+</div>
+<!-- Request Card 4 (Resolved) -->
+<div class="bg-surface-container-low border-2 border-black p-xs flex flex-col gap-xs neubrutalist-shadow-hover transition-all">
+<p class="font-label-bold text-label-sm leading-tight">Perimeter Breach Sec 2</p>
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">security</span>
+<span class="font-label-sm text-[10px] uppercase font-bold">Security</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

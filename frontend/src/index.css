@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-nature-bg text-nature-text font-sans selection:bg-nature-sageLight selection:text-nature-primary;
+    @apply bg-background text-on-surface font-sans selection:bg-primary-container selection:text-on-primary-container;
   }
 }
 
