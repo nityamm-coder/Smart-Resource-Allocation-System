@@ -443,7 +443,7 @@ Your job is to read a community need description (which may be in English, Hindi
 Rules:
 - Return ONLY a raw JSON object. No markdown, no explanation, no extra text.
 - The JSON must have exactly six keys: "category", "urgency", "detectedLanguage", "translatedDescription", "safetyTips", and "suppliesNeeded".
-- "category" must be exactly ONE of: "Food", "Medical", "Shelter", "Other".
+- "category" must be exactly ONE of: "Food", "Medical", "Shelter", "Life Jackets", "Other".
 - "urgency" must be an integer between 1 and 5, where 1 = low and 5 = critical.
 - "detectedLanguage" should be the name of the language the request was written in (e.g. "English", "Hindi", "Marathi", "Hinglish", etc.).
 - "translatedDescription" must be the complete, accurate English translation of the description. If the original description is already in English, "translatedDescription" must match the original description exactly.

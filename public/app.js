@@ -203,6 +203,7 @@ if (isIndexPage) {
       "Medical": "🏥 Medical",
       "Food": "🍎 Food",
       "Shelter": "🏠 Shelter",
+      "Life Jackets": "🛟 Life Jackets",
       "Other": "ℹ️ Other"
     };
     return icons[category] || category;
@@ -719,6 +720,7 @@ if (isDashboardPage) {
       "Medical": "🏥 Medical",
       "Food": "🍎 Food",
       "Shelter": "🏠 Shelter",
+      "Life Jackets": "🛟 Life Jackets",
       "Other": "ℹ️ Other"
     };
     return icons[category] || category;
@@ -1151,6 +1153,7 @@ if (isDashboardPage) {
     let totalFood = 0;
     let totalMedical = 0;
     let totalShelter = 0;
+    let totalLifeJackets = 0;
 
     if (inventory && typeof inventory === "object" && !inventory.hasOwnProperty("Food Packets")) {
       for (const [zone, stock] of Object.entries(inventory)) {
@@ -1160,6 +1163,7 @@ if (isDashboardPage) {
         const shelter = stock["Shelter Kits"] || 0;
 
         totalFood += food;
+        totalLifeJackets += lifeJackets;
         totalMedical += medical;
         totalShelter += shelter;
 
@@ -1182,9 +1186,21 @@ if (isDashboardPage) {
     const ovFood = document.getElementById("ov-food");
     const ovMedical = document.getElementById("ov-medical");
     const ovShelter = document.getElementById("ov-shelter");
+    const ovLifeJackets = document.getElementById("ov-lifejackets");
     if (ovFood) ovFood.textContent = totalFood;
     if (ovMedical) ovMedical.textContent = totalMedical;
     if (ovShelter) ovShelter.textContent = totalShelter;
+    if (ovLifeJackets) ovLifeJackets.textContent = totalLifeJackets;
+
+    // Update the Supplies top bar widgets directly
+    const invFoodCount = document.getElementById("inv-Food-count");
+    const invMedicalCount = document.getElementById("inv-Medical-count");
+    const invShelterCount = document.getElementById("inv-Shelter-count");
+    const invLifeJacketsCount = document.getElementById("inv-LifeJackets-count");
+    if (invFoodCount) invFoodCount.textContent = totalFood;
+    if (invMedicalCount) invMedicalCount.textContent = totalMedical;
+    if (invShelterCount) invShelterCount.textContent = totalShelter;
+    if (invLifeJacketsCount) invLifeJacketsCount.textContent = totalLifeJackets;
   }
 
   async function loadInventory() {
@@ -1295,13 +1311,19 @@ if (isDashboardPage) {
       loadingState.classList.add("d-none");
       if (currentView === "board") {
         kanbanBoard.classList.remove("d-none");
-      } else {
+      } else if (currentView === "map") {
         mapViewContainer.classList.remove("d-none");
         initMap();
         setTimeout(() => {
-          map.invalidateSize();
-          applyFilters();
+          if (map) {
+            map.invalidateSize();
+            applyFilters();
+          }
         }, 100);
+      } else if (currentView === "blockchain") {
+        if (blockchainViewContainer) {
+          blockchainViewContainer.classList.remove("d-none");
+        }
       }
     } catch (err) {
       loadingState.classList.add("d-none");
@@ -1595,13 +1617,15 @@ if (isDashboardPage) {
           
           // Hide Bootstrap Modal
           const modalEl = document.getElementById("restock-modal");
-          const modal = bootstrap.Modal.getInstance(modalEl);
-          if (modal) {
-            modal.hide();
-          } else {
-            // Trigger close button click as fallback
-            const closeBtn = modalEl.querySelector('[data-bs-dismiss="modal"]');
-            if (closeBtn) closeBtn.click();
+          if (modalEl) {
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) {
+              modal.hide();
+            } else {
+              // Trigger close button click as fallback
+              const closeBtn = modalEl.querySelector('[data-bs-dismiss="modal"]');
+              if (closeBtn) closeBtn.click();
+            }
           }
           restockForm.reset();
           showToast(`Successfully restocked ${quantity} ${category} in ${zone}!`, "success");
@@ -1917,31 +1941,31 @@ if (isDashboardPage) {
             let description = "";
             
             if (tx.method === "mintSBT") {
-              methodBadge = `<span class="badge" style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3) !important; color: #fcd34d;">MintSBT</span>`;
+              methodBadge = `<span class="px-2 py-0.5 border-2 border-black bg-tertiary-container text-on-tertiary-container font-bold text-[10px] uppercase">MintSBT</span>`;
               description = `Mint SBT #${tx.payload.tokenId} to ${tx.payload.volunteerName}`;
             } else if (tx.method === "mintSupply") {
-              methodBadge = `<span class="badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3) !important; color: #34d399;">MintSupply</span>`;
+              methodBadge = `<span class="px-2 py-0.5 border-2 border-black bg-primary-container text-on-primary-container font-bold text-[10px] uppercase">MintSupply</span>`;
               description = `Mint ${tx.payload.amount} ${tx.payload.category} tokens`;
             } else if (tx.method === "transferSupply") {
-              methodBadge = `<span class="badge" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3) !important; color: #60a5fa;">TransferSupply</span>`;
+              methodBadge = `<span class="px-2 py-0.5 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-[10px] uppercase">TransferSupply</span>`;
               const fromName = tx.payload.from === NGO_ADMIN_WALLET ? "NGO Admin" : `Vol...${tx.payload.from.substring(38)}`;
               const toName = tx.payload.to === NGO_ADMIN_WALLET ? "NGO Admin" : (tx.payload.to.startsWith("0x") ? `Victim...${tx.payload.to.substring(38)}` : tx.payload.to);
               description = `Transfer ${tx.payload.amount} ${tx.payload.category} from ${fromName} to ${toName}`;
             } else {
-              methodBadge = `<span class="badge" style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3) !important; color: #c7d2fe;">RecordRescue</span>`;
+              methodBadge = `<span class="px-2 py-0.5 border-2 border-black bg-white text-black font-bold text-[10px] uppercase">RecordRescue</span>`;
               description = `Resolve Request: ${tx.payload.requestId.substring(0,8)}...`;
             }
             
             return `
               <tr>
-                <td><span class="text-white fw-bold">#${tx.blockNumber}</span></td>
+                <td><span class="text-black font-extrabold font-mono">#${tx.blockNumber}</span></td>
                 <td>${methodBadge}</td>
                 <td>
-                  <a href="#" class="font-monospace text-info verify-tx-hash" data-hash="${tx.hash}" style="font-size:0.75rem;">${shortHash}</a>
+                  <a href="#" class="font-monospace text-secondary font-bold underline verify-tx-hash" data-hash="${tx.hash}" style="font-size:0.75rem;">${shortHash}</a>
                 </td>
-                <td><span class="text-muted small">${tx.gasUsed}</span></td>
+                <td><span class="text-on-surface-variant font-bold text-xs">${tx.gasUsed}</span></td>
                 <td>
-                  <span class="text-white-50 text-truncate d-inline-block" style="max-width: 180px; font-size:0.72rem;">
+                  <span class="text-on-surface font-semibold text-xs text-truncate d-inline-block" style="max-width: 180px;">
                     ${description}
                   </span>
                 </td>
@@ -1965,7 +1989,7 @@ if (isDashboardPage) {
         const sbts = sbtsData.sbts || [];
         if (sbts.length === 0) {
           sbtList.innerHTML = `
-            <div class="empty-column py-5" style="border-style: dashed; border-radius: 12px; background: rgba(45, 154, 78, 0.04);">
+            <div class="empty-column py-5 text-center border-4 border-dashed border-black bg-surface-container-low font-bold">
               <i class="bi bi-shield-slash fs-3 d-block mb-2 text-warning"></i>
               No Soulbound Credentials minted yet
             </div>
@@ -1977,23 +2001,38 @@ if (isDashboardPage) {
                           Array(5 - s.rating).fill('<i class="bi bi-star text-secondary me-0.5"></i>').join("");
             
             return `
-              <div class="p-3 rounded text-start mb-2" style="background: rgba(15, 23, 42, 0.45); border: 1px solid var(--glass-border); border-left: 4px solid var(--warning);">
-                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-                  <h5 class="fs-6 fw-bold text-white mb-0"><i class="bi bi-patch-check-fill text-success me-1"></i>Token ID #${s.tokenId}</h5>
-                  <span class="badge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3) !important; color: #6ee7b7; font-size:0.7rem;">Verified SBT</span>
+              <div class="p-3 border-2 border-black bg-white shadow-neu-sm mb-4 flex flex-col gap-2">
+                <div class="d-flex justify-content-between align-items-center pb-2 border-b-2 border-black border-dashed flex-wrap">
+                  <h5 class="fs-6 font-bold text-black mb-0"><i class="bi bi-patch-check-fill text-success me-1"></i>Token ID #${s.tokenId}</h5>
+                  <span class="px-2 py-0.5 border-2 border-black bg-[#00ff66] text-[#002107] font-bold text-[10px] uppercase">Verified SBT</span>
                 </div>
-                <div class="text-white-50 small mb-1"><strong>Volunteer:</strong> ${s.volunteerName}</div>
-                <div class="text-white-50 small mb-1"><strong>Wallet:</strong> <span class="font-monospace" style="font-size:0.72rem;">${shortWallet}</span></div>
-                <div class="text-white-50 small mb-1"><strong>Skills/Cat:</strong> ${getCategoryWithIcon(s.category)}</div>
-                <div class="text-white-50 small mb-1"><strong>Hours Logged:</strong> ${s.hoursWorked} hrs</div>
-                <div class="text-white-50 small mb-2 d-flex align-items-center">
-                  <strong class="me-1">Rating:</strong> <span class="d-inline-flex">${stars}</span>
+                <div class="text-xs space-y-1">
+                  <div class="grid grid-cols-2">
+                    <span class="font-bold text-on-surface-variant uppercase text-[10px]">Volunteer:</span>
+                    <span class="font-extrabold text-black">${s.volunteerName}</span>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <span class="font-bold text-on-surface-variant uppercase text-[10px]">Wallet:</span>
+                    <span class="font-monospace font-bold text-secondary text-[10px] truncate">${shortWallet}</span>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <span class="font-bold text-on-surface-variant uppercase text-[10px]">Skills/Cat:</span>
+                    <span class="font-extrabold text-black">${getCategoryWithIcon(s.category)}</span>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <span class="font-bold text-on-surface-variant uppercase text-[10px]">Hours Logged:</span>
+                    <span class="font-extrabold text-black">${s.hoursWorked} hrs</span>
+                  </div>
+                  <div class="grid grid-cols-2">
+                    <span class="font-bold text-on-surface-variant uppercase text-[10px]">Rating:</span>
+                    <span class="d-inline-flex">${stars}</span>
+                  </div>
                 </div>
-                <div class="p-2 rounded mb-2 text-white-50 small" style="background: rgba(0,0,0,0.2); font-style: italic;">
+                <div class="p-2 border-2 border-black bg-surface text-on-surface text-xs font-medium italic">
                   "${s.feedback}"
                 </div>
-                <button class="btn btn-outline-warning btn-xs py-1 px-2.5 verify-sbt-btn text-xs font-monospace w-100" data-hash="${s.txHash}" style="font-size:0.7rem; border-radius:6px;">
-                  <i class="bi bi-shield-fill-check me-1"></i>Verify On-Chain
+                <button class="w-100 py-1.5 border-2 border-black bg-tertiary-container text-on-tertiary-container font-bold uppercase text-xs shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all verify-sbt-btn" data-hash="${s.txHash}">
+                  🛡️ Verify On-Chain
                 </button>
               </div>
             `;
@@ -2639,6 +2678,28 @@ function initHistoryLogs() {
       </div>
     `;
   }
+
+  // ── Custom Collapse Toggle Controller (app.js level) ──
+  document.addEventListener("click", (e) => {
+    const toggle = e.target.closest('[data-bs-toggle="collapse"]');
+    if (!toggle) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const targetId = toggle.getAttribute("href")?.substring(1) || toggle.getAttribute("data-bs-target")?.substring(1);
+    if (!targetId) return;
+    
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
+    
+    const isHidden = window.getComputedStyle(targetEl).display === "none";
+    if (isHidden) {
+      targetEl.style.setProperty("display", "block", "important");
+    } else {
+      targetEl.style.setProperty("display", "none", "important");
+    }
+  });
 }
 
 // Call on load

@@ -224,7 +224,7 @@
         <h3 class="text-lg font-bold flex items-center gap-2 uppercase tracking-wide border-b-2 border-black pb-1 mt-6">
           ⚙️ Operations Snapshot
         </h3>
-        <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-7 gap-4">
           <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
             <span class="text-[10px] font-bold text-on-surface-variant uppercase">Volunteers</span>
             <span class="text-2xl font-extrabold mt-1 text-primary" id="ov-volunteers">—</span>
@@ -240,6 +240,10 @@
           <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
             <span class="text-[10px] font-bold text-on-surface-variant uppercase">Shelters</span>
             <span class="text-2xl font-extrabold mt-1 text-on-surface" id="ov-shelter">—</span>
+          </div>
+          <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase">Life Jackets</span>
+            <span class="text-2xl font-extrabold mt-1 text-primary" id="ov-lifejackets">—</span>
           </div>
           <div class="bg-white border-4 border-black p-3 shadow-neu flex flex-col">
             <span class="text-[10px] font-bold text-on-surface-variant uppercase">Blocks (L2)</span>
@@ -262,7 +266,7 @@
             </div>
             <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col h-[320px]">
               <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🍕 Needs Category Share</h4>
-              <div class="flex-grow relative">
+              <div class="relative h-[215px] w-full">
                 <canvas id="categoryDistributionChart"></canvas>
               </div>
             </div>
@@ -291,10 +295,11 @@
             class="w-full md:flex-grow border-4 border-black px-4 py-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container"
           />
           <div class="flex flex-wrap gap-2 w-full md:w-auto justify-end" id="category-filter-group">
-            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-primary-container" data-category="All">All</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-primary-container active" data-category="All">All</button>
             <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Food">Food</button>
             <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Medical">Medical</button>
             <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Shelter">Shelter</button>
+            <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Life Jackets">Life Jackets</button>
             <button class="btn-filter px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-category="Other">Other</button>
           </div>
         </div>
@@ -344,42 +349,82 @@
 
       <!-- ── BLOCKCHAIN VIEW CONTAINER ────────────────────────── -->
       <div id="blockchain-view-container" class="d-none space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center justify-between">
+        <!-- Top Metrics Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Metric 1: Network Status -->
+          <div class="bg-error-container border-4 border-black p-4 shadow-neu flex items-center justify-between">
             <div>
-              <span class="text-xs font-bold text-on-surface-variant uppercase">Current Block Height</span>
-              <h4 class="text-3xl font-extrabold mt-1 text-primary" id="blockchain-block-height">0</h4>
+              <span class="text-xs font-bold text-on-error-container uppercase tracking-wider">L2 Network Status</span>
+              <h4 class="text-sm font-extrabold mt-1 flex items-center gap-1.5 text-on-error-container">
+                <span class="w-2.5 h-2.5 bg-primary border border-black inline-block animate-pulse"></span>
+                <span id="blockchain-net-name">Loading...</span>
+              </h4>
+            </div>
+            <span class="text-3xl">🔌</span>
+          </div>
+          <!-- Metric 2: Block Height -->
+          <div class="bg-secondary-fixed border-4 border-black p-4 shadow-neu flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-on-secondary-fixed-variant uppercase">Current Block Height</span>
+              <h4 class="text-3xl font-extrabold mt-1 text-on-secondary-fixed-variant" id="blockchain-block-height">0</h4>
             </div>
             <span class="text-4xl">⛓️</span>
           </div>
-          <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center justify-between">
+          <!-- Metric 3: Total Trust SBTs Minted -->
+          <div class="bg-tertiary-fixed border-4 border-black p-4 shadow-neu flex items-center justify-between">
             <div>
-              <span class="text-xs font-bold text-on-surface-variant uppercase">Total Trust SBTs Minted</span>
-              <h4 class="text-3xl font-extrabold mt-1 text-secondary" id="blockchain-total-sbts">0</h4>
+              <span class="text-xs font-bold text-on-tertiary-fixed-variant uppercase">Total Trust SBTs Minted</span>
+              <h4 class="text-3xl font-extrabold mt-1 text-on-tertiary-fixed-variant" id="blockchain-total-sbts">0</h4>
             </div>
             <span class="text-4xl">🏅</span>
           </div>
+          <!-- Metric 4: Smart Contract Address -->
+          <div class="bg-primary-container border-4 border-black p-4 shadow-neu flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold text-on-primary-container uppercase">Contract Address</span>
+              <div class="font-mono text-xs font-bold mt-1 text-ellipsis overflow-hidden whitespace-nowrap max-w-[170px]" id="blockchain-contract-addr">
+                Loading...
+              </div>
+            </div>
+            <span class="text-3xl">📝</span>
+          </div>
         </div>
 
-        <div class="bg-white border-4 border-black p-4 shadow-neu">
-          <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2">🛡️ Immutable L2 Supply Chain Ledger</h3>
-          <div class="overflow-x-auto">
-            <table class="neubrutalist-table">
-              <thead>
-                <tr>
-                  <th>Block</th>
-                  <th>Action Type</th>
-                  <th>Ledger Details</th>
-                  <th>Timestamp</th>
-                  <th>Proof Receipt</th>
-                </tr>
-              </thead>
-              <tbody id="stock-history-body">
-                <!-- Populated via JS -->
-              </tbody>
-            </table>
-            <div id="stock-history-empty" class="text-center py-8 font-bold text-on-surface-variant d-none">
-              No transactions recorded in the local L2 ledger.
+        <!-- Main Split Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Left Column: Ledger Explorer -->
+          <div class="lg:col-span-8 bg-white border-4 border-black p-4 shadow-neu">
+            <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+              <span>🛡️ L2 EVM Ledger Explorer</span>
+            </h3>
+            <div class="overflow-x-auto">
+              <table class="neubrutalist-table">
+                <thead>
+                  <tr>
+                    <th>Block #</th>
+                    <th>Method</th>
+                    <th>Tx Hash</th>
+                    <th>Gas</th>
+                    <th>Payload Details</th>
+                  </tr>
+                </thead>
+                <tbody id="blockchain-ledger-body">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+              <div id="blockchain-ledger-empty" class="text-center py-8 font-bold text-on-surface-variant d-none">
+                No transactions recorded in the local L2 ledger.
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Verified Soulbound Tokens (SBT) -->
+          <div class="lg:col-span-4 bg-white border-4 border-black p-4 shadow-neu flex flex-col">
+            <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2 flex items-center gap-2">
+              <span>🏅 Verified Soulbound Tokens (SBT)</span>
+            </h3>
+            <div class="flex-grow overflow-y-auto max-h-[500px] space-y-4" id="blockchain-sbt-list">
+              <!-- Populated via JS -->
             </div>
           </div>
         </div>
@@ -403,8 +448,23 @@
       <!-- ── SUPPLIES INVENTORY CONTAINER ────────────────────── -->
       <div id="supplies-view-container" class="d-none space-y-6">
         <!-- Live count indicator row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="inventory-bar">
-          <!-- Hydrated by app.js -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="inventory-bar">
+          <div class="bg-green-200 border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Food Packets</span>
+            <span class="text-3xl font-extrabold mt-2 text-tertiary" id="inv-Food-count">—</span>
+          </div>
+          <div class="bg-red-200 border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Medical Kits</span>
+            <span class="text-3xl font-extrabold mt-2 text-secondary" id="inv-Medical-count">—</span>
+          </div>
+          <div class="bg-blue-200 border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Shelter Kits</span>
+            <span class="text-3xl font-extrabold mt-2 text-on-surface" id="inv-Shelter-count">—</span>
+          </div>
+          <div class="bg-yellow-200 border-4 border-black p-4 shadow-neu flex flex-col justify-between">
+            <span class="text-xs font-bold text-on-surface-variant uppercase tracking-wider">Life Jackets</span>
+            <span class="text-3xl font-extrabold mt-2 text-primary" id="inv-LifeJackets-count">—</span>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -413,19 +473,17 @@
             <div class="bg-white border-4 border-black p-4 shadow-neu">
               <div class="flex justify-between items-center mb-4 border-b-2 border-black pb-2 flex-wrap gap-2">
                 <h3 class="text-md font-bold uppercase">📦 ERC1155 Supply Assets</h3>
-                <button class="px-3 py-1.5 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all" id="generate-insights-btn">
-                  🧙‍♂️ AI Distribution Insights
-                </button>
               </div>
               
               <div class="overflow-x-auto">
                 <table class="neubrutalist-table">
                   <thead>
                     <tr>
-                      <th>Token ID</th>
-                      <th>Supply Item</th>
-                      <th>Token Category</th>
-                      <th>Balance Available</th>
+                      <th>Hub / Zone</th>
+                      <th>Food Packets</th>
+                      <th>Life Jackets</th>
+                      <th>Medical Kits</th>
+                      <th>Shelter Kits</th>
                     </tr>
                   </thead>
                   <tbody id="inventory-table-body">
@@ -437,7 +495,12 @@
 
             <!-- AI Insights Content panel -->
             <div class="bg-white border-4 border-black p-4 shadow-neu" id="ai-insights-panel">
-              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🧙‍♂️ Automated Relief Asset Insights</h4>
+              <div class="flex justify-between items-center mb-3 border-b-2 border-black border-dashed pb-1.5 flex-wrap gap-2">
+                <h4 class="font-bold text-xs uppercase">🧙‍♂️ Automated Relief Asset Insights</h4>
+                <button class="px-3 py-1.5 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-0.5 hover:translate-y-0.5 transition-all" id="generate-insights-btn">
+                  🧙‍♂️ AI Distribution Insights
+                </button>
+              </div>
               <div class="p-3 border-2 border-black bg-surface text-on-surface text-sm font-medium" id="ai-insights-content">
                 <div class="text-center text-on-surface-variant py-4 font-bold" id="ai-insights-placeholder">
                   Click the button above to query Gemini AI for smart dispatch suggestions.
@@ -451,23 +514,32 @@
             <h3 class="text-md font-bold uppercase mb-4 border-b-2 border-black pb-2">📦 Mint Supply Assets</h3>
             <form id="restock-form" class="space-y-4">
               <div>
-                <label for="restock-category" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Select Token Category</label>
+                <label for="restock-zone" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Target Hub / Zone</label>
                 <div class="relative">
-                  <select id="restock-category" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container appearance-none" required>
-                    <option value="Food">Food</option>
-                    <option value="Medical">Medical</option>
-                    <option value="Shelter">Shelter</option>
+                  <select id="restock-zone" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container appearance-none" required>
+                    <option value="Kalyan">Kalyan</option>
+                    <option value="Mumbai Central">Mumbai Central</option>
+                    <option value="Thane">Thane</option>
+                    <option value="Vasind">Vasind</option>
                   </select>
                   <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none font-bold">▼</div>
                 </div>
               </div>
               <div>
-                <label for="restock-item" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Item Label / Type</label>
-                <input type="text" id="restock-item" placeholder="e.g. Rice 10kg, Bandages..." class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required />
+                <label for="restock-category" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Select Item Category</label>
+                <div class="relative">
+                  <select id="restock-category" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container appearance-none" required>
+                    <option value="Food Packets">Food Packets</option>
+                    <option value="Life Jackets">Life Jackets</option>
+                    <option value="Medical Kits">Medical Kits</option>
+                    <option value="Shelter Kits">Shelter Kits</option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none font-bold">▼</div>
+                </div>
               </div>
               <div>
-                <label for="restock-amount" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Quantity to Mint</label>
-                <input type="number" id="restock-amount" placeholder="e.g. 50" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required min="1" />
+                <label for="restock-qty" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">Quantity to Mint</label>
+                <input type="number" id="restock-qty" placeholder="e.g. 50" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required min="1" />
               </div>
               <button type="submit" class="w-full py-3 border-4 border-black bg-primary-container text-on-primary-container font-bold uppercase shadow-neu hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all">
                 Mint Token Asset
@@ -840,13 +912,14 @@
         const categoryChart = new Chart(ctxDistribution, {
           type: 'doughnut',
           data: {
-            labels: ['Medical', 'Food', 'Shelter', 'Other'],
+            labels: ['Medical', 'Food', 'Shelter', 'Life Jackets', 'Other'],
             datasets: [{
-              data: [0, 0, 0, 0],
+              data: [0, 0, 0, 0, 0],
               backgroundColor: [
                 '#b3c5ff',   // Medical
                 '#00ff66',   // Food
                 '#ffdb47',   // Shelter
+                '#ff79b0',   // Life Jackets
                 '#dadada'    // Other
               ],
               borderColor: '#000000',
@@ -856,10 +929,18 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+              padding: 5
+            },
             plugins: {
               legend: {
-                position: 'bottom',
-                labels: { color: '#1b1b1b', font: { family: 'Space Grotesk', size: 10, weight: 'bold' }, padding: 12 }
+                position: 'right',
+                labels: { 
+                  color: '#1b1b1b', 
+                  font: { family: 'Space Grotesk', size: 10, weight: 'bold' }, 
+                  boxWidth: 12,
+                  padding: 10
+                }
               }
             }
           }
@@ -914,6 +995,7 @@
           let medicalCount = 0;
           let foodCount = 0;
           let shelterCount = 0;
+          let lifeJacketCount = 0;
           let otherCount = 0;
 
           document.querySelectorAll(".request-card").forEach(card => {
@@ -923,16 +1005,17 @@
               if (txt.includes("medical")) medicalCount++;
               else if (txt.includes("food")) foodCount++;
               else if (txt.includes("shelter")) shelterCount++;
+              else if (txt.includes("life jacket")) lifeJacketCount++;
               else if (txt.includes("other")) otherCount++;
             }
           });
 
           // Check if total matches
-          const totalNeeds = medicalCount + foodCount + shelterCount + otherCount;
+          const totalNeeds = medicalCount + foodCount + shelterCount + lifeJacketCount + otherCount;
           if (totalNeeds === 0 && (openVal + progressVal) > 0) {
-            categoryChart.data.datasets[0].data = [0, 0, 0, 0];
+            categoryChart.data.datasets[0].data = [0, 0, 0, 0, 0];
           } else {
-            categoryChart.data.datasets[0].data = [medicalCount, foodCount, shelterCount, otherCount];
+            categoryChart.data.datasets[0].data = [medicalCount, foodCount, shelterCount, lifeJacketCount, otherCount];
           }
           categoryChart.update();
         }
@@ -963,8 +1046,8 @@
           }
 
           // Supply counts from DOM (synced by app.js)
-          const supplyCats = ["Food", "Medical", "Shelter"];
-          const ovMap = { Food: "ov-food", Medical: "ov-medical", Shelter: "ov-shelter" };
+          const supplyCats = ["Food", "Medical", "Shelter", "LifeJackets"];
+          const ovMap = { Food: "ov-food", Medical: "ov-medical", Shelter: "ov-shelter", LifeJackets: "ov-lifejackets" };
           supplyCats.forEach(cat => {
             const countEl = document.getElementById(`inv-${cat}-count`);
             const ovEl = document.getElementById(ovMap[cat]);
@@ -1068,25 +1151,6 @@
           }
         }
 
-        // ── Custom Collapse Toggle Controller (Tailwind fallback for Bootstrap) ──
-        document.body.addEventListener("click", (e) => {
-          const toggle = e.target.closest('[data-bs-toggle="collapse"]');
-          if (toggle) {
-            e.preventDefault();
-            const targetId = toggle.getAttribute("href")?.substring(1) || toggle.getAttribute("data-bs-target")?.substring(1);
-            if (targetId) {
-              const targetEl = document.getElementById(targetId);
-              if (targetEl) {
-                const isHidden = window.getComputedStyle(targetEl).display === "none";
-                if (isHidden) {
-                  targetEl.style.display = "block";
-                } else {
-                  targetEl.style.display = "none";
-                }
-              }
-            }
-          }
-        });
 
         // Run sync initially and then every 3 seconds
         setTimeout(syncVolunteersFieldList, 1500);

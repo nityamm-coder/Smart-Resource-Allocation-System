@@ -541,6 +541,19 @@ tr.expanded td {
   color: #002107 !important;
 }
 
+/* Kanban Filter Button styles */
+.btn-filter {
+  background-color: white !important;
+  color: black !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-filter.active {
+  background-color: #00ff66 !important; /* neon green active state */
+  color: #002107 !important;
+}
+
+
 
 
 
