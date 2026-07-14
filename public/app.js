@@ -839,7 +839,7 @@ if (isDashboardPage) {
            <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#clustered-${req.id}" role="button" aria-expanded="false" aria-controls="clustered-${req.id}" style="font-size:0.72rem; color: #0050cc; text-decoration:underline; font-weight: 800;">
              <i class="bi bi-people-fill me-1"></i>View Clustered Reports (${req.clusteredReports.length})
            </a>
-           <div class="collapse mt-2" id="clustered-${req.id}">
+           <div style="display: none;" class="mt-2" id="clustered-${req.id}">
              <div class="clustered-reports-list" style="font-size:0.72rem;">
                ${req.clusteredReports.map((cReport, idx) => {
                  const time = new Date(cReport.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -873,7 +873,7 @@ if (isDashboardPage) {
            <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#timeline-${req.id}" role="button" aria-expanded="false" aria-controls="timeline-${req.id}" style="font-size:0.72rem; color: #555555; text-decoration:underline; font-weight: 800;">
              <i class="bi bi-clock-history me-1"></i>View Action Log (${req.timeline.length})
            </a>
-           <div class="collapse mt-2" id="timeline-${req.id}">
+           <div style="display: none;" class="mt-2" id="timeline-${req.id}">
              <div class="timeline-container p-0 m-0" style="padding-left:1rem !important; font-size:0.72rem;">
                ${req.timeline.map(t => {
                  const time = new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
