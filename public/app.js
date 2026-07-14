@@ -833,8 +833,8 @@ if (isDashboardPage) {
       .join("");
 
     const clusteredHtml = req.clusteredReports && req.clusteredReports.length > 0
-      ? `<div class="mt-2 pt-2 border-top border-secondary-subtle">
-           <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#clustered-${req.id}" role="button" aria-expanded="false" aria-controls="clustered-${req.id}" style="font-size:0.72rem; color: #a5b4fc; text-decoration:none; font-weight: 600;">
+      ? `<div class="mt-2 pt-2 border-top border-black border-dashed">
+           <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#clustered-${req.id}" role="button" aria-expanded="false" aria-controls="clustered-${req.id}" style="font-size:0.72rem; color: #0050cc; text-decoration:underline; font-weight: 800;">
              <i class="bi bi-people-fill me-1"></i>View Clustered Reports (${req.clusteredReports.length})
            </a>
            <div class="collapse mt-2" id="clustered-${req.id}">
@@ -843,21 +843,21 @@ if (isDashboardPage) {
                  const time = new Date(cReport.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                  const date = new Date(cReport.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' });
                  return `
-                   <div class="clustered-report-item mb-2 pb-2" style="border-bottom: 1px dashed rgba(255,255,255,0.05);">
+                   <div class="clustered-report-item mb-2 pb-2" style="border-bottom: 1px dashed rgba(0,0,0,0.15);">
                      <div class="d-flex justify-content-between align-items-center mb-1">
-                       <span class="text-white-50 fw-bold">Report #${idx + 2} (${date}, ${time})</span>
+                       <span class="text-slate-600 fw-bold">Report #${idx + 2} (${date}, ${time})</span>
                        <span class="badge-source ${cReport.detectedLanguage ? 'sms' : 'web'} text-xs" style="font-size: 0.65rem; padding: 0.1rem 0.3rem;">
                          ${cReport.detectedLanguage ? '📟 ' + cReport.detectedLanguage : '🌐 English'}
                        </span>
                      </div>
-                     <div class="text-white mb-1" style="white-space: normal;">"${cReport.description}"</div>
+                     <div class="text-black mb-1 fw-bold" style="white-space: normal;">"${cReport.description}"</div>
                      ${(cReport.detectedLanguage && cReport.detectedLanguage.toLowerCase() !== 'english' && cReport.translatedDescription) ? 
-                       `<div class="mb-1 text-indigo" style="font-size: 0.72rem; color: #c7d2fe;">
+                       `<div class="mb-1 font-bold" style="font-size: 0.72rem; color: #006e27;">
                          <i class="bi bi-translate me-1"></i> Translated: "${cReport.translatedDescription}"
                         </div>` : ''
                      }
-                     <div class="text-muted mb-1"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Address: ${formatAddressHtml(cReport.address)}</div>
-                     <div class="text-muted"><i class="bi bi-telephone-fill text-success me-1"></i>Contact: <a href="tel:${cReport.victimPhone}" style="color:var(--brand-primary);">${cReport.victimPhone}</a></div>
+                     <div class="text-slate-700 mb-1"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Address: ${formatAddressHtml(cReport.address)}</div>
+                     <div class="text-slate-700"><i class="bi bi-telephone-fill text-success me-1"></i>Contact: <a href="tel:${cReport.victimPhone}" class="text-secondary font-bold">${cReport.victimPhone}</a></div>
                    </div>
                  `;
                }).join("")}
@@ -867,8 +867,8 @@ if (isDashboardPage) {
       : "";
 
     const timelineHtml = req.timeline && req.timeline.length > 0
-      ? `<div class="mt-2 pt-2 border-top border-secondary-subtle">
-           <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#timeline-${req.id}" role="button" aria-expanded="false" aria-controls="timeline-${req.id}" style="font-size:0.72rem; color: var(--text-muted); text-decoration:none;">
+      ? `<div class="mt-2 pt-2 border-top border-black border-dashed">
+           <a class="meta d-inline-flex align-items-center" data-bs-toggle="collapse" href="#timeline-${req.id}" role="button" aria-expanded="false" aria-controls="timeline-${req.id}" style="font-size:0.72rem; color: #555555; text-decoration:underline; font-weight: 800;">
              <i class="bi bi-clock-history me-1"></i>View Action Log (${req.timeline.length})
            </a>
            <div class="collapse mt-2" id="timeline-${req.id}">
@@ -876,9 +876,9 @@ if (isDashboardPage) {
                ${req.timeline.map(t => {
                  const time = new Date(t.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                  return `
-                   <div class="timeline-event mb-1 pb-1" style="margin-bottom:0.4rem !important; border-bottom: 1px dashed rgba(255,255,255,0.05);">
-                     <span class="timeline-event-time" style="font-size:0.68rem; display:inline;">[${time}]</span>
-                     <span class="timeline-event-note" style="color:var(--text-muted); font-size:0.72rem;">${t.note}</span>
+                   <div class="timeline-event mb-1 pb-1" style="margin-bottom:0.4rem !important; border-bottom: 1px dashed rgba(0,0,0,0.15);">
+                     <span class="timeline-event-time" style="font-size:0.68rem; display:inline; color:#555; font-weight:bold;">[${time}]</span>
+                     <span class="timeline-event-note" style="color:#111; font-weight:600; font-size:0.72rem;">${t.note}</span>
                    </div>
                  `;
                }).join("")}

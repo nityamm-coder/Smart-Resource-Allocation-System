@@ -305,7 +305,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Leaflet maps custom styles */
-#map {
+#map-element {
   border: 4px solid black !important;
   box-shadow: 4px 4px 0px 0px rgba(0,0,0,1) !important;
   height: 500px;
@@ -368,5 +368,181 @@ h1, h2, h3, h4, h5, h6 {
 .d-none {
   display: none !important;
 }
+
+.collapse {
+  display: none;
+}
+
+/* Custom Leaflet Map Markers (Neubrutalist style) */
+.custom-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.map-marker {
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid black !important;
+  border-radius: 50% !important;
+  box-shadow: 2px 2px 0px 0px black !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  animation: markerBounce 1.5s infinite ease-in-out;
+}
+
+.map-marker.status-open {
+  background: #ffdad6 !important; /* light red */
+}
+
+.map-marker.status-in-progress {
+  background: #ffe170 !important; /* amber/yellow */
+}
+
+.map-marker.urgency-5 {
+  background: #ba1a1a !important; /* deep red */
+  border-color: black !important;
+  animation: markerPulse 1s infinite alternate;
+}
+
+.map-marker .marker-dot {
+  width: 6px !important;
+  height: 6px !important;
+  background: black !important;
+  border-radius: 50% !important;
+}
+
+.map-marker .marker-pulse {
+  position: absolute !important;
+  top: -6px !important;
+  left: -6px !important;
+  right: -6px !important;
+  bottom: -6px !important;
+  border: 2px solid black !important;
+  border-radius: 50% !important;
+  opacity: 0;
+  animation: pulseOuter 1.5s infinite;
+  pointer-events: none;
+}
+
+@keyframes markerBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pulseOuter {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* Leaflet Popup Styling */
+.leaflet-popup-content-wrapper {
+  border: 4px solid black !important;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1) !important;
+  border-radius: 0px !important;
+  background: #1b1b1b !important; /* dark neubrutalist popup container */
+  color: white !important;
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+.leaflet-popup-tip {
+  background: #1b1b1b !important;
+}
+
+/* Logs Modal custom styling */
+.log-details-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: 1rem !important;
+  padding: 0.75rem !important;
+  background: #f9f9f9 !important;
+  border: 2px solid black !important;
+  box-shadow: 2px 2px 0px 0px black !important;
+  margin-bottom: 0.5rem !important;
+  color: black !important;
+}
+
+.log-details-section {
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  color: black !important;
+}
+
+.log-details-label {
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  color: #006e27 !important;
+  border-bottom: 2px dashed black !important;
+  margin-bottom: 0.35rem !important;
+  padding-bottom: 0.15rem !important;
+}
+
+tr.clickable {
+  cursor: pointer !important;
+}
+
+tr.clickable:hover td {
+  background-color: #f1f1f1 !important;
+}
+
+tr.expanded td {
+  background-color: #f9f9f9 !important;
+}
+
+.expanded-details-row td {
+  padding: 0.5rem !important;
+  background: #ffffff !important;
+}
+
+/* Logs Modal badge styles */
+.badge-log-status {
+  display: inline-block !important;
+  border: 2px solid black !important;
+  padding: 0.15rem 0.35rem !important;
+  font-weight: 750 !important;
+  font-size: 0.68rem !important;
+  text-transform: uppercase !important;
+  border-radius: 0px !important;
+  box-shadow: 1px 1px 0px 0px black !important;
+}
+
+.badge-log-status.resolved {
+  background-color: #00ff66 !important;
+  color: #002107 !important;
+}
+
+.badge-log-status.resolved-deleted {
+  background-color: #ffe170 !important;
+  color: #221b00 !important;
+}
+
+.badge-log-status.inprogress-deleted {
+  background-color: #dae1ff !important;
+  color: #001849 !important;
+}
+
+.badge-log-status.open-deleted {
+  background-color: #ffdad6 !important;
+  color: #ba1a1a !important;
+}
+
+/* Log Filter Tab styles */
+.log-filter-tab {
+  background-color: white !important;
+  color: black !important;
+  transition: all 0.2s ease !important;
+}
+
+.log-filter-tab.active {
+  background-color: #00ff66 !important; /* neon green active state */
+  color: #002107 !important;
+}
+
+
+
+
 
 

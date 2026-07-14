@@ -338,7 +338,7 @@
       <!-- ── MAP VIEW CONTAINER ──────────────────────────────── -->
       <div id="map-view-container" class="d-none">
         <div class="bg-white border-4 border-black p-1 shadow-neu-heavy">
-          <div id="map" class="w-full" style="height:580px; z-index:1;"></div>
+          <div id="map-element" class="w-full" style="height:580px; z-index:1;"></div>
         </div>
       </div>
 
@@ -479,25 +479,58 @@
 
     </main>
 
-    <!-- ── MODAL: Action Logs Drawer ────────────────────────── -->
-    <div class="fixed inset-y-0 right-0 z-50 w-full max-w-lg bg-white border-l-4 border-black p-6 flex flex-col shadow-2xl d-none" id="logs-modal-container">
-      <div class="flex justify-between items-center mb-4 pb-3 border-b-4 border-black">
-        <h3 class="font-display font-extrabold text-lg text-on-surface flex items-center gap-2 uppercase">
-          📟 System Action Logs Ledger
-        </h3>
-        <button id="close-logs-btn" class="w-8 h-8 border-2 border-black bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface transition-all rounded-none">
-          ✕
-        </button>
-      </div>
+    <!-- ── MODAL: Action Logs Ledger Dedicated Modal Window ────────────────────────── -->
+    <div id="logs-modal-container" class="fixed inset-0 z-50 flex items-center justify-center d-none bg-on-surface/40 backdrop-blur-sm">
+      <div class="bg-white border-4 border-black p-6 w-full max-w-5xl shadow-neu-heavy relative mx-4 max-h-[85vh] flex flex-col">
+        <div class="flex justify-between items-center mb-4 pb-3 border-b-4 border-black shrink-0">
+          <h3 class="font-display font-extrabold text-lg text-on-surface flex items-center gap-2 uppercase">
+            📟 System Action Logs Ledger
+          </h3>
+          <button id="logs-close-btn" class="w-8 h-8 border-2 border-black bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-sm font-bold text-on-surface transition-all rounded-none">
+            ✕
+          </button>
+        </div>
 
-      <div class="flex-grow overflow-y-auto space-y-3 font-mono text-xs pr-2" id="logs-list">
-        <!-- Log lines inserted dynamically by app.js -->
-      </div>
+        <!-- Filter Selection Tabs Row -->
+        <div class="flex flex-wrap gap-2 mb-4 shrink-0" id="log-filter-tabs">
+          <button class="log-filter-tab px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-primary-container active" data-filter="all">All</button>
+          <button class="log-filter-tab px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-filter="resolved">Resolved</button>
+          <button class="log-filter-tab px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-filter="open_deleted">Open (Deleted)</button>
+          <button class="log-filter-tab px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-filter="inprogress_deleted">In Progress (Deleted)</button>
+          <button class="log-filter-tab px-3 py-1.5 border-2 border-black text-xs font-bold uppercase shadow-neu-sm bg-white" data-filter="resolved_deleted">Resolved (Deleted)</button>
+        </div>
 
-      <div class="mt-4 pt-3 border-t-4 border-black text-center">
-        <button id="load-more-logs-btn" class="px-4 py-2 border-2 border-black bg-secondary-container text-on-secondary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
-          🔽 Load More Logs
-        </button>
+        <div class="flex-grow overflow-auto mb-4">
+          <div class="overflow-x-auto">
+            <table class="neubrutalist-table">
+              <thead>
+                <tr>
+                  <th>Description / Address</th>
+                  <th>Category</th>
+                  <th>Zone</th>
+                  <th>Volunteer</th>
+                  <th>Status</th>
+                  <th>Archived Time</th>
+                </tr>
+              </thead>
+              <tbody id="logs-table-body">
+                <!-- Log rows inserted dynamically by app.js -->
+              </tbody>
+            </table>
+            <div id="logs-empty-msg" class="text-center py-8 font-bold text-on-surface-variant d-none">
+              No archived requests found in the system action logs.
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t-4 border-black flex justify-between items-center shrink-0">
+          <button id="download-logs-btn" class="px-4 py-2 border-2 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+            📥 Download Complete Log (JSON)
+          </button>
+          
+          <!-- Hidden compatibility elements for app.js -->
+          <button id="logs-load-more-btn" class="d-none"></button>
+        </div>
       </div>
     </div>
 
@@ -610,11 +643,6 @@
 
         // System Action Logs drawer elements
         const logsModalContainer = document.getElementById("logs-modal-container");
-        const closeLogsBtn = document.getElementById("close-logs-btn");
-
-        closeLogsBtn.addEventListener("click", () => {
-          logsModalContainer.classList.add("d-none");
-        });
 
         function clearSidebarActive() {
           document.querySelectorAll(".sidebar-item").forEach(item => {
@@ -1040,9 +1068,66 @@
           }
         }
 
+        // ── Custom Collapse Toggle Controller (Tailwind fallback for Bootstrap) ──
+        document.body.addEventListener("click", (e) => {
+          const toggle = e.target.closest('[data-bs-toggle="collapse"]');
+          if (toggle) {
+            e.preventDefault();
+            const targetId = toggle.getAttribute("href")?.substring(1) || toggle.getAttribute("data-bs-target")?.substring(1);
+            if (targetId) {
+              const targetEl = document.getElementById(targetId);
+              if (targetEl) {
+                const isHidden = window.getComputedStyle(targetEl).display === "none";
+                if (isHidden) {
+                  targetEl.style.display = "block";
+                } else {
+                  targetEl.style.display = "none";
+                }
+              }
+            }
+          }
+        });
+
         // Run sync initially and then every 3 seconds
         setTimeout(syncVolunteersFieldList, 1500);
         setInterval(syncVolunteersFieldList, 3000);
+
+        // ── Download Complete Log (JSON) ──
+        const downloadLogsBtn = document.getElementById("download-logs-btn");
+        if (downloadLogsBtn) {
+          downloadLogsBtn.addEventListener("click", async () => {
+            downloadLogsBtn.disabled = true;
+            const originalText = downloadLogsBtn.innerHTML;
+            downloadLogsBtn.innerHTML = "📥 Generating JSON...";
+
+            try {
+              // Fetch a large limit (1000) to get all logs under currentLogsFilter
+              const res = await fetch(`/api/logs?limit=1000&filter=${currentLogsFilter}`);
+              if (!res.ok) throw new Error("Failed to fetch logs");
+              const data = await res.json();
+              const logs = data.logs || [];
+
+              // Convert to JSON and trigger download
+              const jsonString = JSON.stringify(logs, null, 2);
+              const blob = new Blob([jsonString], { type: "application/json" });
+              const url = URL.createObjectURL(blob);
+              
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `sras_action_logs_${currentLogsFilter}_${Date.now()}.json`;
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+              URL.revokeObjectURL(url);
+            } catch (err) {
+              console.error("Error downloading logs:", err);
+              alert("Could not download complete logs. Please try again.");
+            } finally {
+              downloadLogsBtn.disabled = false;
+              downloadLogsBtn.innerHTML = originalText;
+            }
+          });
+        }
       });
     </script>
   </body>
