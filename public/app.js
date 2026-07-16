@@ -1276,6 +1276,9 @@ if (isDashboardPage) {
     loadingState.classList.remove("d-none");
     kanbanBoard.classList.add("d-none");
     mapViewContainer.classList.add("d-none");
+    if (blockchainViewContainer) {
+      blockchainViewContainer.classList.add("d-none");
+    }
     errorState.classList.add("d-none");
 
     try {
@@ -1302,19 +1305,35 @@ if (isDashboardPage) {
       await loadInventory();
 
       loadingState.classList.add("d-none");
+
+      // Check if sidebar controls exist (dashboard.html has a sidebar, index_old.html does not)
+      const sbRequests = document.getElementById("sb-requests");
+      const sbMap = document.getElementById("sb-map");
+      const sbBlockchain = document.getElementById("sb-blockchain");
+
+      // If sidebar exists, a tab is only active if its sidebar item has "active" class.
+      // If sidebar does not exist, we treat it as active so it falls back to the original view-switching logic.
+      const isRequestsActive = !sbRequests || sbRequests.classList.contains("active");
+      const isMapActive = !sbMap || sbMap.classList.contains("active");
+      const isBlockchainActive = !sbBlockchain || sbBlockchain.classList.contains("active");
+
       if (currentView === "board") {
-        kanbanBoard.classList.remove("d-none");
+        if (isRequestsActive) {
+          kanbanBoard.classList.remove("d-none");
+        }
       } else if (currentView === "map") {
-        mapViewContainer.classList.remove("d-none");
-        initMap();
-        setTimeout(() => {
-          if (map) {
-            map.invalidateSize();
-            applyFilters();
-          }
-        }, 100);
+        if (isMapActive) {
+          mapViewContainer.classList.remove("d-none");
+          initMap();
+          setTimeout(() => {
+            if (map) {
+              map.invalidateSize();
+              applyFilters();
+            }
+          }, 100);
+        }
       } else if (currentView === "blockchain") {
-        if (blockchainViewContainer) {
+        if (isBlockchainActive && blockchainViewContainer) {
           blockchainViewContainer.classList.remove("d-none");
         }
       }

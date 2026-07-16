@@ -26,8 +26,8 @@ export default function ImpactStats() {
   }, []);
 
   return (
-    <section className="max-w-5xl mx-auto px-6 -mt-8 relative z-20">
-      <div className="w-full bg-[#1b1b1b] text-white border-4 border-black shadow-neu flex flex-col md:flex-row justify-between items-center p-6 gap-6 rounded-none">
+    <section className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
+      <div className="w-full bg-[#1b1b1b] text-white border-4 border-black shadow-neu flex flex-col md:flex-row justify-between items-center py-8 px-6 gap-6 rounded-none">
         
         {/* Stat 1 */}
         <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-4 md:pb-0 md:pr-6">

@@ -3,19 +3,21 @@ import { LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <nav className="w-full top-0 sticky z-50 flex justify-between items-center px-6 md:px-12 py-4 bg-surface border-b-4 border-black shadow-neu">
-      <div className="flex items-center gap-2">
-        <span className="text-3xl">🌱</span>
-        <span className="text-2xl font-bold text-on-surface uppercase tracking-tighter">SRAS</span>
-      </div>
-      <div className="hidden md:flex items-center gap-8 font-bold">
-        <a className="text-on-surface hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" href="dashboard.html">NGO Dashboard</a>
-        <a className="text-primary underline decoration-4 underline-offset-8" href="index.html">Victim Portal</a>
-        <a className="text-on-surface hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all" href="tracking.html">Live Tracking</a>
+    <nav className="w-full top-0 sticky z-50 flex justify-between items-center px-12 md:px-32 py-5 bg-[#0d3822]">
+      <div className="flex items-center gap-3.5">
+        <div className="bg-white p-1.5 rounded-xl flex items-center justify-center w-12 h-12 shrink-0">
+          <span className="text-3xl">🌱</span>
+        </div>
+        <div>
+          <span className="text-3xl font-extrabold text-white tracking-tight block leading-none">SRAS</span>
+          <span className="text-[10px] font-bold text-[#80ED99] tracking-wider uppercase flex items-center gap-1.5 mt-1.5">
+            <span className="text-[8px] text-[#80ED99]">&#9679;</span> Smart Resource Allocation System
+          </span>
+        </div>
       </div>
       <div className="flex gap-4">
-        <a href="dashboard.html" className="border-4 border-black shadow-neu hover:shadow-none active:translate-x-1 active:translate-y-1 bg-primary-container text-on-primary-container px-4 py-2 font-bold uppercase transition-all flex items-center gap-2 text-sm">
-          <LayoutDashboard size={16} />
+        <a href="dashboard.html" className="border border-[#38a3a5] hover:bg-[#38a3a5]/20 text-white px-6 py-2.5 rounded-full font-bold text-sm tracking-wide uppercase transition-all flex items-center gap-2">
+          <LayoutDashboard size={18} className="text-[#38a3a5]" />
           NGO Dashboard
         </a>
       </div>
