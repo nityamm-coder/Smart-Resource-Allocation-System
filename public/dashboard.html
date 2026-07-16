@@ -97,44 +97,57 @@
     </div>
 
     <!-- ── Sidebar Left (Desktop) ───────────────────────────────── -->
-    <nav class="hidden md:flex bg-white text-on-surface font-bold h-screen sticky top-0 w-64 border-r-4 border-black shadow-neu flex-col p-4 gap-2 z-50">
+    <nav class="hidden md:flex sidebar-container text-white font-bold h-screen sticky top-0 w-64 flex-col p-5 gap-4 z-50">
       <!-- Logo -->
-      <a class="flex items-center gap-2 mb-6 p-2 border-b-4 border-black" href="index.html">
+      <a class="flex items-center gap-3 py-2 px-1" href="index.html">
         <span class="text-3xl">🌱</span>
         <div>
-          <h1 class="font-display text-xl font-extrabold leading-none text-primary uppercase">SRAS</h1>
-          <p class="text-[9px] uppercase tracking-widest text-on-surface-variant font-bold">NGO command center</p>
+          <h1 class="font-display text-2xl font-extrabold leading-none text-white tracking-tight">SRAS</h1>
+          <p class="text-[10px] text-white/50 font-medium tracking-wide mt-0.5">Smart Resource Allocation System</p>
         </div>
       </a>
 
+      <hr class="border-white/10 my-1" />
+
+      <!-- User Profile Card -->
+      <div class="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/10 mb-2">
+        <div class="w-10 h-10 rounded-full bg-[#D97706] text-white flex items-center justify-center font-bold text-sm shrink-0">
+          NM
+        </div>
+        <div class="overflow-hidden">
+          <h4 class="text-white text-sm font-bold leading-tight truncate">Nityam Mishra</h4>
+          <p class="text-white/40 text-[10px] font-medium leading-none mt-1">NGO Coordinator</p>
+        </div>
+      </div>
+
       <!-- Navigation Menu -->
-      <div class="flex-1 flex flex-col gap-2">
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-primary-container text-on-primary-container sidebar-item active" id="sb-overview">
-          📊 Overview
+      <div class="flex-1 flex flex-col gap-1.5">
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item active" id="sb-overview">
+          <i class="bi bi-grid-1x2-fill"></i> Overview
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-requests">
-          📝 Requests Board
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-requests">
+          <i class="bi bi-grid-3x3-gap-fill"></i> Requests Board
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-map">
-          🗺️ Interactive Map
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-map">
+          <i class="bi bi-map-fill"></i> Interactive Map
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-blockchain">
-          🛡️ L2 Trust Layer
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-blockchain">
+          <i class="bi bi-database-fill"></i> L2 Trust Layer
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-volunteers">
-          👥 Volunteers
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-volunteers">
+          <i class="bi bi-people-fill"></i> Volunteers
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-supplies">
-          📦 Supplies Inventory
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-supplies">
+          <i class="bi bi-box-seam-fill"></i> Supplies Inventory
         </button>
-        <button class="flex items-center gap-3 p-2.5 w-full text-left font-bold text-sm border-2 border-black shadow-neu-sm bg-white hover:bg-surface-container sidebar-item" id="sb-logs">
-          🕰️ Action History
+        <button class="flex items-center gap-3 w-full text-left font-semibold text-sm sidebar-item" id="sb-logs">
+          <i class="bi bi-clock-history"></i> History Logs
         </button>
       </div>
 
       <!-- Time Indicator -->
-      <div class="mt-auto border-t-4 border-black pt-4 p-2 text-center text-xs font-mono font-bold bg-[#f1f1f1] border-2 border-black">
-        SYSTEM CLOCK: <span id="live-clock">—</span>
+      <div class="mt-auto pt-4 text-center text-[10px] font-mono font-medium text-white/40 border-t border-white/10">
+        SYSTEM CLOCK: <span id="live-clock" class="text-white font-bold">—</span>
       </div>
     </nav>
 
