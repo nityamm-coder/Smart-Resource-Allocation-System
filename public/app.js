@@ -945,15 +945,8 @@ if (isDashboardPage) {
             
             <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
               <div class="d-flex align-items-center gap-2">
-                <label for="status-${req.id}" class="meta mb-0">Status:</label>
-                <select
-                  id="status-${req.id}"
-                  class="status-select"
-                  data-id="${req.id}"
-                >${optionsHtml}</select>
-                <button class="delete-btn" data-id="${req.id}" title="Delete Request Permanently">
-                  <i class="bi bi-trash3-fill"></i>
-                </button>
+                <span class="meta mb-0 font-bold">Status:</span>
+                <span class="px-2.5 py-1 border-2 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase">Resolved</span>
               </div>
             </div>
             ${clusteredHtml}
