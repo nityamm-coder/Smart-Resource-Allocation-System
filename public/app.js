@@ -1642,7 +1642,8 @@ if (isDashboardPage) {
       const name = document.getElementById("vol-name").value.trim();
       const phone = document.getElementById("vol-phone").value.trim();
       const zone = document.getElementById("vol-zone").value;
-      const walletAddress = document.getElementById("vol-wallet").value.trim();
+      const walletEl = document.getElementById("vol-wallet");
+      const walletAddress = walletEl ? walletEl.value.trim() : "";
       
       // Collect selected skills
       const skillCheckboxes = document.querySelectorAll(".vol-skill-checkbox:checked");

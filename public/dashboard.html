@@ -445,13 +445,16 @@
 
       <!-- ── VOLUNTEERS ROSTER CONTAINER ─────────────────────── -->
       <div id="volunteers-view-container" class="d-none space-y-4">
-        <div class="bg-white border-4 border-black p-4 shadow-neu flex items-center">
+        <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col md:flex-row items-center gap-4">
           <input
             type="text"
             id="volunteer-search"
             placeholder="Filter by volunteer name, location, or skills..."
-            class="w-full border-4 border-black px-4 py-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container"
+            class="w-full md:flex-grow border-4 border-black px-4 py-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container"
           />
+          <button onclick="bootstrap.Modal.getInstance(document.getElementById('add-volunteer-modal')).show()" class="px-6 py-2 border-4 border-black bg-primary-container text-on-primary-container font-bold uppercase transition-all shadow-neu-sm hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] text-sm whitespace-nowrap">
+            + Add Volunteer
+          </button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="volunteers-list">
           <!-- Populated by app.js -->
@@ -678,6 +681,74 @@
       </div>
     </div>
 
+    <!-- ── MODAL: Add Volunteer Modal ──── -->
+    <div id="add-volunteer-modal" class="fixed inset-0 z-50 flex items-center justify-center d-none bg-on-surface/40 backdrop-blur-sm">
+      <div class="bg-white border-4 border-black p-6 w-full max-w-xl shadow-neu-heavy relative mx-4 max-h-[90vh] flex flex-col overflow-hidden">
+        <div class="flex justify-between items-center mb-4 pb-2 border-b-2 border-black shrink-0">
+          <h4 class="font-display font-extrabold text-md text-on-surface uppercase">Add New Volunteer</h4>
+          <button onclick="bootstrap.Modal.getInstance(document.getElementById('add-volunteer-modal')).hide()" class="font-bold text-sm hover:text-error">✕</button>
+        </div>
+        <form id="add-volunteer-form" class="flex-grow overflow-y-auto pr-2 space-y-4 text-black">
+          <div>
+            <label for="vol-name" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Full Name</label>
+            <input type="text" id="vol-name" placeholder="e.g. Rahul Sharma" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required />
+          </div>
+          <div>
+            <label for="vol-phone" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Phone Number (with +91)</label>
+            <input type="text" id="vol-phone" placeholder="e.g. +91 98765 43210" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container" required />
+          </div>
+          <div>
+            <label for="vol-zone" class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Operation Hub / Zone</label>
+            <div class="relative">
+              <select id="vol-zone" class="w-full border-4 border-black p-2 bg-surface font-bold text-sm focus:outline-none focus:ring-4 focus:ring-primary-container appearance-none" required>
+                <option value="Kalyan">Kalyan</option>
+                <option value="Mumbai Central">Mumbai Central</option>
+                <option value="Thane">Thane</option>
+                <option value="Vasind">Vasind</option>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none font-bold">▼</div>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Select Specialty / Skills</label>
+            <div class="grid grid-cols-2 gap-2 border-4 border-black p-3 bg-surface">
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="Medical" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                Medical
+              </label>
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="First Aid" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                First Aid
+              </label>
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="Food" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                Food
+              </label>
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="Logistics" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                Logistics
+              </label>
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="Shelter" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                Shelter
+              </label>
+              <label class="flex items-center gap-2 font-bold text-xs cursor-pointer">
+                <input type="checkbox" value="Construction" class="vol-skill-checkbox border-2 border-black focus:ring-0" />
+                Construction
+              </label>
+            </div>
+            <p id="skills-error" class="text-error font-bold text-[10px] uppercase mt-1 d-none">⚠️ Please select at least one skill/specialty.</p>
+          </div>
+          <div class="pt-2 flex justify-end gap-2 shrink-0">
+            <button type="button" onclick="bootstrap.Modal.getInstance(document.getElementById('add-volunteer-modal')).hide()" class="px-4 py-2 border-2 border-black bg-[#f1f1f1] font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">Cancel</button>
+            <button type="submit" class="px-4 py-2 border-2 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">Add Volunteer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
 
     <!-- Toast Container for Custom Glassmorphic Notifications -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
@@ -701,6 +772,10 @@
       // Stub getInstance as well
       window.bootstrap.Modal.getInstance = function(element) {
         return {
+          show: function() {
+            element.classList.remove('d-none');
+            element.classList.add('flex');
+          },
           hide: function() {
             element.classList.remove('flex');
             element.classList.add('d-none');
