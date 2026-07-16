@@ -113,16 +113,36 @@ h1, h2, h3, h4, h5, h6 {
   color: #705d00 !important;
 }
 
-/* Category */
+/* Category Badges (Pills) */
 .badge-category {
-  border: 2px solid black !important;
-  padding: 0.15rem 0.35rem !important;
-  font-weight: 700 !important;
+  border: 0px !important;
+  padding: 0.2rem 0.6rem !important;
+  font-weight: 800 !important;
   text-transform: uppercase !important;
-  font-size: 0.68rem !important;
-  background-color: #6bff83 !important;
-  color: #00531b !important;
-  border-radius: 0px !important;
+  font-size: 0.65rem !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+.badge-category.cat-food {
+  background-color: #ffedd5 !important;
+  color: #c2410c !important;
+}
+.badge-category.cat-medical {
+  background-color: #fee2e2 !important;
+  color: #b91c1c !important;
+}
+.badge-category.cat-shelter {
+  background-color: #f3e8ff !important;
+  color: #7e22ce !important;
+}
+.badge-category.cat-life-jackets {
+  background-color: #ccfbf1 !important;
+  color: #0f766e !important;
+}
+.badge-category.cat-other {
+  background-color: #fef9c3 !important;
+  color: #a16207 !important;
 }
 
 /* Clustered badge */
@@ -213,42 +233,42 @@ h1, h2, h3, h4, h5, h6 {
   color: white !important;
 }
 
-/* Resolved Compact Cards */
-.resolved-compact-card {
+/* Compact Cards */
+.compact-card {
   cursor: pointer !important;
   border-radius: 0px !important;
+  transition: all 0.15s ease-out !important;
 }
 
-.resolved-compact-card .compact-header {
+/* Card colors based on status */
+.request-card.status-open {
+  background-color: #ffe3e3 !important;
+}
+.request-card.status-in-progress {
+  background-color: #caf0f8 !important;
+}
+.request-card.status-resolved {
+  background-color: #d1fae5 !important;
+}
+
+.compact-card .compact-header {
   display: flex !important;
   justify-content: space-between !important;
-  align-items: center !important;
+  align-items: start !important;
+  width: 100% !important;
 }
 
-.resolved-compact-card .compact-desc {
-  font-size: 0.8rem !important;
+.compact-card .compact-desc {
+  font-size: 0.82rem !important;
   font-weight: 800 !important;
   margin: 0 !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  white-space: nowrap !important;
-  max-width: 60% !important;
 }
 
-.resolved-compact-card .compact-meta {
-  font-size: 0.7rem !important;
-  font-weight: 700 !important;
-  color: #555 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 0.25rem !important;
-}
-
-.resolved-compact-card .card-expanded-content {
+.compact-card .card-expanded-content {
   display: none !important;
 }
 
-.resolved-compact-card.expanded .card-expanded-content {
+.compact-card.expanded .card-expanded-content {
   display: block !important;
   margin-top: 1rem !important;
   border-top: 2px dashed black !important;

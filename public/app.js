@@ -294,7 +294,7 @@ if (isIndexPage) {
       let translationHtml = '';
       if (data.detectedLanguage && data.detectedLanguage.toLowerCase() !== 'english' && data.translatedDescription) {
         translationHtml = `
-          <div class="p-2 rounded mb-3 text-start" style="font-size:0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid var(--brand-primary); color: #c7d2fe;">
+          <div class="p-2 rounded mb-3 text-start" style="font-size:0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid #4f46e5; color: #3730a3;">
             <i class="bi bi-translate me-1 text-primary animate-pulse"></i> <strong>AI Translated (${data.detectedLanguage} ➔ English):</strong> "${data.translatedDescription}"
           </div>
         `;
@@ -773,7 +773,7 @@ if (isDashboardPage) {
       return `
         <span>${cleanText || "External Link"}</span>
         <div class="mt-1">
-          <a href="${url}" target="_blank" class="btn-maps" style="background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); color: #c7d2fe !important;">
+          <a href="${url}" target="_blank" class="btn-maps">
             <i class="bi bi-box-arrow-up-right"></i> Open Link
           </a>
         </div>
@@ -810,17 +810,17 @@ if (isDashboardPage) {
            <strong>${req.matchedVolunteer.name}</strong><br>
            <i class="bi bi-telephone-fill me-1 text-success"></i><a href="tel:${req.matchedVolunteer.phone}">${req.matchedVolunteer.phone}</a>
          </div>`
-      : `<div class="volunteer-chip" style="background:rgba(245,158,11,0.06); border-color:rgba(245,158,11,0.2); color:#fbbf24;">
+      : `<div class="volunteer-chip" style="background: rgba(245,158,11,0.08) !important; border: 2px solid #b45309 !important; color: #b45309 !important;">
            <i class="bi bi-person-x"></i> No volunteer matched yet
          </div>`;
 
     let suppliesHtml = "";
     if (req.allocatedSupplies && req.allocatedSupplies.length > 0) {
       suppliesHtml = `
-        <div class="mt-2 mb-2 p-2 rounded text-start" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.16); font-size: 0.75rem; color: #a7f3d0;">
-          <strong style="color: #34d399;"><i class="bi bi-box-seam me-1"></i>Allocated Supplies:</strong>
-          <div class="d-flex flex-wrap gap-1 mt-1">
-            ${req.allocatedSupplies.map(s => `<span class="badge bg-success-subtle text-success border border-success-subtle py-1 px-2" style="font-size:0.68rem; border-radius: 4px;">${s.item} x${s.quantity}</span>`).join('')}
+        <div class="mt-2 mb-2 p-2 rounded text-start" style="background: rgba(16, 185, 129, 0.08); border: 2px solid #047857; font-size: 0.75rem; color: #065f46;">
+          <strong style="color: #047857;"><i class="bi bi-box-seam me-1"></i>Allocated Supplies:</strong>
+          <div class="d-flex flex-wrap gap-1.5 mt-1.5">
+            ${req.allocatedSupplies.map(s => `<span class="px-2 py-1 font-bold" style="font-size:0.68rem; border-radius: 4px; background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; display: inline-block;">${s.item} x${s.quantity}</span>`).join('')}
           </div>
         </div>
       `;
@@ -889,123 +889,86 @@ if (isDashboardPage) {
          </div>`
       : "";
 
+    const isExpanded = expandedRequestIds.has(req.id);
+    const statusLower = req.status.toLowerCase().replace(" ", "-");
+    
+    // Check if Resolved for compact date presentation
+    let compactMetaText = "";
     if (req.status === "Resolved") {
       const timeStr = createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const dateStr = createdDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
-      const formattedTime = `${dateStr}, ${timeStr}`;
-      const isExpanded = expandedRequestIds.has(req.id);
-
-      return `
-        <div class="request-card urgency-${req.urgency} resolved-compact-card ${isExpanded ? 'expanded' : ''}" id="card-${req.id}">
-          <div class="compact-header">
-            <p class="compact-desc">
-              ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered me-2" style="font-size: 0.65rem;"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length}</span>` : ''}
-              ${req.description}
-            </p>
-            <span class="compact-meta">
-              <i class="bi bi-check-circle-fill text-success" style="font-size: 0.82rem;"></i>
-              ${formattedTime}
-            </span>
-          </div>
-          
-          <div class="card-expanded-content">
-            <div class="d-flex align-items-center justify-content-between gap-2 mb-2 flex-wrap">
-              <div>
-                <span class="badge-category">${getCategoryWithIcon(req.category)}</span>
-                ${sourceBadge}
-                ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered ms-2"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length} reports</span>` : ''}
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="badge-urgency ${urgencyClass}">
-                  ⚡ ${urgencyLabel(req.urgency)}
-                </span>
-              </div>
-            </div>
-            
-            <p class="description mb-2" style="white-space: normal;">
-              ${req.description}
-              ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
-                `<span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(45, 154, 78, 0.08); border: 1px solid rgba(45, 154, 78, 0.2); border-left: 4px solid var(--brand-primary); color: #1b6b37;">
-                  <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
-                 </span>` : ''
-              }
-            </p>
-            
-            <div class="meta mb-1">
-              <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Address:</strong> ${formatAddressHtml(req.address)}
-            </div>
-            <div class="meta mb-1">
-              <i class="bi bi-telephone-fill text-primary me-1"></i><strong>Contact:</strong> <a href="tel:${req.victimPhone}">${req.victimPhone || "N/A"}</a>
-            </div>
-            <div class="meta mb-2">
-              <i class="bi bi-map me-1"></i>Hub: ${req.zone}
-            </div>
-            ${suppliesHtml}
-            ${volunteerHtml}
-            
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
-              <div class="d-flex align-items-center gap-2">
-                <span class="meta mb-0 font-bold">Status:</span>
-                <span class="px-2.5 py-1 border-2 border-black bg-primary-container text-on-primary-container font-bold text-xs uppercase">Resolved</span>
-              </div>
-            </div>
-            ${clusteredHtml}
-            ${timelineHtml}
-          </div>
-        </div>
-      `;
+      compactMetaText = `${dateStr}, ${timeStr}`;
     }
 
     return `
-      <div class="request-card urgency-${req.urgency} ${isSlaViolation ? 'sla-violation' : ''}" id="card-${req.id}">
-        <div class="d-flex align-items-center justify-content-between gap-2 mb-2 flex-wrap">
-          <div>
-            <span class="badge-category">${getCategoryWithIcon(req.category)}</span>
-            ${sourceBadge}
-            ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered ms-2"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length} reports</span>` : ''}
+      <div class="request-card urgency-${req.urgency} status-${statusLower} compact-card ${isExpanded ? 'expanded' : ''} ${isSlaViolation ? 'sla-violation' : ''}" id="card-${req.id}">
+        <!-- Collapsed Header -->
+        <div class="compact-header d-flex justify-content-between align-items-start gap-2 w-full">
+          <div class="d-flex flex-column gap-1.5 flex-grow text-start">
+            <div class="d-flex align-items-center gap-1.5 flex-wrap">
+              <span class="badge-category cat-${req.category.toLowerCase().replace(' ', '-')}">${getCategoryWithIcon(req.category)}</span>
+              ${compactMetaText ? `<span class="compact-meta-date text-xs text-black/50 font-bold">${compactMetaText}</span>` : ''}
+            </div>
+            <p class="compact-desc font-bold text-sm text-black mb-0" style="white-space: normal; line-height: 1.25;">
+              ${req.description}
+            </p>
           </div>
-          <div class="d-flex align-items-center">
-            <span class="badge-urgency ${urgencyClass}">
-              ⚡ ${urgencyLabel(req.urgency)}
-            </span>
-            ${slaBadge}
-          </div>
-        </div>
-        <p class="description mb-2">
-          ${req.description}
-          ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
-            `<span class="d-block mt-2 p-2 rounded text-indigo" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid var(--brand-primary); color: #c7d2fe;">
-              <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
-             </span>` : ''
-          }
-        </p>
-        <div class="meta mb-1">
-          <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Address:</strong> ${formatAddressHtml(req.address)}
-        </div>
-        <div class="meta mb-1">
-          <i class="bi bi-telephone-fill text-primary me-1"></i><strong>Contact:</strong> <a href="tel:${req.victimPhone}">${req.victimPhone || "N/A"}</a>
-        </div>
-        <div class="meta mb-2">
-          <i class="bi bi-map me-1"></i>Hub: ${req.zone}
-        </div>
-        ${suppliesHtml}
-        ${volunteerHtml}
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
-          <div class="d-flex align-items-center gap-2">
-            <label for="status-${req.id}" class="meta mb-0">Status:</label>
-            <select
-              id="status-${req.id}"
-              class="status-select"
-              data-id="${req.id}"
-            >${optionsHtml}</select>
-            <button class="delete-btn" data-id="${req.id}" title="Delete Request Permanently">
-              <i class="bi bi-trash3-fill"></i>
+          <div class="d-flex align-items-center gap-1 shrink-0">
+            <button class="delete-btn bg-transparent border-0 text-black/60 hover:text-red-600 p-1" data-id="${req.id}" title="Delete Request Permanently">
+              <i class="bi bi-trash3-fill text-sm"></i>
             </button>
           </div>
-          ${durationText}
         </div>
-        ${clusteredHtml}
-        ${timelineHtml}
+        
+        <!-- Expanded Content -->
+        <div class="card-expanded-content">
+          <div class="d-flex align-items-center justify-content-between gap-2 mb-2 flex-wrap border-t border-black border-dashed pt-3 mt-2">
+            <div>
+              ${sourceBadge}
+              ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered ms-2"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length} reports</span>` : ''}
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="badge-urgency ${urgencyClass}">
+                ⚡ ${urgencyLabel(req.urgency)}
+              </span>
+              ${slaBadge}
+            </div>
+          </div>
+          
+          <p class="description mb-2 text-start" style="white-space: normal; font-size: 0.82rem;">
+            ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
+              `<span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid #4f46e5; color: #3730a3;">
+                <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
+               </span>` : ''
+            }
+          </p>
+          
+          <div class="meta mb-1 text-start" style="font-size: 0.82rem;">
+            <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Address:</strong> ${formatAddressHtml(req.address)}
+          </div>
+          <div class="meta mb-1 text-start" style="font-size: 0.82rem;">
+            <i class="bi bi-telephone-fill text-primary me-1"></i><strong>Contact:</strong> <a href="tel:${req.victimPhone}">${req.victimPhone || "N/A"}</a>
+          </div>
+          <div class="meta mb-2 text-start" style="font-size: 0.82rem;">
+            <i class="bi bi-map me-1"></i>Hub: ${req.zone}
+          </div>
+          ${suppliesHtml}
+          ${volunteerHtml}
+          
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 pt-2 border-t border-black border-dashed">
+            <div class="d-flex align-items-center gap-2">
+              <label for="status-${req.id}" class="meta mb-0 font-bold" style="font-size:0.82rem;">Status:</label>
+              <select
+                id="status-${req.id}"
+                class="status-select border-2 border-black p-1 text-xs font-bold uppercase bg-white focus:outline-none"
+                data-id="${req.id}"
+              >${optionsHtml}</select>
+            </div>
+            ${durationText}
+          </div>
+          ${clusteredHtml}
+          ${timelineHtml}
+        </div>
       </div>
     `;
   }
@@ -1042,23 +1005,29 @@ if (isDashboardPage) {
     countProgress.textContent = inProgress.length;
     countResolved.textContent = resolved.length;
 
-    function fillColumn(container, items) {
+    function fillColumn(container, items, columnType) {
       if (items.length === 0) {
+        let msg = "No matching requests";
+        if (columnType === "open") msg = "No open requests currently.";
+        else if (columnType === "progress") msg = "No requests in progress currently.";
+        else if (columnType === "resolved") msg = "No resolved requests currently.";
+
         container.innerHTML = `
-          <div class="empty-column">
-            <i class="bi bi-inbox fs-4 d-block mb-2"></i>No matching requests
+          <div class="empty-column py-5 flex flex-column align-items-center justify-content-center">
+            <i class="bi bi-archive-fill fs-3 d-block mb-2 text-black/40"></i>
+            <span>${msg}</span>
           </div>`;
       } else {
         container.innerHTML = items.map(buildCard).join("");
       }
     }
 
-    fillColumn(colOpen,     open);
-    fillColumn(colProgress, inProgress);
-    fillColumn(colResolved, resolved);
+    fillColumn(colOpen,     open, "open");
+    fillColumn(colProgress, inProgress, "progress");
+    fillColumn(colResolved, resolved, "resolved");
 
-    // Click event handler to expand/collapse resolved compact cards
-    document.querySelectorAll(".resolved-compact-card").forEach((card) => {
+    // Click event handler to expand/collapse compact cards
+    document.querySelectorAll(".compact-card").forEach((card) => {
       card.addEventListener("click", (e) => {
         if (
           e.target.closest("select") || 
