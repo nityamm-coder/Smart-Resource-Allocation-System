@@ -558,4 +558,106 @@ tr.expanded td {
 
 
 
+/* Volunteer cards styling */
+.roster-card {
+  background: white !important;
+  border: 4px solid black !important;
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1) !important;
+  padding: 1.25rem !important;
+  margin-bottom: 1.25rem !important;
+  transition: all 0.15s ease-out !important;
+  border-radius: 0px !important;
+  color: black !important;
+}
 
+.roster-card:hover {
+  transform: translate(-2px, -2px) !important;
+  box-shadow: 6px 6px 0px 0px rgba(0,0,0,1) !important;
+}
+
+.roster-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px dashed black !important;
+  padding-bottom: 0.5rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid black;
+  display: inline-block;
+}
+
+.status-dot.available {
+  background-color: #00ff66;
+}
+
+.status-dot.busy {
+  background-color: #ffdb47;
+}
+
+.roster-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0;
+  flex-grow: 1;
+  color: black;
+}
+
+.roster-status-badge {
+  border: 2px solid black;
+  padding: 0.15rem 0.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  border-radius: 0px;
+}
+
+.roster-status-badge.available {
+  background-color: #dae1ff;
+  color: #0050cc;
+}
+
+.roster-status-badge.busy {
+  background-color: #ffdad6;
+  color: #ba1a1a;
+}
+
+.roster-meta {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #3b4b3a;
+}
+
+.roster-meta i {
+  font-size: 0.9rem;
+}
+
+.roster-skills {
+  margin-top: 0.5rem;
+}
+
+.roster-skills-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.roster-skill-badge {
+  border: 2px solid black;
+  padding: 0.15rem 0.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.65rem;
+  background-color: #6bff83;
+  color: #00531b;
+  border-radius: 0px;
+}

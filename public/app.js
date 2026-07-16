@@ -1456,8 +1456,8 @@ if (isDashboardPage) {
       modalBody.innerHTML = sortedFeedbacks.map(f => {
         const stars = Array.from({ length: 5 }, (_, i) => {
           return i < f.rating 
-            ? `<i class="bi bi-star-fill" style="color: #d97706 !important;"></i>` 
-            : `<i class="bi bi-star text-white-50"></i>`;
+            ? `<i class="bi bi-star-fill text-[#d97706]"></i>` 
+            : `<i class="bi bi-star text-slate-300"></i>`;
         }).join('');
 
         const dateStr = f.timestamp 
@@ -1465,12 +1465,12 @@ if (isDashboardPage) {
           : "Recently";
 
         return `
-          <div class="p-3 mb-3 rounded" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-              <div class="d-flex gap-1">${stars}</div>
-              <span class="text-white-50" style="font-size: 0.72rem;">${dateStr}</span>
+          <div class="p-3 mb-3 border-2 border-black bg-surface shadow-neu-sm">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex gap-1">${stars}</div>
+              <span class="text-on-surface-variant font-bold" style="font-size: 0.72rem;">${dateStr}</span>
             </div>
-            <p class="mb-0 text-light" style="font-size: 0.82rem; font-style: italic; font-weight: 450;">"${f.comment}"</p>
+            <p class="mb-0 text-on-surface font-bold" style="font-size: 0.82rem; font-style: italic;">"${f.comment}"</p>
           </div>
         `;
       }).join('');
