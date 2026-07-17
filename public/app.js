@@ -927,13 +927,13 @@ if (isDashboardPage) {
         
         <!-- Expanded Content -->
         <div class="card-expanded-content">
-          <p class="description mb-2 text-start pt-1" style="white-space: normal; font-size: 0.82rem;">
-            ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
-              `<span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid #4f46e5; color: #3730a3;">
+          ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
+            `<p class="description mb-2 text-start pt-1" style="white-space: normal; font-size: 0.82rem;">
+              <span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid #4f46e5; color: #3730a3;">
                 <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
-               </span>` : ''
-            }
-          </p>
+              </span>
+             </p>` : ''
+          }
           
           <div class="meta mb-1 text-start" style="font-size: 0.82rem;">
             <i class="bi bi-geo-alt-fill text-danger me-1"></i><strong>Address:</strong> ${formatAddressHtml(req.address)}
@@ -947,7 +947,7 @@ if (isDashboardPage) {
           ${suppliesHtml}
           ${volunteerHtml}
           
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 pt-2 border-t border-black border-dashed">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2 pt-1.5 border-t border-black border-dashed">
             <div class="d-flex align-items-center gap-2">
               <label class="meta mb-0 font-bold" style="font-size:0.82rem;">Status:</label>
               ${req.status === "Resolved" 
@@ -2057,6 +2057,7 @@ if (isDashboardPage) {
   // ── View Toggle Events ──
   if (btnViewBoard && btnViewMap && btnViewBlockchain) {
     btnViewBoard.addEventListener("click", () => {
+      kanbanBoard.classList.remove("d-none");
       if (currentView === "board") return;
       currentView = "board";
       btnViewBoard.classList.add("active");
@@ -2064,19 +2065,26 @@ if (isDashboardPage) {
       btnViewBlockchain.classList.remove("active");
       mapViewContainer.classList.add("d-none");
       blockchainViewContainer.classList.add("d-none");
-      kanbanBoard.classList.remove("d-none");
       applyFilters();
     });
 
     btnViewMap.addEventListener("click", () => {
-      if (currentView === "map") return;
+      mapViewContainer.classList.remove("d-none");
+      if (currentView === "map") {
+        setTimeout(() => {
+          if (map) {
+            map.invalidateSize();
+            applyFilters();
+          }
+        }, 100);
+        return;
+      }
       currentView = "map";
       btnViewMap.classList.add("active");
       btnViewBoard.classList.remove("active");
       btnViewBlockchain.classList.remove("active");
       kanbanBoard.classList.add("d-none");
       blockchainViewContainer.classList.add("d-none");
-      mapViewContainer.classList.remove("d-none");
       
       shouldFitMapBounds = true;
       initMap();
@@ -2087,6 +2095,9 @@ if (isDashboardPage) {
     });
 
     btnViewBlockchain.addEventListener("click", () => {
+      if (blockchainViewContainer) {
+        blockchainViewContainer.classList.remove("d-none");
+      }
       if (currentView === "blockchain") return;
       currentView = "blockchain";
       btnViewBlockchain.classList.add("active");
@@ -2094,7 +2105,6 @@ if (isDashboardPage) {
       btnViewMap.classList.remove("active");
       kanbanBoard.classList.add("d-none");
       mapViewContainer.classList.add("d-none");
-      blockchainViewContainer.classList.remove("d-none");
       
       loadBlockchainStats();
     });

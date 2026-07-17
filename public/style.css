@@ -61,9 +61,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* SLA Exceeded */
+@keyframes sla-pulse {
+  0% {
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+    border-color: #ba1a1a !important;
+  }
+  50% {
+    box-shadow: 4px 4px 0px 0px #ba1a1a !important;
+    border-color: #ff3b30 !important;
+    background-color: #ffebe9 !important;
+  }
+  100% {
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1) !important;
+    border-color: #ba1a1a !important;
+  }
+}
+
 .sla-violation, .request-card.sla-violation {
   border-color: #ba1a1a !important;
   background-color: #ffdad6 !important;
+  animation: sla-pulse 2s infinite ease-in-out !important;
 }
 
 /* Urgency level badges */
@@ -175,11 +192,11 @@ h1, h2, h3, h4, h5, h6 {
 /* Volunteer Assigned Chip */
 .volunteer-chip {
   border: 2px solid black !important;
-  padding: 0.6rem !important;
+  padding: 0.4rem 0.6rem !important;
   background-color: #f3f3f3 !important;
   color: #1b1b1b !important;
-  margin-top: 0.75rem !important;
-  margin-bottom: 0.75rem !important;
+  margin-top: 0.4rem !important;
+  margin-bottom: 0.4rem !important;
   font-size: 0.75rem !important;
   border-radius: 0px !important;
   font-weight: 700 !important;
@@ -270,9 +287,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .compact-card.expanded .card-expanded-content {
   display: block !important;
-  margin-top: 1rem !important;
+  margin-top: 0.5rem !important;
   border-top: 2px dashed black !important;
-  padding-top: 1rem !important;
+  padding-top: 0.5rem !important;
 }
 
 /* Empty Column State */
