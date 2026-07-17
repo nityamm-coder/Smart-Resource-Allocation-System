@@ -1297,6 +1297,23 @@
             }
           });
         }
+
+        // Parse direct view routing URL parameters on load to trigger corresponding sidebar navigation
+        const urlParams = new URLSearchParams(window.location.search);
+        const viewParam = urlParams.get("view");
+        if (viewParam === "blockchain") {
+          setTimeout(() => {
+            if (sbBlockchain) sbBlockchain.click();
+          }, 100);
+        } else if (viewParam === "map") {
+          setTimeout(() => {
+            if (sbMap) sbMap.click();
+          }, 100);
+        } else if (viewParam === "board") {
+          setTimeout(() => {
+            if (sbRequests) sbRequests.click();
+          }, 100);
+        }
       });
     </script>
   </body>

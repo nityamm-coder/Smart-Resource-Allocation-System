@@ -347,22 +347,69 @@
 
           <!-- Success block sbt verification details -->
           <div id="rating-success-container" class="d-none text-center py-4 space-y-4">
-            <span class="text-5xl block">🥇</span>
-            <h4 class="font-display font-extrabold text-lg text-primary uppercase">Trust Badge Minted!</h4>
+            <span class="text-5xl block">✅</span>
+            <h4 class="font-display font-extrabold text-lg text-primary uppercase">Delivery Officially Confirmed!</h4>
             <p class="text-xs font-bold text-on-surface-variant max-w-sm mx-auto leading-relaxed">
-              Your feedback was securely archived on the immutable L2 ledger, and a Soulbound Token (SBT) was minted to the volunteer's decentralized identity.
+              Thank you! Your feedback has been received, and the supply shipment is now permanently certified.
             </p>
-            
-            <div class="p-3 border-4 border-black bg-surface font-mono text-[11px] text-left space-y-1 text-on-surface-variant">
-              <div>SBT ID: <strong class="text-primary" id="success-sbt-id">#0</strong></div>
-              <div class="truncate">L2 Tx: <a href="" id="success-tx-link" target="_blank" class="text-secondary underline">0x00...</a></div>
-              <div>Block Number: <span id="success-block-num" class="font-bold">--</span></div>
-            </div>
 
-            <div id="success-supply-info" class="p-3 border-4 border-black bg-primary-container font-mono text-[11px] text-left space-y-1 text-on-primary-container d-none">
-              <strong class="block uppercase text-[10px] text-primary mb-1">📦 Supply Distribution Authenticated</strong>
-              <div class="truncate">Supply L2 Tx: <a href="" id="success-supply-tx-link" target="_blank" class="text-[#002107] underline">0x00...</a></div>
-              <div>Block Number: <span id="success-supply-block-num" class="font-bold">--</span></div>
+            <!-- Beautiful Human-Attractive Receipt Card -->
+            <div class="border-4 border-black p-5 bg-white text-left shadow-neu relative overflow-hidden">
+              <!-- Decorative background stamp -->
+              <div class="absolute -right-8 -top-8 w-24 h-24 border-4 border-dashed border-emerald-500/20 rounded-full flex items-center justify-center rotate-12 pointer-events-none">
+                <span class="text-[10px] font-extrabold text-emerald-500/35 uppercase tracking-widest">VERIFIED</span>
+              </div>
+              
+              <div class="flex items-center gap-2 border-b-2 border-black pb-2 mb-3">
+                <span class="text-xl">📄</span>
+                <h5 class="font-display font-extrabold text-xs uppercase text-on-surface">Aid Delivery Receipt</h5>
+              </div>
+              
+              <div class="space-y-2 text-xs font-bold text-on-surface">
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Request ID:</span>
+                  <span class="font-mono text-black" id="receipt-req-id">--</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Delivered Supply:</span>
+                  <span class="text-emerald-700 uppercase" id="receipt-item-desc">--</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Rescuer / Volunteer:</span>
+                  <span class="text-black" id="receipt-vol-name">--</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Locality / Hub:</span>
+                  <span class="text-black" id="receipt-locality">--</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-on-surface-variant">Your Service Rating:</span>
+                  <span class="text-[#D97706]" id="receipt-rating-stars">--</span>
+                </div>
+                <div class="flex flex-col gap-1 border-t border-black border-dashed pt-2 mt-2">
+                  <span class="text-on-surface-variant">Your Feedback Comments:</span>
+                  <span class="text-black italic font-medium" id="receipt-feedback-text">"No comments provided."</span>
+                </div>
+              </div>
+              
+              <div class="mt-4 pt-3 border-t border-black border-dashed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                <span class="text-[10px] text-emerald-600 font-extrabold flex items-center gap-1">
+                  <i class="bi bi-shield-fill-check"></i> Secured by Trust Layer
+                </span>
+                <button type="button" id="open-ledger-details-btn" class="text-[10px] text-secondary font-bold underline hover:text-primary bg-transparent border-0 p-0 cursor-pointer">
+                  View Technical Blockchain details
+                </button>
+              </div>
+            </div>
+            <!-- Hidden technical elements kept for script compatibility if needed -->
+            <div class="d-none">
+              <span id="success-sbt-id">#0</span>
+              <a href="" id="success-tx-link">0x00...</a>
+              <span id="success-block-num">--</span>
+              <div id="success-supply-info">
+                <a href="" id="success-supply-tx-link">0x00...</a>
+                <span id="success-supply-block-num">--</span>
+              </div>
             </div>
           </div>
         </div>
@@ -590,32 +637,16 @@
         }
 
         // Display Success View with Blockchain Details
-        document.getElementById("success-sbt-id").textContent = `#${resData.tokenId || 'N/A'}`;
-        const txLink = document.getElementById("success-tx-link");
-        if (txLink) {
-          txLink.textContent = resData.txHash ? `${resData.txHash.substring(0, 18)}...` : '0x...';
-          txLink.href = `dashboard.html?view=blockchain&tx=${resData.txHash}`;
-        }
-        const blockNumSpan = document.getElementById("success-block-num");
-        if (blockNumSpan) {
-          blockNumSpan.textContent = resData.blockNumber || '--';
-        }
-
-        // Display supply verification coordinates if confirmed
-        const supplyInfoContainer = document.getElementById("success-supply-info");
-        if (supplyInfoContainer) {
-          if (resData.supplyTxHash) {
-            document.getElementById("success-supply-block-num").textContent = resData.supplyBlockNumber || '--';
-            const supplyTxLink = document.getElementById("success-supply-tx-link");
-            if (supplyTxLink) {
-              supplyTxLink.textContent = `${resData.supplyTxHash.substring(0, 18)}...`;
-              supplyTxLink.href = `dashboard.html?view=blockchain&tx=${resData.supplyTxHash}`;
-            }
-            supplyInfoContainer.classList.remove("d-none");
-          } else {
-            supplyInfoContainer.classList.add("d-none");
-          }
-        }
+        populateReceiptAndModal(
+          window.currentRequestData || { category: infoCategory.textContent, matchedVolunteer: { name: volName.textContent }, zone: infoZone.textContent },
+          selectedRating,
+          feedbackText.value.trim(),
+          resData.tokenId,
+          resData.txHash,
+          resData.blockNumber,
+          resData.supplyTxHash,
+          resData.supplyBlockNumber
+        );
 
         ratingFormContainer.classList.add("d-none");
         ratingSuccessContainer.classList.remove("d-none");
@@ -716,16 +747,105 @@
       }, 4000);
     }
 
+    function populateReceiptAndModal(data, ratingVal, feedbackVal, sbtId, sbtTx, sbtBlock, supplyTx, supplyBlock) {
+      document.getElementById("receipt-req-id").textContent = requestId || "--";
+      document.getElementById("receipt-item-desc").textContent = `1x ${data.category || 'Supplies'} Pack`;
+      document.getElementById("receipt-vol-name").textContent = data.matchedVolunteer ? data.matchedVolunteer.name : "N/A";
+      document.getElementById("receipt-locality").textContent = data.zone || "N/A";
+      
+      const starRatingString = Array(Number(ratingVal) || 0).fill("★").join("") + Array(5 - (Number(ratingVal) || 0)).fill("☆").join("");
+      document.getElementById("receipt-rating-stars").textContent = starRatingString;
+      
+      const cleanFeedback = (feedbackVal && feedbackVal.trim()) ? `"${feedbackVal.trim()}"` : '"No comments provided."';
+      document.getElementById("receipt-feedback-text").textContent = cleanFeedback;
+      
+      document.getElementById("modal-sbt-id").textContent = sbtId ? `#${sbtId}` : "#N/A";
+      document.getElementById("modal-sbt-tx").textContent = sbtTx || "0x...";
+      document.getElementById("modal-sbt-block").textContent = sbtBlock || "--";
+      
+      // Also populate the hidden legacy elements for compatibility
+      document.getElementById("success-sbt-id").textContent = sbtId ? `#${sbtId}` : "#N/A";
+      const successTxLink = document.getElementById("success-tx-link");
+      if (successTxLink) {
+        successTxLink.textContent = sbtTx ? `${sbtTx.substring(0, 18)}...` : '0x...';
+        successTxLink.href = `dashboard.html?view=blockchain&tx=${sbtTx}`;
+      }
+      const successBlockNum = document.getElementById("success-block-num");
+      if (successBlockNum) {
+        successBlockNum.textContent = sbtBlock || '--';
+      }
+
+      const modalSupplySection = document.getElementById("modal-supply-section");
+      const hiddenSupplyInfo = document.getElementById("success-supply-info");
+
+      if (supplyTx) {
+        document.getElementById("modal-supply-tx").textContent = supplyTx;
+        document.getElementById("modal-supply-block").textContent = supplyBlock || "--";
+        modalSupplySection.classList.remove("d-none");
+
+        if (hiddenSupplyInfo) {
+          const successSupplyTxLink = document.getElementById("success-supply-tx-link");
+          if (successSupplyTxLink) {
+            successSupplyTxLink.textContent = `${supplyTx.substring(0, 18)}...`;
+            successSupplyTxLink.href = `dashboard.html?view=blockchain&tx=${supplyTx}`;
+          }
+          const successSupplyBlockNum = document.getElementById("success-supply-block-num");
+          if (successSupplyBlockNum) {
+            successSupplyBlockNum.textContent = supplyBlock || '--';
+          }
+          hiddenSupplyInfo.classList.remove("d-none");
+        }
+      } else {
+        modalSupplySection.classList.add("d-none");
+        if (hiddenSupplyInfo) {
+          hiddenSupplyInfo.classList.add("d-none");
+        }
+      }
+    }
+
+    // Modal controls event listeners
+    document.addEventListener("DOMContentLoaded", () => {
+      const ledgerDetailsModal = document.getElementById("ledger-details-modal");
+      const openLedgerDetailsBtn = document.getElementById("open-ledger-details-btn");
+      const closeLedgerDetailsBtn = document.getElementById("close-ledger-details-btn");
+      const closeLedgerDetailsBtnFooter = document.getElementById("close-ledger-details-btn-footer");
+
+      if (openLedgerDetailsBtn) {
+        openLedgerDetailsBtn.addEventListener("click", () => {
+          if (ledgerDetailsModal) {
+            ledgerDetailsModal.classList.remove("d-none");
+            ledgerDetailsModal.classList.add("flex");
+          }
+        });
+      }
+
+      const hideLedgerModal = () => {
+        if (ledgerDetailsModal) {
+          ledgerDetailsModal.classList.remove("flex");
+          ledgerDetailsModal.classList.add("d-none");
+        }
+      };
+
+      if (closeLedgerDetailsBtn) {
+        closeLedgerDetailsBtn.addEventListener("click", hideLedgerModal);
+      }
+      if (closeLedgerDetailsBtnFooter) {
+        closeLedgerDetailsBtnFooter.addEventListener("click", hideLedgerModal);
+      }
+    });
+
     // Main render function
     function renderRequest(data) {
-      // Check for resolved transition to show notification
-      if (window.lastRequestStatus && window.lastRequestStatus !== "Resolved" && data.status === "Resolved" && data.matchedVolunteer && (data.rating === undefined || data.rating === null)) {
-        const notif = document.getElementById("resolved-notification");
+      window.currentRequestData = data;
+      // Check for resolved status to show notification/prompt to rate
+      const notif = document.getElementById("resolved-notification");
+      if (data.status === "Resolved" && data.matchedVolunteer && (data.rating === undefined || data.rating === null)) {
         if (notif) {
           notif.classList.remove("d-none");
-          setTimeout(() => {
-            notif.classList.add("d-none");
-          }, 15000);
+        }
+      } else {
+        if (notif) {
+          notif.classList.add("d-none");
         }
       }
       window.lastRequestStatus = data.status;
@@ -806,33 +926,16 @@
         if (data.rating !== undefined && data.rating !== null) {
           ratingFormContainer.classList.add("d-none");
           
-          // Populate blockchain values if they exist
-          document.getElementById("success-sbt-id").textContent = data.blockchainSbtId ? `#${data.blockchainSbtId}` : '#N/A';
-          const txLink = document.getElementById("success-tx-link");
-          if (txLink) {
-            txLink.textContent = data.blockchainSbtTx ? `${data.blockchainSbtTx.substring(0, 18)}...` : '0x...';
-            txLink.href = `dashboard.html?view=blockchain&tx=${data.blockchainSbtTx}`;
-          }
-          const blockNumSpan = document.getElementById("success-block-num");
-          if (blockNumSpan) {
-            blockNumSpan.textContent = data.blockchainSbtBlock || '--';
-          }
-
-          // Populate supply verification coordinates if they exist
-          const supplyInfoContainer = document.getElementById("success-supply-info");
-          if (supplyInfoContainer) {
-            if (data.blockchainSupplyTx) {
-              document.getElementById("success-supply-block-num").textContent = data.blockchainSupplyBlock || '--';
-              const supplyTxLink = document.getElementById("success-supply-tx-link");
-              if (supplyTxLink) {
-                supplyTxLink.textContent = `${data.blockchainSupplyTx.substring(0, 18)}...`;
-                supplyTxLink.href = `dashboard.html?view=blockchain&tx=${data.blockchainSupplyTx}`;
-              }
-              supplyInfoContainer.classList.remove("d-none");
-            } else {
-              supplyInfoContainer.classList.add("d-none");
-            }
-          }
+          populateReceiptAndModal(
+            data,
+            data.rating,
+            data.feedback,
+            data.blockchainSbtId,
+            data.blockchainSbtTx,
+            data.blockchainSbtBlock,
+            data.blockchainSupplyTx,
+            data.blockchainSupplyBlock
+          );
           
           ratingSuccessContainer.classList.remove("d-none");
         } else {
@@ -934,6 +1037,66 @@
       `).join("");
     }
   </script>
+  <!-- Modal: Technical Blockchain Details -->
+  <div id="ledger-details-modal" class="fixed inset-0 z-50 flex items-center justify-center d-none bg-on-surface/40 backdrop-blur-sm">
+    <div class="bg-white border-4 border-black p-6 w-[95%] max-w-[500px] shadow-neu-heavy relative">
+      <button id="close-ledger-details-btn" class="absolute top-4 right-4 font-bold text-sm hover:text-error border-2 border-black bg-white px-2 py-0.5 shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">✕</button>
+      
+      <div class="flex items-center gap-2 mb-4 border-b-4 border-black pb-2">
+        <span class="text-xl">⛓️</span>
+        <h4 class="font-display font-extrabold text-md text-on-surface uppercase">L2 Ledger Credentials</h4>
+      </div>
+      
+      <div class="space-y-4 text-xs font-bold text-on-surface">
+        <p class="leading-relaxed">
+          This delivery has been cryptographically logged on-chain. Below are the raw transaction and smart contract values recorded on the Arbitrum Sepolia Simulated L2 network.
+        </p>
+        
+        <div class="p-3 border-4 border-black bg-surface-container-low font-mono space-y-2 text-[11px] text-on-surface-variant">
+          <div>
+            <span class="text-on-surface uppercase text-[10px] font-extrabold block">Network Status</span>
+            <span class="text-emerald-700 flex items-center gap-1"><i class="bi bi-cpu"></i> Arbitrum Sepolia (Simulated L2)</span>
+          </div>
+          <hr class="border-black border-dashed">
+          <div>
+            <span class="text-on-surface uppercase text-[10px] font-extrabold block">Contract Address</span>
+            <span class="select-all">0x7a43f891F891F891F891F891F891F891F891F891</span>
+          </div>
+          <hr class="border-black border-dashed">
+          <div>
+            <span class="text-on-surface uppercase text-[10px] font-extrabold block">Soulbound Token (SBT) ID</span>
+            <span id="modal-sbt-id" class="text-primary font-bold">#--</span>
+          </div>
+          <hr class="border-black border-dashed">
+          <div>
+            <span class="text-on-surface uppercase text-[10px] font-extrabold block">SBT Transaction Hash</span>
+            <span id="modal-sbt-tx" class="select-all break-all text-secondary">0x...</span>
+          </div>
+          <hr class="border-black border-dashed">
+          <div>
+            <span class="text-on-surface uppercase text-[10px] font-extrabold block">SBT Block Number</span>
+            <span id="modal-sbt-block">--</span>
+          </div>
+          <div id="modal-supply-section" class="d-none">
+            <hr class="border-black border-dashed">
+            <div>
+              <span class="text-on-surface uppercase text-[10px] font-extrabold block">Supply Transfer Tx Hash</span>
+              <span id="modal-supply-tx" class="select-all break-all text-secondary">0x...</span>
+            </div>
+            <hr class="border-black border-dashed">
+            <div>
+              <span class="text-on-surface uppercase text-[10px] font-extrabold block">Supply Transfer Block Number</span>
+              <span id="modal-supply-block">--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-5 text-right">
+        <button id="close-ledger-details-btn-footer" class="px-4 py-2 border-2 border-black bg-[#f1f1f1] font-bold text-xs uppercase shadow-neu-sm hover:shadow-none hover:translate-x-[1px] hover:translate-y-[1px]">Close</button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

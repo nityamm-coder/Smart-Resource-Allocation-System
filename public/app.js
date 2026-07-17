@@ -903,17 +903,22 @@ if (isDashboardPage) {
     return `
       <div class="request-card urgency-${req.urgency} status-${statusLower} compact-card ${isExpanded ? 'expanded' : ''} ${isSlaViolation ? 'sla-violation' : ''}" id="card-${req.id}">
         <!-- Collapsed Header -->
-        <div class="compact-header d-flex justify-content-between align-items-start gap-2 w-full">
+        <div class="compact-header d-flex justify-content-between align-items-start gap-2 w-full mb-2">
           <div class="d-flex flex-column gap-1.5 flex-grow text-start">
             <div class="d-flex align-items-center gap-1.5 flex-wrap">
               <span class="badge-category cat-${req.category.toLowerCase().replace(' ', '-')}">${getCategoryWithIcon(req.category)}</span>
-              ${compactMetaText ? `<span class="compact-meta-date text-xs text-black/50 font-bold">${compactMetaText}</span>` : ''}
+              ${sourceBadge}
+              <span class="badge-urgency ${urgencyClass}">⚡ ${urgencyLabel(req.urgency)}</span>
+              ${slaBadge}
+              ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length}</span>` : ''}
             </div>
             <p class="compact-desc font-bold text-sm text-black mb-0" style="white-space: normal; line-height: 1.25;">
               ${req.description}
             </p>
           </div>
-          <div class="d-flex align-items-center gap-1 shrink-0">
+          <div class="d-flex align-items-center gap-2 shrink-0">
+            ${durationText ? `<span class="text-xs text-black/60 font-bold">${durationText}</span>` : ''}
+            ${compactMetaText ? `<span class="compact-meta-date text-xs text-black/50 font-bold">${compactMetaText}</span>` : ''}
             <button class="delete-btn bg-transparent border-0 text-black/60 hover:text-red-600 p-1" data-id="${req.id}" title="Delete Request Permanently">
               <i class="bi bi-trash3-fill text-sm"></i>
             </button>
@@ -922,20 +927,7 @@ if (isDashboardPage) {
         
         <!-- Expanded Content -->
         <div class="card-expanded-content">
-          <div class="d-flex align-items-center justify-content-between gap-2 mb-2 flex-wrap border-t border-black border-dashed pt-3 mt-2">
-            <div>
-              ${sourceBadge}
-              ${req.clusteredReports && req.clusteredReports.length > 0 ? `<span class="badge-clustered ms-2"><i class="bi bi-people-fill"></i> +${req.clusteredReports.length} reports</span>` : ''}
-            </div>
-            <div class="d-flex align-items-center">
-              <span class="badge-urgency ${urgencyClass}">
-                ⚡ ${urgencyLabel(req.urgency)}
-              </span>
-              ${slaBadge}
-            </div>
-          </div>
-          
-          <p class="description mb-2 text-start" style="white-space: normal; font-size: 0.82rem;">
+          <p class="description mb-2 text-start pt-1" style="white-space: normal; font-size: 0.82rem;">
             ${(req.detectedLanguage && req.detectedLanguage.toLowerCase() !== 'english' && req.translatedDescription) ? 
               `<span class="d-block mt-2 p-2 rounded" style="font-size: 0.82rem; background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); border-left: 4px solid #4f46e5; color: #3730a3;">
                 <i class="bi bi-translate me-1"></i> <strong>Translated (${req.detectedLanguage}):</strong> "${req.translatedDescription}"
@@ -957,14 +949,16 @@ if (isDashboardPage) {
           
           <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mt-3 pt-2 border-t border-black border-dashed">
             <div class="d-flex align-items-center gap-2">
-              <label for="status-${req.id}" class="meta mb-0 font-bold" style="font-size:0.82rem;">Status:</label>
-              <select
-                id="status-${req.id}"
-                class="status-select border-2 border-black p-1 text-xs font-bold uppercase bg-white focus:outline-none"
-                data-id="${req.id}"
-              >${optionsHtml}</select>
+              <label class="meta mb-0 font-bold" style="font-size:0.82rem;">Status:</label>
+              ${req.status === "Resolved" 
+                ? `<span class="px-2.5 py-1 border-2 border-black bg-[#86efac] text-black font-bold text-xs uppercase" style="border-radius: 0px;">Resolved</span>`
+                : `<select
+                    id="status-${req.id}"
+                    class="status-select border-2 border-black p-1 text-xs font-bold uppercase bg-white focus:outline-none"
+                    data-id="${req.id}"
+                  >${optionsHtml}</select>`
+              }
             </div>
-            ${durationText}
           </div>
           ${clusteredHtml}
           ${timelineHtml}
