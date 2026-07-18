@@ -1148,9 +1148,12 @@ app.post("/api/insights", async (req, res) => {
     });
 
     // 3. Prompt Gemini
+    const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const prompt = `
 You are a highly capable AI Logistics and Disaster Relief coordinator.
 Analyze the following active/recent disaster requests and the current inventory levels across different hubs (zones).
+
+Current Date: ${currentDate}
 
 Recent Emergency Requests (JSON):
 ${JSON.stringify(requests, null, 2)}
@@ -1158,14 +1161,19 @@ ${JSON.stringify(requests, null, 2)}
 Current Hub Stock Levels (JSON):
 ${JSON.stringify(inventory, null, 2)}
 
-Generate a detailed, formatted Markdown report to help the NGO admins manage logistics.
-The report must include:
-1. **Summary of Trends:** Identify which zones/hubs are experiencing the highest volume of requests and the most common needs (e.g. Food Packets vs. Medical Kits).
-2. **Critical Inventory Alerts:** Warn about any hubs that are running dangerously low on specific items (e.g. less than 5 remaining) or will run out soon based on current trends.
-3. **Logistics Optimization Recommendations:** Provide concrete recommendations on which hubs should restock or where items should be transferred (e.g., "Transfer 10 Life Jackets from Thane to Kalyan to meet rising flood requests"). Make sure these are actionable.
-4. **General Coordination Tips:** 1-2 closing logistics best practices for this scenario.
+Generate a compact, highly readable, and visually appealing Markdown report for the NGO admin dashboard.
+It must be short, to-the-point, and easily readable at a glance.
 
-Keep the tone professional, urgent, and focused. Do not return any JSON or wrapper text, just the Markdown report directly.
+Guidelines:
+- Start the report with: "**Report Date:** ${currentDate}"
+- Keep the report short and concise. Avoid long text blocks or long paragraphs.
+- Use clean bullet points, short key-value highlights, bold text, and emoji icons.
+- Structure it cleanly:
+  1. 📈 **Quick Trends:** Zone request volumes & top needs.
+  2. ⚠️ **Critical Stock Alerts:** Hub/item shortage warnings (especially if < 5 items remain).
+  3. 🚀 **Actionable Dispatch Tips:** Concrete hub-to-hub transfers or restocking actions.
+
+Keep the tone professional, urgent, and focused. Do not return any JSON or wrapper text, just the clean Markdown report directly.
 `;
 
     const geminiResult = await geminiModel.generateContent(prompt);
