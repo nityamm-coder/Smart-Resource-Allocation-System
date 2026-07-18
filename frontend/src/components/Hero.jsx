@@ -63,6 +63,16 @@ export default function Hero() {
 
   return (
     <section className="relative overflow-hidden pt-12 pb-16 md:pt-16 md:pb-20 bg-background border-b-4 border-black">
+      {/* Background Image with blur and overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img 
+          src="/leaves.jpg" 
+          className="w-full h-full object-cover filter blur-[0.5px] opacity-80" 
+          alt="Leaves Background" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+      </div>
+
       {/* Abstract Grid Pattern */}
       <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, black 1px, transparent 0)', backgroundSize: '16px 16px' }}></div>
 
@@ -76,7 +86,7 @@ export default function Hero() {
 
           <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl tracking-tight text-on-surface leading-[1.1] min-h-[120px] md:min-h-[160px] lg:min-h-[auto] uppercase">
             Report a Need for <br className="hidden sm:inline" />
-            <span className="underline decoration-8 decoration-primary-container underline-offset-4">
+            <span className="underline decoration-8 decoration-primary-container underline-offset-4 whitespace-nowrap">
               {typewriterText}
             </span>
             <span className="typewriter-cursor ml-1">|</span>
