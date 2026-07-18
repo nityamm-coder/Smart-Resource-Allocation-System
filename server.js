@@ -1168,6 +1168,9 @@ Guidelines:
 - Start the report with: "**Report Date:** ${currentDate}"
 - Keep the report short and concise. Avoid long text blocks or long paragraphs.
 - Use clean bullet points, short key-value highlights, bold text, and emoji icons.
+- Format critical warnings using: "> [!WARNING] Message"
+- Format general notes using: "> [!NOTE] Message"
+- Use simple Markdown tables for summary statistics or zone comparisons.
 - Structure it cleanly:
   1. 📈 **Quick Trends:** Zone request volumes & top needs.
   2. ⚠️ **Critical Stock Alerts:** Hub/item shortage warnings (especially if < 5 items remain).

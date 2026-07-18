@@ -1171,49 +1171,244 @@ if (isDashboardPage) {
     }
   }
 
-  // ── AI Insights Button Handler ──────────────────────────────
+  // ── AI Insights Dedicated Tab and Update Handlers ──────────────────────────
+  const updateInsightsBtn = document.getElementById("update-insights-btn");
+  const aiReportBody = document.getElementById("ai-report-body");
+  const insightTimeBadge = document.getElementById("insight-time-badge");
+  const sbAiInsights = document.getElementById("sb-ai-insights");
+
+  // Keep references to old UI elements for backwards compatibility
   const generateInsightsBtn = document.getElementById("generate-insights-btn");
   const aiInsightsContent = document.getElementById("ai-insights-content");
-  
-  if (generateInsightsBtn && aiInsightsContent) {
-    generateInsightsBtn.addEventListener("click", async () => {
-      generateInsightsBtn.disabled = true;
-      const originalHtml = generateInsightsBtn.innerHTML;
-      generateInsightsBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Analyzing...`;
-      
-      try {
-        const res = await fetch(`${API_BASE}/api/insights`, {
-          method: "POST"
-        });
-        if (res.ok) {
-          const data = await res.json();
-          aiInsightsContent.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.6;">${parseMarkdown(data.report)}</div>`;
-        } else {
-          showToast("Failed to generate AI insights", "danger");
-        }
-      } catch (err) {
-        console.error("AI Insights request failed:", err);
-        showToast("Error communicating with AI services.", "danger");
-      } finally {
-        generateInsightsBtn.disabled = false;
-        generateInsightsBtn.innerHTML = originalHtml;
+
+  async function generateNewInsights() {
+    // Determine which button triggered this to show the loading state
+    let activeBtn = updateInsightsBtn || generateInsightsBtn;
+    if (!activeBtn) return;
+
+    activeBtn.disabled = true;
+    const originalHtml = activeBtn.innerHTML;
+    
+    // Check if it's the tab update button to rotate the icon
+    if (activeBtn.id === "update-insights-btn") {
+      activeBtn.innerHTML = `<i class="bi bi-arrow-clockwise animate-spin me-1.5"></i>Analyzing...`;
+    } else {
+      activeBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Analyzing...`;
+    }
+    
+    try {
+      const res = await fetch(`${API_BASE}/api/insights`, {
+        method: "POST"
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const genTime = new Date().toLocaleString();
+        
+        // Cache report & timestamp in localStorage
+        localStorage.setItem("sras_last_insight_report", data.report);
+        localStorage.setItem("sras_last_insight_time", genTime);
+        
+        // Update DOM elements
+        renderInsights(data.report, genTime);
+        showToast("AI Logistics insights updated successfully!", "success");
+      } else {
+        showToast("Failed to generate AI insights", "danger");
       }
+    } catch (err) {
+      console.error("AI Insights request failed:", err);
+      showToast("Error communicating with AI services.", "danger");
+    } finally {
+      activeBtn.disabled = false;
+      activeBtn.innerHTML = originalHtml;
+    }
+  }
+
+  function renderInsights(report, time) {
+    if (aiReportBody) {
+      aiReportBody.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.65;">${parseMarkdown(report)}</div>`;
+    }
+    if (insightTimeBadge) {
+      insightTimeBadge.textContent = `Last Generated: ${time}`;
+    }
+    
+    // Backward compatibility for old panel in Supplies view
+    if (aiInsightsContent) {
+      aiInsightsContent.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.65;">${parseMarkdown(report)}</div>`;
+    }
+  }
+
+  function loadCachedInsights() {
+    const cachedReport = localStorage.getItem("sras_last_insight_report");
+    const cachedTime = localStorage.getItem("sras_last_insight_time");
+    
+    if (cachedReport && cachedTime) {
+      renderInsights(cachedReport, cachedTime);
+    } else {
+      // Auto-trigger API call if cache is completely empty
+      generateNewInsights();
+    }
+  }
+
+  // Register Event Listeners
+  if (sbAiInsights) {
+    sbAiInsights.addEventListener("click", () => {
+      loadCachedInsights();
     });
+  }
+
+  if (updateInsightsBtn) {
+    updateInsightsBtn.addEventListener("click", () => {
+      generateNewInsights();
+    });
+  }
+
+  if (generateInsightsBtn) {
+    generateInsightsBtn.addEventListener("click", () => {
+      generateNewInsights();
+    });
+  }
+
+  // Initialize cached insights on page load
+  loadCachedInsights();
+
+  function parseInlineMarkdown(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\`\`\`([\s\S]*?)\`\`\`/g, '<pre class="bg-light p-2 rounded my-1" style="font-size:0.75rem;"><code>$1</code></pre>')
+      .replace(/\`([^\`]+)\`/g, '<code>$1</code>');
   }
 
   function parseMarkdown(md) {
     if (!md) return "";
-    return md
-      .replace(/^### (.*$)/gim, '<h6 class="fw-bold text-dark mt-3 mb-2"><i class="bi bi-chevron-right text-primary me-1"></i>$1</h6>')
-      .replace(/^## (.*$)/gim, '<h5 class="fw-bold text-primary mt-4 mb-2">$1</h5>')
-      .replace(/^# (.*$)/gim, '<h4 class="fw-extrabold text-success mt-4 mb-3">$1</h4>')
-      .replace(/^\* (.*$)/gim, '<li class="ms-3 mb-1">$1</li>')
-      .replace(/^\- (.*$)/gim, '<li class="ms-3 mb-1">$1</li>')
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      .replace(/\`\`\`([\s\S]*?)\`\`\`/g, '<pre class="bg-light p-2 rounded my-2" style="font-size:0.8rem;"><code>$1</code></pre>')
-      .replace(/\`([^\`]+)\`/g, '<code>$1</code>')
-      .replace(/\n/g, '<br>');
+    
+    // Split by lines to parse tables, headers and lists cleanly
+    const lines = md.split('\n');
+    let html = '';
+    let inList = false;
+    let inTable = false;
+    
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      
+      // Handle empty lines
+      if (line === '') {
+        if (inList) {
+          html += '</ul>';
+          inList = false;
+        }
+        if (inTable) {
+          html += '</tbody></table></div>';
+          inTable = false;
+        }
+        continue;
+      }
+      
+      // Handle headings
+      if (line.startsWith('# ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inTable) { html += '</tbody></table></div>'; inTable = false; }
+        html += `<h3 class="text-md font-extrabold text-primary uppercase mt-4 mb-2 border-b-2 border-black pb-1">${line.substring(2)}</h3>`;
+        continue;
+      }
+      if (line.startsWith('## ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inTable) { html += '</tbody></table></div>'; inTable = false; }
+        html += `<h4 class="text-sm font-bold text-secondary uppercase mt-3 mb-2">${line.substring(3)}</h4>`;
+        continue;
+      }
+      if (line.startsWith('### ')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inTable) { html += '</tbody></table></div>'; inTable = false; }
+        html += `<h5 class="text-xs font-bold text-on-surface uppercase mt-2 mb-1 flex items-center gap-1.5"><i class="bi bi-chevron-right text-primary"></i> ${line.substring(4)}</h5>`;
+        continue;
+      }
+      
+      // Handle list items
+      if (line.startsWith('* ') || line.startsWith('- ')) {
+        if (inTable) { html += '</tbody></table></div>'; inTable = false; }
+        if (!inList) {
+          html += '<ul class="list-disc pl-5 mb-3 space-y-1">';
+          inList = true;
+        }
+        let content = line.substring(2);
+        content = parseInlineMarkdown(content);
+        html += `<li class="font-bold text-xs text-on-surface-variant">${content}</li>`;
+        continue;
+      }
+      
+      // Handle table rows
+      if (line.startsWith('|')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        const parts = line.split('|').map(p => p.trim()).filter((p, idx, arr) => idx > 0 && idx < arr.length - 1);
+        if (parts.length > 0) {
+          // Check if it's separator row (e.g. |---|---|)
+          if (parts.every(p => /^:-*-*:?$/.test(p) || /^-+$/.test(p))) {
+            continue;
+          }
+          if (!inTable) {
+            html += '<div class="overflow-x-auto my-3"><table class="neubrutalist-table w-full text-xs"><thead><tr>';
+            parts.forEach(p => {
+              html += `<th class="border-2 border-black bg-secondary-fixed text-on-secondary-fixed p-2 text-left font-bold uppercase">${parseInlineMarkdown(p)}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            inTable = true;
+          } else {
+            html += '<tr>';
+            parts.forEach(p => {
+              html += `<td class="border-2 border-black p-2 bg-white font-bold text-on-surface">${parseInlineMarkdown(p)}</td>`;
+            });
+            html += '</tr>';
+          }
+          continue;
+        }
+      }
+      
+      // Handle warning/info boxes (e.g. starting with > )
+      if (line.startsWith('>')) {
+        if (inList) { html += '</ul>'; inList = false; }
+        if (inTable) { html += '</tbody></table></div>'; inTable = false; }
+        let content = line.substring(1).trim();
+        let bgClass = "bg-[#ffd600]/10 border-[#705d00]";
+        let textClass = "text-[#544600]";
+        let icon = "🧙‍♂️";
+        
+        if (content.startsWith('[!WARNING]') || content.startsWith('[!ALERT]')) {
+          bgClass = "bg-error-container border-error";
+          textClass = "text-on-error-container";
+          content = content.replace(/^\[!(WARNING|ALERT)\]/, '').trim();
+          icon = "⚠️";
+        } else if (content.startsWith('[!NOTE]') || content.startsWith('[!INFO]')) {
+          bgClass = "bg-secondary-fixed border-secondary";
+          textClass = "text-on-secondary-fixed-variant";
+          content = content.replace(/^\[!(NOTE|INFO)\]/, '').trim();
+          icon = "ℹ️";
+        }
+        
+        html += `<div class="p-3 border-4 border-black ${bgClass} ${textClass} font-bold text-xs shadow-neu-sm my-3 flex gap-2 items-start rounded-none">
+          <span class="text-base leading-none">${icon}</span>
+          <div>${parseInlineMarkdown(content)}</div>
+        </div>`;
+        continue;
+      }
+      
+      // Default line: normal paragraph
+      if (inList) {
+        html += '</ul>';
+        inList = false;
+      }
+      if (inTable) {
+        html += '</tbody></table></div>';
+        inTable = false;
+      }
+      html += `<p class="mb-2 leading-relaxed text-xs text-on-surface-variant font-bold">${parseInlineMarkdown(line)}</p>`;
+    }
+    
+    // Close tags if left open at the end
+    if (inList) html += '</ul>';
+    if (inTable) html += '</tbody></table></div>';
+    
+    return html;
   }
 
   async function loadVolunteers() {
