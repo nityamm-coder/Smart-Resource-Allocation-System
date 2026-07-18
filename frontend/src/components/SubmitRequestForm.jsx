@@ -133,7 +133,7 @@ export default function SubmitRequestForm({ onSubmittingStateChange }) {
   };
 
   return (
-    <div className="bg-white border-4 border-black p-6 sm:p-8 shadow-neu rounded-none">
+    <div className="border-4 border-black p-6 sm:p-8 shadow-neu rounded-none" style={{ backgroundColor: '#caf0f8' }}>
       <h2 className="font-display font-extrabold text-xl md:text-2xl text-on-surface mb-6 flex items-center gap-2.5 border-b-4 border-black pb-3 uppercase">
         <span className="w-8 h-8 border-2 border-black bg-error-container text-on-error-container flex items-center justify-center text-sm shadow-neu-sm">
           🚨
