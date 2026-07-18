@@ -49,7 +49,7 @@ export default function Hero() {
     let speed = isDeleting ? 90 : 180;
 
     if (!isDeleting && charIndex === currentWord.length) {
-      speed = 1800; // Hold word
+      speed = 3000; // Hold word (3 seconds) for better readability
       setIsDeleting(true);
     } else if (isDeleting && charIndex === 0) {
       setIsDeleting(false);
