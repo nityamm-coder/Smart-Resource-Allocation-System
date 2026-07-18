@@ -1183,14 +1183,14 @@ if (isDashboardPage) {
 
   async function generateNewInsights() {
     // Determine which button triggered this to show the loading state
-    let activeBtn = updateInsightsBtn || generateInsightsBtn;
+    let activeBtn = document.getElementById("update-insights-btn-inner") || updateInsightsBtn || generateInsightsBtn;
     if (!activeBtn) return;
 
     activeBtn.disabled = true;
     const originalHtml = activeBtn.innerHTML;
     
     // Check if it's the tab update button to rotate the icon
-    if (activeBtn.id === "update-insights-btn") {
+    if (activeBtn.id === "update-insights-btn" || activeBtn.id === "update-insights-btn-inner") {
       activeBtn.innerHTML = `<i class="bi bi-arrow-clockwise animate-spin me-1.5"></i>Analyzing...`;
     } else {
       activeBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Analyzing...`;
@@ -1207,9 +1207,12 @@ if (isDashboardPage) {
         // Cache report & timestamp in localStorage
         localStorage.setItem("sras_last_insight_report", data.report);
         localStorage.setItem("sras_last_insight_time", genTime);
+        if (data.structuredData) {
+          localStorage.setItem("sras_last_insight_structured", JSON.stringify(data.structuredData));
+        }
         
         // Update DOM elements
-        renderInsights(data.report, genTime);
+        renderInsights(data.report, genTime, data.structuredData);
         showToast("AI Logistics insights updated successfully!", "success");
       } else {
         showToast("Failed to generate AI insights", "danger");
@@ -1223,10 +1226,7 @@ if (isDashboardPage) {
     }
   }
 
-  function renderInsights(report, time) {
-    if (aiReportBody) {
-      aiReportBody.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.65;">${parseMarkdown(report)}</div>`;
-    }
+  function renderInsights(report, time, structured) {
     if (insightTimeBadge) {
       insightTimeBadge.textContent = `Last Generated: ${time}`;
     }
@@ -1235,14 +1235,186 @@ if (isDashboardPage) {
     if (aiInsightsContent) {
       aiInsightsContent.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.65;">${parseMarkdown(report)}</div>`;
     }
+
+    if (!aiReportBody) return;
+
+    if (structured) {
+      // Helper function to render formatted nested lists in the cards
+      const renderBulletList = (items) => {
+        if (!items || !items.length) return "";
+        return items.map(item => {
+          if (typeof item !== "string") return "";
+          
+          if (item.includes("\n")) {
+            const lines = item.split("\n").filter(l => l.trim().length > 0);
+            return lines.map(line => {
+              const trimmed = line.trim();
+              const isSub = trimmed.startsWith("-") || trimmed.startsWith("*") || trimmed.startsWith("o") || trimmed.startsWith("•");
+              const cleanLine = trimmed.replace(/^[-*o•\s]+/, "");
+              if (isSub) {
+                return `<li class="ms-4 list-disc text-xs md:text-sm font-semibold text-slate-700 leading-relaxed">${cleanLine}</li>`;
+              } else {
+                return `<li class="font-extrabold text-sm md:text-base mt-2 list-none text-black">${cleanLine}</li>`;
+              }
+            }).join("");
+          } else {
+            const trimmed = item.trim();
+            const isSub = trimmed.startsWith("-") || trimmed.startsWith("*") || trimmed.startsWith("o") || trimmed.startsWith("•");
+            const cleanLine = trimmed.replace(/^[-*o•\s]+/, "");
+            if (isSub) {
+              return `<li class="ms-4 list-disc text-xs md:text-sm font-semibold text-slate-700 leading-relaxed">${cleanLine}</li>`;
+            }
+            // For main bullet points: check if it looks like a heading (e.g. ends with colon or starts with bold text)
+            if (cleanLine.endsWith(":") || cleanLine.startsWith("**")) {
+              return `<li class="font-extrabold text-sm md:text-base mt-2 list-none text-black">${cleanLine.replace(/\*\*/g, "")}</li>`;
+            }
+            return `<li class="list-disc ms-4 text-xs md:text-sm font-semibold text-slate-800 leading-relaxed">${cleanLine}</li>`;
+          }
+        }).join("");
+      };
+
+      // Build needs items HTML (Card A)
+      const needsHtml = (structured.needsOverview || [])
+        .map(need => {
+          const cleanNeed = need.trim().replace(/^[-*o•\s]+/, "");
+          return `<li class="list-disc ms-4 text-sm md:text-base font-bold text-black/90">${cleanNeed}</li>`;
+        })
+        .join("");
+
+      // Build hubs breakdown HTML (Card B)
+      const hubsHtml = (structured.supplyPipeline.hubs || [])
+        .map(h => `
+          <div class="flex flex-col gap-1">
+            <div class="flex justify-between font-bold text-xs md:text-sm text-black uppercase tracking-wider">
+              <span>${h.name}</span>
+              <span>${h.total} units (${h.fullness}%)</span>
+            </div>
+            <div class="w-full bg-white border-2 border-black h-2.5 rounded-none overflow-hidden relative">
+              <div class="bg-black h-full" style="width: ${h.fullness}%"></div>
+            </div>
+          </div>
+        `)
+        .join("");
+
+      // Build categories breakdown HTML (Card B)
+      const categoriesHtml = (structured.supplyPipeline.categories || [])
+        .map(c => `<li><span class="text-slate-800 font-extrabold uppercase text-[11px]">${c.name}:</span> <span class="font-black text-xs md:text-sm">${c.total}</span></li>`)
+        .join("");
+
+      aiReportBody.innerHTML = `
+        <div class="radical-insights-hub text-black space-y-6">
+          <!-- Banner: Volunteer Force -->
+          <div class="border-4 border-black bg-[#fdffb6] p-4 shadow-neu-sm flex items-center justify-between flex-wrap gap-4 rounded-none">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">👥</span>
+              <span class="font-extrabold text-sm md:text-base uppercase tracking-wider text-black">
+                VOLUNTEER FORCE: ACTIVE: <span class="text-[#ba1a1a] font-black">${structured.activeVolunteers}</span> | ON STANDBY: <span class="text-[#006e27] font-black">${structured.standbyVolunteers}</span>
+              </span>
+            </div>
+            <span class="text-xl">⚡</span>
+          </div>
+
+          <!-- Grid: Needs & Supply Pipeline -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card A: Needs Overview -->
+            <div class="border-4 border-black bg-[#ffadad] p-5 shadow-neu flex flex-col justify-between min-h-[220px] relative rounded-none">
+              <div>
+                <div class="flex justify-between items-center mb-4">
+                  <h3 class="font-extrabold text-base md:text-lg uppercase tracking-wider text-black">🎒 Needs Overview</h3>
+                </div>
+                <ul class="space-y-2 font-bold text-sm md:text-base text-black/90 list-none pl-0">
+                  ${needsHtml}
+                </ul>
+              </div>
+              <div class="absolute bottom-2 right-4 text-3xl font-black opacity-15 select-none">A</div>
+            </div>
+
+            <!-- Card B: Supply Pipeline -->
+            <div class="border-4 border-black bg-[#c1f2c2] p-5 shadow-neu flex flex-col justify-between min-h-[220px] relative rounded-none">
+              <div>
+                <div class="flex justify-between items-center mb-4 pb-1 border-b-2 border-black">
+                  <h3 class="font-extrabold text-base md:text-lg uppercase tracking-wider text-black">🚛 Hub Stocks & Capacity</h3>
+                </div>
+                <div class="space-y-3">
+                  ${hubsHtml}
+                </div>
+                <div class="mt-4 border-t-2 border-black pt-3">
+                  <h4 class="font-black text-xs uppercase mb-1.5 text-black">Total Supplies by Category:</h4>
+                  <ul class="grid grid-cols-2 gap-x-4 gap-y-1 list-none pl-0 mb-0">
+                    ${categoriesHtml}
+                  </ul>
+                </div>
+              </div>
+              <div class="absolute bottom-2 right-4 text-3xl font-black opacity-15 select-none">B</div>
+            </div>
+          </div>
+
+          <!-- Grid: Immediate Fulfillment, Resource Gap, Monitoring -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card C: Immediate Local Fulfillment -->
+            <div class="border-4 border-black bg-white p-5 shadow-neu flex flex-col justify-between min-h-[240px] relative rounded-none">
+              <div>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-black pb-1.5">
+                  <span class="text-lg">📦</span>
+                  <h3 class="font-black text-xs md:text-sm uppercase tracking-wider text-black">Immediate Local Fulfillment</h3>
+                </div>
+                <ul class="space-y-1.5 pl-0 list-none text-left">
+                  ${renderBulletList(structured.immediateFulfillment)}
+                </ul>
+              </div>
+              <div class="absolute bottom-2 right-4 text-3xl font-black opacity-10 select-none">C</div>
+            </div>
+
+            <!-- Card D: Resource Gap & Procurement -->
+            <div class="border-4 border-black bg-white p-5 shadow-neu flex flex-col justify-between min-h-[240px] relative rounded-none">
+              <div>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-black pb-1.5">
+                  <span class="text-lg">💧</span>
+                  <h3 class="font-black text-xs md:text-sm uppercase tracking-wider text-black">Resource Gap & Procurement</h3>
+                </div>
+                <ul class="space-y-1.5 pl-0 list-none text-left">
+                  ${renderBulletList(structured.resourceGap)}
+                </ul>
+              </div>
+              <div class="absolute bottom-2 right-4 text-3xl font-black opacity-10 select-none">D</div>
+            </div>
+
+            <!-- Card E: Monitoring -->
+            <div class="border-4 border-black bg-white p-5 shadow-neu flex flex-col justify-between min-h-[240px] relative rounded-none">
+              <div>
+                <div class="flex items-center gap-2 mb-4 border-b-2 border-black pb-1.5">
+                  <span class="text-lg">📍</span>
+                  <h3 class="font-black text-xs md:text-sm uppercase tracking-wider text-black">Monitoring</h3>
+                </div>
+                <ul class="space-y-1.5 pl-0 list-none text-left">
+                  ${renderBulletList(structured.monitoring)}
+                </ul>
+              </div>
+              <div class="absolute bottom-2 right-4 text-3xl font-black opacity-10 select-none">E</div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      aiReportBody.innerHTML = `<div class="ai-report-markdown text-dark p-2" style="line-height: 1.65;">${parseMarkdown(report)}</div>`;
+    }
   }
 
   function loadCachedInsights() {
     const cachedReport = localStorage.getItem("sras_last_insight_report");
     const cachedTime = localStorage.getItem("sras_last_insight_time");
+    const cachedStructured = localStorage.getItem("sras_last_insight_structured");
     
     if (cachedReport && cachedTime) {
-      renderInsights(cachedReport, cachedTime);
+      let structured = null;
+      try {
+        if (cachedStructured) {
+          structured = JSON.parse(cachedStructured);
+        }
+      } catch (e) {
+        console.error("Failed to parse cached structured insights:", e);
+      }
+      renderInsights(cachedReport, cachedTime, structured);
     } else {
       // Auto-trigger API call if cache is completely empty
       generateNewInsights();
@@ -1267,6 +1439,13 @@ if (isDashboardPage) {
       generateNewInsights();
     });
   }
+
+  // Dynamic inner button click delegation
+  document.addEventListener("click", (e) => {
+    if (e.target && (e.target.id === "update-insights-btn-inner" || e.target.closest("#update-insights-btn-inner"))) {
+      generateNewInsights();
+    }
+  });
 
   // Initialize cached insights on page load
   loadCachedInsights();

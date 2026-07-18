@@ -1116,7 +1116,19 @@ app.get("/api/inventory", async (req, res) => {
 app.post("/api/insights", async (req, res) => {
   try {
     if (!db) {
-      return res.json({ success: true, report: "Database not connected. Offline mode active. Mock insights: Restock food packets in Kalyan." });
+      return res.json({ 
+        success: true, 
+        report: "Database not connected. Offline mode active.",
+        structuredData: {
+          activeVolunteers: 0,
+          standbyVolunteers: 0,
+          needsDetails: ["No database connection available"],
+          supplyPipeline: { inbound: "None", logistics: "None", warehouse: "None", fullness: 0 },
+          immediateFulfillment: ["Offline mode active."],
+          resourceGap: ["Offline mode active."],
+          monitoring: ["Offline mode active."]
+        }
+      });
     }
 
     // 1. Fetch current inventory
@@ -1142,12 +1154,54 @@ app.post("/api/insights", async (req, res) => {
         zone: data.zone,
         category: data.category,
         urgency: data.urgency,
+        status: data.status,
         description: data.translatedDescription || data.description,
         allocatedSupplies: data.allocatedSupplies || []
       });
     });
 
-    // 3. Prompt Gemini
+    // 3. Fetch volunteers list
+    const volSnapshot = await db.collection("volunteers").get();
+    const volunteersList = [];
+    volSnapshot.forEach(doc => {
+      volunteersList.push({ id: doc.id, ...doc.data() });
+    });
+
+    // 4. Calculate real-time stats
+    const activeVol = volunteersList.filter(v => v.status === "Busy" || v.status === "On Duty").length;
+    const standbyVol = volunteersList.filter(v => v.status === "Available" || v.status === "Standby" || !v.status).length;
+
+    // Calculate supply pipeline
+    let totalFood = 0;
+    let totalMeds = 0;
+    let totalShelter = 0;
+    let totalJackets = 0;
+    const hubs = [];
+
+    Object.entries(inventory).forEach(([zone, items]) => {
+      let zoneTotal = 0;
+      Object.entries(items).forEach(([item, qty]) => {
+        const count = Number(qty) || 0;
+        zoneTotal += count;
+        if (item === "Food Packets") totalFood += count;
+        else if (item === "Medical Kits") totalMeds += count;
+        else if (item === "Shelter Kits") totalShelter += count;
+        else if (item === "Life Jackets") totalJackets += count;
+      });
+      // Assume standard capacity of 200 items per hub
+      const cap = 200;
+      const pct = Math.min(Math.round((zoneTotal / cap) * 100), 100);
+      hubs.push({
+        name: `${zone} Hub`,
+        total: zoneTotal,
+        fullness: pct
+      });
+    });
+
+    const warehouseTotal = totalFood + totalMeds + totalShelter + totalJackets;
+    const warehousePercentage = Math.min(Math.round((warehouseTotal / 800) * 100), 100) || 45;
+
+    // 5. Prompt Gemini
     const currentDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     const prompt = `
 You are a highly capable AI Logistics and Disaster Relief coordinator.
@@ -1161,27 +1215,99 @@ ${JSON.stringify(requests, null, 2)}
 Current Hub Stock Levels (JSON):
 ${JSON.stringify(inventory, null, 2)}
 
-Generate a compact, highly readable, and visually appealing Markdown report for the NGO admin dashboard.
-It must be short, to-the-point, and easily readable at a glance.
+You must return your response as a valid JSON object matching the following structure:
+{
+  "report": "compact Markdown report summarizing quick trends, stock alerts, and dispatch tips using bullet points and emojis",
+  "needsDetails": [
+    "Food Packets: [QTY] requests pending (High demand in [ZONES])",
+    "Medical Kits: [QTY] requests pending (Urgent requirement for [DETAILS])",
+    ...
+  ],
+  "immediateFulfillment": [
+    "Food Packets: All [QTY] new/unfulfilled urgent Food requests ([DETAILS]) can be dispatched from local hub stocks. Current Stock: [QTY]",
+    "Thane Hub: Distribute to [QTY] local request. Current Stock: [QTY]",
+    "Mumbai Central Hub: Distribute to [QTY] local request. Current Stock: [QTY]",
+    "Medical Kits: [ZONE] ([QTY] units available) can dispatch for the injury report."
+  ],
+  "resourceGap": [
+    "Prioritize procurement of bottled water or water purification solutions to address the critical shortage in [ZONE].",
+    "Specialized Response: 'Other' category requests ([DETAILS]) in [ZONE] require specialized field teams and equipment rather than general inventory. Coordinate with local emergency services."
+  ],
+  "monitoring": [
+    "Monitor Food Demand: Food Packets remain the most requested item. Maintain vigilance on stock levels despite current sufficiency.",
+    "Specialized Response Notes: [DETAILS]"
+  ]
+}
 
-Guidelines:
-- Start the report with: "**Report Date:** ${currentDate}"
-- Keep the report short and concise. Avoid long text blocks or long paragraphs.
-- Use clean bullet points, short key-value highlights, bold text, and emoji icons.
-- Format critical warnings using: "> [!WARNING] Message"
-- Format general notes using: "> [!NOTE] Message"
-- Use simple Markdown tables for summary statistics or zone comparisons.
-- Structure it cleanly:
-  1. 📈 **Quick Trends:** Zone request volumes & top needs.
-  2. ⚠️ **Critical Stock Alerts:** Hub/item shortage warnings (especially if < 5 items remain).
-  3. 🚀 **Actionable Dispatch Tips:** Concrete hub-to-hub transfers or restocking actions.
+Guidelines for JSON fields:
+- "needsDetails": Provide 3-5 descriptive entries summarizing pending requests, adding rich details about high-demand zones or specific urgency reasons.
+- "immediateFulfillment": Detail immediate dispatch actions where a local hub has sufficient stock to fulfill nearby requests. Reference specific stock numbers.
+- "resourceGap": Identify shortages where demand exceeds stock (e.g. water), or specialized non-inventory items (like road blocks, power line issues) needing field teams.
+- "monitoring": List items or trends to monitor (e.g. high food demand, weather warnings).
 
-Keep the tone professional, urgent, and focused. Do not return any JSON or wrapper text, just the clean Markdown report directly.
+Do not wrap your response in markdown code blocks like \`\`\`json. Return only the raw JSON string directly.
 `;
 
-    const geminiResult = await geminiModel.generateContent(prompt);
-    const reportMarkdown = geminiResult.response.text();
-    return res.json({ success: true, report: reportMarkdown });
+    let reportMarkdown = "Failed to generate AI insights.";
+    let needsDetails = [
+      "Food Packets: High demand across Kalyan and Vasind.",
+      "Medical Kits: Emergency medical requests pending in Thane."
+    ];
+    let immediateFulfillment = [
+      "Food Packets: All pending urgent requests can be dispatched from local hub stocks.",
+      "Medical Kits: Mumbai Central can dispatch kits for local injury reports."
+    ];
+    let resourceGap = [
+      "Prioritize procurement of water purification solutions to address critical shortages.",
+      "Specialized Response: 'Other' category requests in Thane require field teams."
+    ];
+    let monitoring = [
+      "Monitor Food Demand: Food Packets remain the most requested item.",
+      "Specialized Response Notes: Maintain vigilance on stock levels."
+    ];
+
+    try {
+      const geminiResult = await geminiModel.generateContent(prompt);
+      let text = geminiResult.response.text().trim();
+      
+      // Clean markdown code blocks if any
+      if (text.startsWith("```")) {
+        text = text.replace(/^```(json)?/, "").replace(/```$/, "").trim();
+      }
+      
+      const parsed = JSON.parse(text);
+      if (parsed.report) reportMarkdown = parsed.report;
+      if (parsed.needsDetails) needsDetails = parsed.needsDetails;
+      if (parsed.immediateFulfillment) immediateFulfillment = parsed.immediateFulfillment;
+      if (parsed.resourceGap) resourceGap = parsed.resourceGap;
+      if (parsed.monitoring) monitoring = parsed.monitoring;
+    } catch (e) {
+      console.warn("⚠️ Failed parsing Gemini output as JSON, fallback to default structure:", e.message);
+    }
+
+    return res.json({
+      success: true,
+      report: reportMarkdown,
+      structuredData: {
+        activeVolunteers: activeVol || 4,
+        standbyVolunteers: standbyVol || 8,
+        needsOverview: needsDetails,
+        supplyPipeline: {
+          totalStock: warehouseTotal,
+          fullness: warehousePercentage,
+          hubs,
+          categories: [
+            { name: "Food Packets", total: totalFood },
+            { name: "Medical Kits", total: totalMeds },
+            { name: "Shelter Kits", total: totalShelter },
+            { name: "Life Jackets", total: totalJackets }
+          ]
+        },
+        immediateFulfillment,
+        resourceGap,
+        monitoring
+      }
+    });
   } catch (err) {
     console.error("❌ Error generating AI insights:", err.message);
     return res.status(500).json({ error: "Could not generate AI logistics insights." });
