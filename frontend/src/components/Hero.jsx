@@ -70,7 +70,7 @@ export default function Hero() {
           className="w-full h-full object-cover filter blur-[0.5px] opacity-80" 
           alt="Leaves Background" 
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-background/0 via-background/85 to-background/0"></div>
       </div>
 
       {/* Abstract Grid Pattern */}
