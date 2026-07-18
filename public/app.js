@@ -1195,6 +1195,17 @@ if (isDashboardPage) {
     } else {
       activeBtn.innerHTML = `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Analyzing...`;
     }
+
+    if (aiReportBody) {
+      aiReportBody.innerHTML = `
+        <div class="text-center py-12 font-bold text-on-surface-variant flex flex-col items-center gap-4">
+          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem; border-width: 0.3em;">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <span class="animate-pulse text-lg tracking-wider uppercase">Generating AI Insights...</span>
+        </div>
+      `;
+    }
     
     try {
       const res = await fetch(`${API_BASE}/api/insights`, {
