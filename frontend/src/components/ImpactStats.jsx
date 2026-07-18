@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Award, Zap } from 'lucide-react';
 
 export default function ImpactStats() {
   const [resolvedCount, setResolvedCount] = useState(0);
@@ -27,35 +26,35 @@ export default function ImpactStats() {
 
   return (
     <section className="max-w-7xl mx-auto px-6 -mt-8 relative z-20">
-      <div className="w-full bg-[#1b1b1b] text-white border-4 border-black shadow-neu flex flex-col md:flex-row justify-between items-center py-8 px-6 gap-6 rounded-none">
+      <div className="w-full bg-[#1b1b1b] text-white border-4 border-black shadow-neu flex flex-col md:flex-row justify-between items-center py-4 px-10 md:px-16 gap-6 rounded-none">
         
         {/* Stat 1 */}
-        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-4 md:pb-0 md:pr-6">
-          <span className="font-display text-5xl font-extrabold text-primary-container leading-none mb-2">
-            {resolvedCount > 0 ? resolvedCount : '14'}
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b border-slate-800 md:border-b-0 md:border-r border-slate-700/50 pb-4 md:pb-0 md:pr-8">
+          <span className="font-display text-4xl md:text-5xl font-extrabold text-[#00e676] leading-none mb-1.5">
+            {resolvedCount > 0 ? resolvedCount : '3,402'}
           </span>
-          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
+          <span className="font-bold text-[9px] uppercase tracking-widest text-[#a7f3d0]">
             Rescues Completed
           </span>
         </div>
 
         {/* Stat 2 */}
-        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b-4 md:border-b-0 md:border-r-4 border-black pb-4 md:pb-0 md:pr-6 pl-0 md:pl-6">
-          <span className="font-display text-5xl font-extrabold text-tertiary-container leading-none mb-2">
-            &lt; 15m
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b border-slate-800 md:border-b-0 md:border-r border-slate-700/50 pb-4 md:pb-0 md:pr-8 pl-0 md:pl-8">
+          <span className="font-display text-4xl md:text-5xl font-extrabold text-[#ffd600] leading-none mb-1.5">
+            890
           </span>
-          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
-            Avg Dispatch Time
+          <span className="font-bold text-[9px] uppercase tracking-widest text-amber-200">
+            Active Volunteers
           </span>
         </div>
 
         {/* Stat 3 */}
-        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 pl-0 md:pl-6">
-          <span className="font-display text-5xl font-extrabold text-secondary-container leading-none mb-2">
-            98.4%
+        <div className="flex flex-col items-center md:items-start w-full md:w-1/3 pl-0 md:pl-8">
+          <span className="font-display text-4xl md:text-5xl font-extrabold text-[#00b0ff] leading-none mb-1.5">
+            14.2k
           </span>
-          <span className="font-bold text-[10px] uppercase tracking-widest text-outline-variant">
-            Aid Success Rate
+          <span className="font-bold text-[9px] uppercase tracking-widest text-sky-200">
+            Supplies Deployed
           </span>
         </div>
 
