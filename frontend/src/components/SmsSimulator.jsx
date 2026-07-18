@@ -123,10 +123,11 @@ export default function SmsSimulator() {
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }}
+              animate={{ opacity: 0.4 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-on-surface/40 backdrop-blur-xs"
+              className="absolute inset-0 bg-black/50"
+              style={{ backdropFilter: 'blur(30px)', WebkitBackdropFilter: 'blur(30px)' }}
             />
 
             {/* Content Drawer */}
@@ -135,7 +136,8 @@ export default function SmsSimulator() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 26, stiffness: 220 }}
-              className="relative w-full max-w-md h-full bg-white border-l-4 border-black shadow-2xl flex flex-col p-6 overflow-y-auto rounded-none"
+              className="relative w-full max-w-md h-full border-l-4 border-black shadow-2xl flex flex-col p-6 overflow-y-auto rounded-none"
+              style={{ background: 'linear-gradient(135deg, #90e0ef, #48cae4)' }}
             >
               {/* Header */}
               <div className="flex justify-between items-center mb-4 pb-3 border-b-4 border-black">
@@ -150,7 +152,7 @@ export default function SmsSimulator() {
                 </button>
               </div>
 
-              <p className="text-xs text-on-surface-variant mb-6 leading-relaxed font-bold">
+              <p className="text-xs text-slate-800 mb-6 leading-relaxed font-bold">
                 In disaster zones without internet, victims send a standard SMS to our gateway. Use this phone mock to simulate sending a raw SMS message and watch how Gemini AI parses it.
               </p>
 
