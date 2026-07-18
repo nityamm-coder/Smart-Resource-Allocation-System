@@ -988,13 +988,12 @@ Example output if new request:
 });
 // ── Route: GET /api/requests/stats ────────────────────────────
 /**
- * Retrieves the total count of resolved requests from both active
- * and archived request databases.
+ * Retrieves the total count of resolved requests, active volunteers, and supplies deployed.
  */
 app.get("/api/requests/stats", async (req, res) => {
   try {
     if (!db) {
-      return res.json({ success: true, resolvedCount: 0 });
+      return res.json({ success: true, resolvedCount: 0, activeVolunteers: 0, suppliesDeployed: 0 });
     }
 
     const activeResolvedSnapshot = await db.collection("requests")
@@ -1007,9 +1006,33 @@ app.get("/api/requests/stats", async (req, res) => {
 
     const totalResolved = activeResolvedSnapshot.size + archivedResolvedSnapshot.size;
 
+    // Real Volunteers Count
+    let volunteersCount = 0;
+    try {
+      const volSnapshot = await db.collection("volunteers").get();
+      volunteersCount = volSnapshot.size;
+      if (volunteersCount === 0) {
+        const dynamicVolunteersList = await getDynamicVolunteers();
+        volunteersCount = dynamicVolunteersList.length;
+      }
+    } catch (e) {
+      const dynamicVolunteersList = await getDynamicVolunteers();
+      volunteersCount = dynamicVolunteersList.length;
+    }
+
+    // Real Supplies Deployed Count
+    let suppliesCount = 0;
+    try {
+      suppliesCount = await blockchain.getTotalSuppliesDeployed();
+    } catch (e) {
+      console.error("❌ Error fetching supplies deployed stats:", e.message);
+    }
+
     return res.json({
       success: true,
-      resolvedCount: totalResolved
+      resolvedCount: totalResolved,
+      activeVolunteers: volunteersCount,
+      suppliesDeployed: suppliesCount
     });
   } catch (err) {
     console.error("❌ Error fetching request stats:", err.message);

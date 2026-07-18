@@ -660,6 +660,15 @@ async function getSBTs() {
   return ledger.sbts;
 }
 
+/**
+ * Return total amount of supplies deployed/transferred
+ */
+async function getTotalSuppliesDeployed() {
+  const ledger = loadSimulatedLedger();
+  const transferTxs = (ledger.transactions || []).filter(tx => tx.method === "transferSupply");
+  return transferTxs.reduce((sum, tx) => sum + (tx.payload?.amount || 0), 0);
+}
+
 module.exports = {
   recordResolution,
   mintVolunteerSBT,
@@ -671,6 +680,7 @@ module.exports = {
   getBlocks,
   getTransactions,
   getSBTs,
+  getTotalSuppliesDeployed,
   getDeterministicWalletAddress,
   NGO_ADMIN_WALLET
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 export default function ImpactStats() {
   const [resolvedCount, setResolvedCount] = useState(0);
+  const [activeVolunteers, setActiveVolunteers] = useState(0);
+  const [suppliesDeployed, setSuppliesDeployed] = useState(0);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -11,10 +13,12 @@ export default function ImpactStats() {
           const data = await res.json();
           if (data.success) {
             setResolvedCount(data.resolvedCount || 0);
+            setActiveVolunteers(data.activeVolunteers || 0);
+            setSuppliesDeployed(data.suppliesDeployed || 0);
           }
         }
       } catch (err) {
-        console.error("Error fetching resolved count:", err);
+        console.error("Error fetching stats:", err);
       }
     };
 
@@ -31,7 +35,7 @@ export default function ImpactStats() {
         {/* Stat 1 */}
         <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b border-slate-800 md:border-b-0 md:border-r border-slate-700/50 pb-4 md:pb-0 md:pr-8">
           <span className="font-display text-4xl md:text-5xl font-extrabold text-[#00e676] leading-none mb-1.5">
-            {resolvedCount > 0 ? resolvedCount : '3,402'}
+            {resolvedCount}
           </span>
           <span className="font-bold text-[9px] uppercase tracking-widest text-[#a7f3d0]">
             Rescues Completed
@@ -41,7 +45,7 @@ export default function ImpactStats() {
         {/* Stat 2 */}
         <div className="flex flex-col items-center md:items-start w-full md:w-1/3 border-b border-slate-800 md:border-b-0 md:border-r border-slate-700/50 pb-4 md:pb-0 md:pr-8 pl-0 md:pl-8">
           <span className="font-display text-4xl md:text-5xl font-extrabold text-[#ffd600] leading-none mb-1.5">
-            890
+            {activeVolunteers}
           </span>
           <span className="font-bold text-[9px] uppercase tracking-widest text-amber-200">
             Active Volunteers
@@ -51,7 +55,7 @@ export default function ImpactStats() {
         {/* Stat 3 */}
         <div className="flex flex-col items-center md:items-start w-full md:w-1/3 pl-0 md:pl-8">
           <span className="font-display text-4xl md:text-5xl font-extrabold text-[#00b0ff] leading-none mb-1.5">
-            14.2k
+            {suppliesDeployed}
           </span>
           <span className="font-bold text-[9px] uppercase tracking-widest text-sky-200">
             Supplies Deployed
