@@ -2230,7 +2230,7 @@ if (isDashboardPage) {
           
           <div class="d-flex align-items-center gap-2 mt-2 pt-2 border-top border-secondary">
             <label style="font-size:0.72rem; color:#94a3b8; margin-bottom:0;">Status:</label>
-            <select class="map-status-select" data-id="${req.id}">
+            <select class="map-status-select" data-id="${req.id}" style="color: #1b1b1b;">
               <option value="Open" ${req.status === "Open" ? "selected" : ""}>Open</option>
               <option value="In Progress" ${req.status === "In Progress" ? "selected" : ""}>In Progress</option>
               <option value="Resolved" ${req.status === "Resolved" ? "selected" : ""}>Resolved</option>
