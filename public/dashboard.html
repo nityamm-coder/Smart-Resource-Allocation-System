@@ -280,7 +280,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
           <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white border-4 border-black p-4 shadow-neu flex flex-col h-[320px]">
-              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">🚨 Need Urgency Trends</h4>
+              <h4 class="font-bold text-xs uppercase mb-3 border-b-2 border-black border-dashed pb-1.5">📍 Request Metric from Hubs</h4>
               <div class="flex-grow relative">
                 <canvas id="requestsTrendChart"></canvas>
               </div>
@@ -1121,14 +1121,15 @@
         const trendChart = new Chart(ctxTrend, {
           type: 'bar',
           data: {
-            labels: ['Open', 'In Progress', 'Resolved'],
+            labels: ['Kalyan', 'Mumbai Central', 'Thane', 'Vasind'],
             datasets: [{
-              label: 'Active Requests',
-              data: [0, 0, 0],
+              label: 'Requests by Hub',
+              data: [0, 0, 0, 0],
               backgroundColor: [
-                '#ffdad6',   // Red — Open
-                '#ffdb47',  // Amber — In Progress
-                '#00ff66'    // Green — Resolved
+                '#ffdad6',   // Red
+                '#ffdb47',   // Amber
+                '#00ff66',   // Green
+                '#ade8f4'    // Blue
               ],
               borderColor: '#000000',
               borderWidth: 3
@@ -1155,12 +1156,21 @@
 
         // Update function reading from DOM state counter values
         function updateCharts() {
-          // Status trends
-          const openVal = parseInt(document.getElementById("stat-open").textContent) || 0;
-          const progressVal = parseInt(document.getElementById("stat-progress").textContent) || 0;
-          const resolvedVal = parseInt(document.getElementById("stat-resolved").textContent) || 0;
+          // Requests by Hub
+          let kalyanCount = 0;
+          let mumbaiCentralCount = 0;
+          let thaneCount = 0;
+          let vasindCount = 0;
+
+          document.querySelectorAll(".request-card").forEach(card => {
+            const txt = card.textContent.toLowerCase();
+            if (txt.includes("kalyan")) kalyanCount++;
+            else if (txt.includes("mumbai central")) mumbaiCentralCount++;
+            else if (txt.includes("thane")) thaneCount++;
+            else if (txt.includes("vasind")) vasindCount++;
+          });
           
-          trendChart.data.datasets[0].data = [openVal, progressVal, resolvedVal];
+          trendChart.data.datasets[0].data = [kalyanCount, mumbaiCentralCount, thaneCount, vasindCount];
           trendChart.update();
 
           // Categories from loaded cards
